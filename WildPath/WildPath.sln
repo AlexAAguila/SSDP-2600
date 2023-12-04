@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34031.279
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WildPath", "WildPath.csproj", "{F7485F8D-66A4-4238-AFCA-B95D0111B9FA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F7485F8D-66A4-4238-AFCA-B95D0111B9FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7485F8D-66A4-4238-AFCA-B95D0111B9FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7485F8D-66A4-4238-AFCA-B95D0111B9FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7485F8D-66A4-4238-AFCA-B95D0111B9FA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {036419BE-1FE1-4882-801F-363DC47B5CBB}
+	EndGlobalSection
+EndGlobal
