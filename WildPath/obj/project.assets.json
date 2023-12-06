@@ -3330,19 +3330,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\fer_n\\.nuget\\packages\\": {}
+    "C:\\Users\\Clayton\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\fer_n\\OneDrive\\Desktop\\OrangeTeam\\SSDP-2600\\WildPath\\WildPath.csproj",
+      "projectUniqueName": "C:\\Users\\Clayton\\OneDrive - BCIT\\Documents\\School\\SSDP-2600 Systems Analysis & Design\\SSDP-2600\\WildPath\\WildPath.csproj",
       "projectName": "WildPath",
-      "projectPath": "C:\\Users\\fer_n\\OneDrive\\Desktop\\OrangeTeam\\SSDP-2600\\WildPath\\WildPath.csproj",
-      "packagesPath": "C:\\Users\\fer_n\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\fer_n\\OneDrive\\Desktop\\OrangeTeam\\SSDP-2600\\WildPath\\obj\\",
+      "projectPath": "C:\\Users\\Clayton\\OneDrive - BCIT\\Documents\\School\\SSDP-2600 Systems Analysis & Design\\SSDP-2600\\WildPath\\WildPath.csproj",
+      "packagesPath": "C:\\Users\\Clayton\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Clayton\\OneDrive - BCIT\\Documents\\School\\SSDP-2600 Systems Analysis & Design\\SSDP-2600\\WildPath\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\fer_n\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Clayton\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -3408,7 +3408,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.401\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100\\RuntimeIdentifierGraph.json"
       }
     }
   }
