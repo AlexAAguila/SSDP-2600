@@ -9,18 +9,18 @@ using WildPath.Data;
 
 #nullable disable
 
-namespace WildPath.Data.Migrations
+namespace WildPath.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231206211953_Claytn")]
-    partial class Claytn
+    [Migration("20231208182959_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.11")
+                .HasAnnotation("ProductVersion", "7.0.12")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
