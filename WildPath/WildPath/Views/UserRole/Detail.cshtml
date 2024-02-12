@@ -1,0 +1,19 @@
+﻿@model WildPath.ViewModels.UserVM
+
+@{
+    ViewData["Title"] = "Detail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Detail</h1>
+
+<div>
+    <h4>UserVM</h4>
+    <hr />
+    <dl class="row">
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Email">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

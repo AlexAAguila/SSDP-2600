@@ -4,8 +4,9 @@ DROP TABLE IF EXISTS Returns;
 DROP TABLE IF EXISTS TransactionItems;
 DROP TABLE IF EXISTS Items;
 DROP TABLE IF EXISTS Transactions;
-DROP TABLE IF EXISTS Profile;
+DROP TABLE IF EXISTS ContactInfo;
 DROP TABLE IF EXISTS Address;
+
 
 -- Create the Address table
 CREATE TABLE Address
@@ -19,22 +20,18 @@ CREATE TABLE Address
 );
 
 -- Create the Profile table
-CREATE TABLE Profile
+CREATE TABLE ContactInfo
 (
-    pkEmail VARCHAR(100) PRIMARY KEY,
+    pkShippingProfile INT PRIMARY KEY IDENTITY,
 	fkMailingAddressId INT FOREIGN KEY REFERENCES Address (pkAddressId) NOT NULL,
 	fkShippingAddressId INT FOREIGN KEY REFERENCES Address (pkAddressId),
-	firstName VARCHAR(100) NOT NULL,
-	lastName VARCHAR(100) NOT NULL,
 	phone BIGINT,
-	isAdmin CHAR(1) NOT NULL,
 );
 
 -- Create the Transactions table
 CREATE TABLE Transactions
 (
     pkTransactionId INT PRIMARY KEY IDENTITY,
-	fkEmail VARCHAR(100) FOREIGN KEY REFERENCES Profile (pkEmail) NOT NULL,
 	status VARCHAR (100) NOT NULL,
 	purchaseDate DATE NOT NULL,
 	shippingMethod VARCHAR(100) NOT NULL,
