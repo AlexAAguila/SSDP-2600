@@ -20,15 +20,15 @@
     </thead>
     <tbody>
 @foreach (var item in Model) {
-        <tr>
-            <td>@item.Email</td>
-
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Email">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Email">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Email">Delete</a>
-            </td>
-        </tr>
+            <tr>
+                <td>@item.Email</td>
+                <td>
+                    @Html.ActionLink(
+                             "View Roles"
+                             , "Detail"
+                             , new { userName = item.Email })
+                </td>
+            </tr>
 }
     </tbody>
 </table>

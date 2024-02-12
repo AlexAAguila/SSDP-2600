@@ -1,19 +1,45 @@
-﻿@model WildPath.ViewModels.UserVM
+﻿@model IEnumerable<WildPath.ViewModels.RoleVM>
 
 @{
-    ViewData["Title"] = "Detail";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "User Roles Detail";
+    string message = ViewBag.Message;
 }
 
-<h1>Detail</h1>
+<h3>User: @ViewBag.UserName</h3>
 
-<div>
-    <h4>UserVM</h4>
-    <hr />
-    <dl class="row">
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Email">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+@if (message.Length > 0)
+{
+    <div class="alert alert-success" role="alert">
+        @ViewBag.Message
+    </div>
+}
+<p>
+    @Html.ActionLink("Assign Roles"
+            , "Create"
+            , new { userName = @ViewBag.UserName })
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.RoleName)</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RoleName)
+
+                <span style="padding-left:50px">
+                        @Html.ActionLink("Delete", "Delete", new
+                            { role = item.RoleName, email = item.Id })
+
+                    </span>
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>
