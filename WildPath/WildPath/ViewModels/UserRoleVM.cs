@@ -9,6 +9,6 @@ namespace WildPath.ViewModels
         [Required]
         public string Email { get; set; }
         [Required]
-        public string Role { get; set; }
+        public string RoleName { get; set; }
     }
 }
