@@ -6,8 +6,21 @@ P@ssw0rd!
 Scaffold-DbContext "Server=tcp:wildpathserver.database.windows.net,1433;Initial Catalog=WildPathDb;Persist Security Info=False;User ID=WildPathAdmin;Password=P@ssw0rd!;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir EfModels
 Server=tcp:wildpathserver.database.windows.net,1433;Initial Catalog=WildPathDb;Persist Security Info=False;User ID=WildPathAdmin;Password=P@ssw0rd!;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;
 
+
+//Put in secrets file
 {
   "ConnectionStrings": {
     "DefaultConnection": "Server=tcp:wildpathserver.database.windows.net,1433;Initial Catalog=WildPathDb;Persist Security Info=False;User ID=WildPathAdmin;Password=P@ssw0rd!;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
   }
+}
+
+//appsettings
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*"
 }
