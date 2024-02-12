@@ -77,9 +77,9 @@ namespace WildPath.Controllers
                 {
                     var addUR =
                     await userRoleRepo.AddUserRoleAsync(userRoleVM.Email,
-                                                        userRoleVM.Role);
+                                                        userRoleVM.RoleName);
 
-                    string message = $"{userRoleVM.Role} permissions" +
+                    string message = $"{userRoleVM.RoleName} permissions" +
                                      $" successfully added to " +
                                      $"{userRoleVM.Email}.";
 
@@ -114,7 +114,7 @@ namespace WildPath.Controllers
             UserRoleVM userRoleVM = new UserRoleVM
             {
                 Email = userName,
-                Role = roleName
+                RoleName = roleName
             };
             return View(userRoleVM);
         }

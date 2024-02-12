@@ -35,7 +35,7 @@ namespace WildPath.Repositories
             if (user != null)
             {
                 var result = await _userManager.RemoveFromRoleAsync(user
-                                                              , userRoleVM.Role);
+                                                              , userRoleVM.RoleName);
                 return result.Succeeded;
             }
 
