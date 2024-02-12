@@ -29,13 +29,14 @@ namespace WildPath.Repositories
 
 
 
-        public async Task<bool> RemoveUserRoleAsync(UserRoleVM userRoleVM)
+        public async Task<bool> RemoveUserRoleAsync(string email
+                                                 , string roleName)
         {
-            var user = await _userManager.FindByEmailAsync(userRoleVM.Email);
+            var user = await _userManager.FindByEmailAsync(email);
             if (user != null)
             {
                 var result = await _userManager.RemoveFromRoleAsync(user
-                                                              , userRoleVM.RoleName);
+                                                              , roleName);
                 return result.Succeeded;
             }
 
@@ -50,7 +51,7 @@ namespace WildPath.Repositories
             {
                 var roles = await _userManager.GetRolesAsync(user);
                 return roles.Select(roleName =>
-                   new RoleVM { RoleName = roleName });
+                   new RoleVM { RoleName = roleName, Id = email });
             }
 
             return Enumerable.Empty<RoleVM>();

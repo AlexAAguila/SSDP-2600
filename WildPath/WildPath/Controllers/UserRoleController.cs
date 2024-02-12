@@ -39,18 +39,18 @@ namespace WildPath.Controllers
             return View(users);
         }
 
-        public async Task<IActionResult> Detail(string userName,
+         public async Task<IActionResult> Detail(string userName,
                                                 string message = "")
         {
             UserRoleRepo userRoleRepo = new UserRoleRepo(_userManager);
-
+            MyRegisteredUserRepo myRegisteredUserRepo = new MyRegisteredUserRepo(_db);
 
             var roles = await userRoleRepo.GetUserRolesAsync(userName);
-            var user = _myRegisteredUserRepo.GetUserByName(userName);
+            var name = myRegisteredUserRepo.GetUserByName(userName);
 
-            ViewBag.Name = user != null ? user.FirstName + " " + user.LastName : userName;
             ViewBag.Message = message;
-            ViewBag.UserName = userName;
+            ViewBag.UserName = name;
+
 
             return View(roles);
         }
@@ -122,7 +122,7 @@ namespace WildPath.Controllers
         [HttpPost, ActionName("Delete")]
         public async Task<IActionResult> Delete(UserRoleVM userRoleVM)
         {
-            bool isSuccess = await _userRoleRepo.RemoveUserRoleAsync(userRoleVM);
+            bool isSuccess = await _userRoleRepo.RemoveUserRoleAsync(userRoleVM.Email, userRoleVM.RoleName);
 
             if (isSuccess)
             {
