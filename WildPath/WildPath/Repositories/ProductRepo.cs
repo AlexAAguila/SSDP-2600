@@ -17,6 +17,12 @@ namespace WildPath.Repositories
         {
             return _wpdb.Items;
         }
+
+        public IEnumerable<Item> GetByCategory(string category)
+        {
+            return _wpdb.Items.Where(p => p.Category == category);
+        }
+
         public Item GetById(int id)
         {
             return _wpdb.Items
