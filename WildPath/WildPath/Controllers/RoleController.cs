@@ -3,10 +3,11 @@ using WildPath.Repositories;
 using WildPath.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using WildPath.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WildPath.Controllers
 {
-    //[Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     public class RoleController : Controller
     {
         private readonly ApplicationDbContext _db;
