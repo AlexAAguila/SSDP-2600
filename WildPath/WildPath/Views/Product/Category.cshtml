@@ -7,9 +7,9 @@
 
 <h1>Category</h1>
 
-<p>
+@* <p>
     <a asp-action="Create">Create New</a>
-</p>
+</p> *@
 <table class="table">
     <thead>
         <tr>
@@ -25,9 +25,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Price)
             </th>
-            <th>
+ @*            <th>
                 @Html.DisplayNameFor(model => model.Stock)
-            </th>
+            </th> *@
             <th>
                 @Html.DisplayNameFor(model => model.Category)
             </th>
@@ -58,9 +58,9 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Price)
             </td>
-            <td>
+@*             <td>
                 @Html.DisplayFor(modelItem => item.Stock)
-            </td>
+            </td> *@
             <td>
                 @Html.DisplayFor(modelItem => item.Category)
             </td>
@@ -73,11 +73,11 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Colour)
             </td>
-            <td>
+@*             <td>
                 <a asp-action="Edit" asp-route-id="@item.PkItemId">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.PkItemId">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.PkItemId">Delete</a>
-            </td>
+            </td> *@
         </tr>
 }
     </tbody>
