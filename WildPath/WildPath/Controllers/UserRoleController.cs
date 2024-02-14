@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace WildPath.Controllers
 {
-    //[Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     public class UserRoleController : Controller
     {
         private readonly ApplicationDbContext _db;
