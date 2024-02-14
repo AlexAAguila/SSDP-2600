@@ -1,0 +1,11 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/WildPath/.vs/WildPath/FileContentIndex
+/WildPath/bin/Debug/net7.0
+/WildPath/Migrations
+/WildPath/obj
+/WildPath/WildPath/bin/Debug/net8.0
+/WildPath/WildPath/WildPath.csproj
+/WildPath/WildPath.csproj.user
