@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using SendGridDemo.Data.Services;
 using WildPath.Data;
 using WildPath.Models;
 using WildPath.Repositories;
@@ -36,6 +37,7 @@ namespace WildPath.Areas.Identity.Pages.Account
         private readonly ApplicationDbContext _db;
         private readonly MyRegisteredUserRepo _myRegisteredUserRepo;
         private readonly IConfiguration _configuration;
+        private readonly IEmailService _emailService;
 
         public RegisterModel(
             UserManager<IdentityUser> userManager,
@@ -45,7 +47,8 @@ namespace WildPath.Areas.Identity.Pages.Account
             IEmailSender emailSender,
             ApplicationDbContext db,
             MyRegisteredUserRepo myRegisteredUserRepo,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            IEmailService emailService)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -56,6 +59,7 @@ namespace WildPath.Areas.Identity.Pages.Account
             _db = db;
             _myRegisteredUserRepo = myRegisteredUserRepo;
             _configuration = configuration;
+            _emailService = emailService;
         }
 
         /// <summary>
@@ -158,12 +162,29 @@ namespace WildPath.Areas.Identity.Pages.Account
                         values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
                         protocol: Request.Scheme);
 
-                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    //await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
+                    //    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    var response = await _emailService.SendSingleEmail(new Models.ComposeEmailModel
+                    {
+                        FirstName = Input.FirstName,
+                        LastName = Input.LastName,
+                        Subject = "Confirm your email",
+                        Email = Input.Email,
+                        Body = $"Please confirm your account by " +
+           $"<a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>."
+                    });
+
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
-                        return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
+                        //return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
+                        return RedirectToPage("RegisterConfirmation", new
+                        {
+                            email = Input.Email,
+                            returnUrl = returnUrl,
+                            DisplayConfirmAccountLink = false
+                        });
+
                     }
                     else
                     {

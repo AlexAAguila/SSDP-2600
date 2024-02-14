@@ -1,0 +1,14 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/WildPath/.vs/WildPath/FileContentIndex
+/WildPath/bin/Debug/net7.0
+/WildPath/Migrations
+/WildPath/obj
+/WildPath/WildPath/bin/Debug/net8.0
+/WildPath/WildPath/WildPath.csproj
+/WildPath/WildPath.csproj.user
+/WildPath/.vs/WildPath/DesignTimeBuild/.dtbcache.v2
+/WildPath/WildPath/obj/Debug/net8.0/WildPath.AssemblyInfo.cs
+/WildPath/WildPath/obj/Debug/net8.0/WildPath.AssemblyInfoInputs.cache
