@@ -16,7 +16,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("WildPath")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+cf0f7a435ace390098234d1949cc03cb9429e5b2")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+18949716f9a702e29f751b522fb0d629f3fbd6ac")]
 [assembly: System.Reflection.AssemblyProductAttribute("WildPath")]
 [assembly: System.Reflection.AssemblyTitleAttribute("WildPath")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
