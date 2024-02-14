@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using SendGridDemo.Data.Services;
 using WildPath.Data;
 using WildPath.Data.Services;
+using WildPath.EfModels;
 using WildPath.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,9 +12,11 @@ var connectionString = builder.Configuration["ConnectionStrings:DefaultConnectio
 // Add services to the container.
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
+builder.Services.AddDbContext<WildPathDbContext>(options =>
+    options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
@@ -21,6 +24,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<MyRegisteredUserRepo>();
 builder.Services.AddScoped<UserRepo>();
 builder.Services.AddScoped<UserRoleRepo>();
+builder.Services.AddScoped<ProductRepo>();
 
 builder.Services.AddTransient<IEmailService, EmailService>();
 

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "lRyc9/wHUY3riw8BsKSht23WX2RIl3ZY5k+QOjA6kWf9KU2CeF2uPdMOxmqQwZXGXNx8vTr16oglNnlVenwYQw==",
+  "dgSpecHash": "qKu/C3+4sPekMUUt11mF1QYw+qkbJmxAMuLT/iAGhoWEf4O7V1cciUnpMlHjEljc2XQZygvXHtvfb6RPm6uWLA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Clayton\\OneDrive - BCIT\\Documents\\School\\SSDP-2600 Systems Analysis & Design\\SSDP-2600\\WildPath\\WildPath\\WildPath.csproj",
+  "projectFilePath": "C:\\Users\\Clayton\\OneDrive - BCIT\\Documents\\School\\SSDP-3300 Software Systems Project\\SSDP-2600\\WildPath\\WildPath\\WildPath.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Clayton\\.nuget\\packages\\azure.core\\1.35.0\\azure.core.1.35.0.nupkg.sha512",
     "C:\\Users\\Clayton\\.nuget\\packages\\azure.identity\\1.10.3\\azure.identity.1.10.3.nupkg.sha512",
