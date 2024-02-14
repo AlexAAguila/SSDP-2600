@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SendGrid.Helpers.Mail;
 using WildPath.EfModels;
 using WildPath.Repositories;
 
@@ -20,5 +21,13 @@ namespace WildPath.Controllers
 
             return View(productRepo.GetAll());
         }
+
+        public IActionResult Details(int id)
+        {
+            ProductRepo productRepo = new ProductRepo(_wpdb);
+            return View(productRepo.GetById(id));
+        }
+
+
     }
 }
