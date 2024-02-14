@@ -39,21 +39,21 @@ namespace WildPath.Controllers
             return View(users);
         }
 
-         public async Task<IActionResult> Detail(string userName,
-                                                string message = "")
+        public async Task<IActionResult> Detail(string userName, string message = "")
         {
             UserRoleRepo userRoleRepo = new UserRoleRepo(_userManager);
             MyRegisteredUserRepo myRegisteredUserRepo = new MyRegisteredUserRepo(_db);
 
             var roles = await userRoleRepo.GetUserRolesAsync(userName);
-            var name = myRegisteredUserRepo.GetUserByName(userName);
+            var user = await _userManager.FindByNameAsync(userName);
+            var userEmail = user != null ? user.Email : "";
 
             ViewBag.Message = message;
-            ViewBag.UserName = name;
-
+            ViewBag.UserName = userEmail;
 
             return View(roles);
         }
+
 
         public ActionResult Create()
         {
@@ -109,31 +109,48 @@ namespace WildPath.Controllers
 
 
         [HttpGet]
-        public async Task<ActionResult> Delete(string userName, string roleName)
+        public async Task<IActionResult> Delete(string email, string role)
         {
-            UserRoleVM userRoleVM = new UserRoleVM
+            UserRoleRepo userRoleRepo = new UserRoleRepo(_userManager);
+
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
             {
-                Email = userName,
-                RoleName = roleName
+                return NotFound(); 
+            }
+
+            var roles = await _userManager.GetRolesAsync(user);
+            if (!roles.Contains(role))
+            {
+                return NotFound();
+            }
+
+            var model = new UserRoleVM
+            {
+                Email = email,
+                RoleName = role
             };
-            return View(userRoleVM);
+
+            return View(model);
         }
 
-        [HttpPost, ActionName("Delete")]
-        public async Task<IActionResult> Delete(UserRoleVM userRoleVM)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(UserRoleVM model)
         {
-            bool isSuccess = await _userRoleRepo.RemoveUserRoleAsync(userRoleVM.Email, userRoleVM.RoleName);
+            UserRoleRepo userRoleRepo = new UserRoleRepo(_userManager);
 
-            if (isSuccess)
+            if (ModelState.IsValid)
             {
-                return RedirectToAction("Detail", new { userName = userRoleVM.Email });
+                var removed = await userRoleRepo.RemoveUserRoleAsync(model.Email, model.RoleName);
+                if (removed)
+                {
+                    ViewBag.Message = $"Role '{model.RoleName}' has been removed from user '{model.Email}'.";
+
+                    return RedirectToAction("Detail", new { userName = model.Email, message = ViewBag.Message });
+                }
             }
-            else
-            {
-                ModelState.AddModelError("", "Role not removed.");
-            }
-            return View(userRoleVM);
+            return View(model);
         }
-
     }
 }
