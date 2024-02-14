@@ -25,8 +25,12 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="Index">Products</a>
                         </li>
-@*                          @if (User.IsInRole("Admin"))
-                         { *@
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="Category" asp-route-category="backpacks">Products</a>
+                        </li>
+
+                          @if (User.IsInRole("Admin"))
+                         {
                             <li b-6eg8tbgho9="" class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="UserRole" asp-action="Index">Users</a>
                             </li>
