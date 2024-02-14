@@ -540,3 +540,5 @@ C:\Users\tr4cy\OneDrive\Desktop\SSDP-2600\WildPath\WildPath\obj\Debug\net8.0\ref
 C:\Users\tr4cy\OneDrive\Desktop\SSDP-2600\WildPath\WildPath\obj\Debug\net8.0\WildPath.pdb
 C:\Users\tr4cy\OneDrive\Desktop\SSDP-2600\WildPath\WildPath\obj\Debug\net8.0\WildPath.genruntimeconfig.cache
 C:\Users\tr4cy\OneDrive\Desktop\SSDP-2600\WildPath\WildPath\obj\Debug\net8.0\ref\WildPath.dll
+C:\Users\Clayton\OneDrive - BCIT\Documents\School\SSDP-2600 Systems Analysis & Design\SSDP-2600\WildPath\WildPath\bin\Debug\net8.0\SendGrid.dll
+C:\Users\Clayton\OneDrive - BCIT\Documents\School\SSDP-2600 Systems Analysis & Design\SSDP-2600\WildPath\WildPath\bin\Debug\net8.0\StarkbankEcdsa.dll
