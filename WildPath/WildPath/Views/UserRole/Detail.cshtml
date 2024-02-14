@@ -5,7 +5,7 @@
     string message = ViewBag.Message;
 }
 
-<h3>User: @ViewBag.UserName</h3>
+<h3>@ViewBag.UserName</h3>
 
 @if (message.Length > 0)
 {
@@ -43,3 +43,7 @@
         }
     </tbody>
 </table>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
