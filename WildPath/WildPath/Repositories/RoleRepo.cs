@@ -27,10 +27,21 @@ namespace WildPath.Repositories
             return roles;
         }
 
+        //public RoleVM GetRole(string id)
+        //{
+
+
+        //    var role = _db.Roles.Where(r => r.Id == id)
+        //                        .FirstOrDefault();
+
+        //    if (role != null)
+        //    {
+        //        return new RoleVM() { RoleName = role.Name, Id = role.Id };
+        //    }
+        //    return null;
+        //}
         public RoleVM GetRole(string roleName)
         {
-
-
             var role = _db.Roles.Where(r => r.Name == roleName)
                                 .FirstOrDefault();
 
@@ -83,7 +94,7 @@ namespace WildPath.Repositories
                                                "Text");
             return roleSelectList;
         }
-
+       
         public void CreateInitialRole()
         {
             const string ADMIN = "Admin";
@@ -96,30 +107,19 @@ namespace WildPath.Repositories
                 CreateRole(ADMIN_ID, ADMIN);
             }
         }
-        public bool DeleteRole(RoleVM roleVM)
+
+        public bool DeleteRole(string roleName)
         {
-            bool isSuccess = true;
-
-            try
+            var role = _db.Roles.FirstOrDefault(r => r.Name == roleName);
+            if (role != null)
             {
-                var role = _db.Roles.FirstOrDefault(r => r.Name == roleVM.Id);
-
-                if (_db.UserRoles.Any(ur => ur.RoleId == role.Id))
-                {
-                    isSuccess = false;
-                    return isSuccess;
-                }
-
                 _db.Roles.Remove(role);
                 _db.SaveChanges();
+                return true;
             }
-            catch (Exception)
-            {
-                isSuccess = false;
-            }
-
-            return isSuccess;
+            return false;
         }
+
     }
 
 }

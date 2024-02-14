@@ -4,7 +4,7 @@ namespace WildPath.ViewModels
 {
     public class RoleVM
     {
-        [Display(Name = "ID")]
+        [Display(Name = "Role Id")]
         public string? Id { get; set; }
 
         [Required]
