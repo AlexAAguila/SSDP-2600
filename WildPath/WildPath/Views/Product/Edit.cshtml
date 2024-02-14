@@ -41,7 +41,13 @@
             </div>
             <div class="form-group">
                 <label asp-for="Category" class="control-label"></label>
-                <input asp-for="Category" class="form-control" />
+                <select asp-for="Category" class="form-control">
+                    <option value="Backpacks" selected="@(Model.Category == "Backpacks")">Backpacks</option>
+                    <option value="Tents" selected="@(Model.Category == "Tents")">Tents</option>
+                    <option value="Sleeping Gear" selected="@(Model.Category == "Sleeping Gear")">Sleeping Gear</option>
+                    <option value="Camping Furniture" selected="@(Model.Category == "Camping Furniture")">Camping Furniture</option>
+                    <option value="Accessories" selected="@(Model.Category == "Accessories")">Accessories</option>
+                </select>
                 <span asp-validation-for="Category" class="text-danger"></span>
             </div>
             <div class="form-group">
