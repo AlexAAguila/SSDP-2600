@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using WildPath.Data;
+using WildPath.EfModels;
 using WildPath.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration["ConnectionStrings:DefaultConnection"];
 // Add services to the container.
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlServer(connectionString));
+builder.Services.AddDbContext<WildPathDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -19,6 +22,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<MyRegisteredUserRepo>();
 builder.Services.AddScoped<UserRepo>();
 builder.Services.AddScoped<UserRoleRepo>();
+builder.Services.AddScoped<ProductRepo>();
 
 var app = builder.Build();
 
