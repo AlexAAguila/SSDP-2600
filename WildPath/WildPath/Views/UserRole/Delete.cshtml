@@ -25,10 +25,12 @@
             @Html.DisplayFor(model => model.RoleName)
         </dd>
     </dl>
-    
-    <form asp-action="Delete">
-        <input type="hidden" asp-for="ID" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
+
+    <form asp-action="DeleteConfirmed">
+        <div>
+            <input type="hidden" asp-for="Email" />
+            <input type="hidden" asp-for="RoleName" />
+            <input type="submit" value="Delete" class="btn btn-danger" />
+            <a asp-controller="UserRole" asp-action="Detail" asp-route-userName="@Model.Email">Cancel</a>
+        </div>
     </form>
-</div>
