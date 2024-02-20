@@ -20,3 +20,9 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+
+.custom-btn-green {
+    background-color: #ACCAC3;
+    color: white;
+}
