@@ -26,7 +26,9 @@
 
                         <!-- Mobile View: Direct category links, hidden on lg and up -->
                         <li class="nav-item d-lg-none">
-
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="ShopAll" asp-route-category="Shop All">Shop All</a>
+                        </li>
+                        <li class="nav-item d-lg-none">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="Category" asp-route-category="Backpacks">Backpacks</a>
                         </li>
                         <li class="nav-item d-lg-none">
@@ -48,6 +50,9 @@
                                 Products
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li>
+                                    <a class="dropdown-item" asp-area="" asp-controller="Product" asp-action="ShopAll" asp-route-category="Shop All">Shop All</a>
+                                </li>
                                 <li>
                                     <a class="dropdown-item" asp-area="" asp-controller="Product" asp-action="Category" asp-route-category="Backpacks">Backpacks</a>
                                 </li>

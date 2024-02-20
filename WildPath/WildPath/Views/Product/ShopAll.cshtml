@@ -1,4 +1,4 @@
-﻿@model IEnumerable<WildPath.EfModels.Item>
+﻿@model PaginatedList<WildPath.EfModels.Item>
 
 @{
     ViewData["Title"] = "ShopAll";
@@ -16,38 +16,38 @@
         </div>
     </form>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Supplier)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.ItemName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.ItemDetails)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Price)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Category)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Weight)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Size)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Colour)
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            @if (Model.Any())
-            {
+    @if (Model.Any())
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.First().Supplier)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.First().ItemName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.First().ItemDetails)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.First().Price)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.First().Category)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.First().Weight)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.First().Size)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.First().Colour)
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
                 @foreach (var item in Model)
                 {
                     <tr>
@@ -77,15 +77,32 @@
                         </td>
                     </tr>
                 }
-            }
-            else
-            {
-                <tr>
-                    <td colspan="8">Item not found.</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+
+        <!-- Pagination -->
+        <nav>
+            <ul class="pagination">
+                <li class="page-item @(Model.HasPreviousPage ? "" : "disabled")">
+                    <a class="page-link"
+                       href="@Url.Action("ShopAll", new { sortOrder = ViewData["CurrentSort"], searchString = ViewData["SearchString"], pageNumber = Model.PageIndex - 1 })">
+                        Previous
+                    </a>
+                </li>
+                <li class="page-item @(Model.HasNextPage ? "" : "disabled")">
+                    <a class="page-link"
+                       href="@Url.Action("ShopAll", new { sortOrder = ViewData["CurrentSort"], searchString = ViewData["SearchString"], pageNumber = Model.PageIndex + 1 })">
+                        Next
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    }
+    else
+    {
+        <p>No items found.</p>
+    }
+
     <div>
         <a asp-action="ShopAll" class="btn btn-primary">Back to List</a>
     </div>
