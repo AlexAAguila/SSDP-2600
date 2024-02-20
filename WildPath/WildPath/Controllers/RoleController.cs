@@ -17,9 +17,16 @@ namespace WildPath.Controllers
             _db = db;
         }
 
-        public ActionResult Index()
+        //public ActionResult Index()
+        //{
+        //    RoleRepo roleRepo = new RoleRepo(_db);
+        //    return View(roleRepo.GetAllRoles());
+        //}
+
+        public ActionResult Index(string message = "")
         {
             RoleRepo roleRepo = new RoleRepo(_db);
+            ViewBag.Message = message;
             return View(roleRepo.GetAllRoles());
         }
 
@@ -54,30 +61,45 @@ namespace WildPath.Controllers
             return View(roleVM);
         }
 
+
         [HttpGet]
-        public ActionResult Delete(string id)
+        public ActionResult Delete(string roleName)
         {
             RoleRepo roleRepo = new RoleRepo(_db);
-            RoleVM role = roleRepo.GetRole(id);
+            var role = roleRepo.GetRole(roleName);
+            if (role == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
             return View(role);
+
         }
 
         [HttpPost]
         public ActionResult Delete(RoleVM roleVM)
         {
             RoleRepo roleRepo = new RoleRepo(_db);
-            bool isSuccess = roleRepo.DeleteRole(roleVM);
+            bool isSuccess = roleRepo.DeleteRole(roleVM.RoleName);
+
             if (isSuccess)
             {
-                return RedirectToAction(nameof(Index), new { message = "Role deleted successfully." });
+                string message = "Role deletion success.";
+                return RedirectToAction(nameof(Index), new { message = message });
             }
             else
             {
                 ModelState.AddModelError("", "Role deletion failed.");
-                ModelState.AddModelError("", "The role may be assigned to a user.");
             }
             return View(roleVM);
         }
+
+        public IActionResult Details(string id)
+        {
+            RoleRepo roleRepo = new RoleRepo(_db);
+            RoleVM role = roleRepo.GetRole(id);
+            return View(role);
+        }
+
 
     }
 }
