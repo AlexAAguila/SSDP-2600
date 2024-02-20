@@ -43,3 +43,5 @@
 /.vs/SSDP-2600/v17/.wsuo
 /.vs/VSWorkspaceState.json
 /.vs/SSDP-2600/FileContentIndex/deca375f-59fd-4172-a350-843527316e3b.vsidx
+*.cs
+/WildPath/WildPath/Migrations/ApplicationDbContextModelSnapshot.cs

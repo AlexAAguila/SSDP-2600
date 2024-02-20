@@ -24,7 +24,7 @@ namespace WildPath.Controllers
             return View(payPalConfirmationModel);
         }
 
-        public IActionResult Admin()
+        public IActionResult Privacy()
         {
             return View();
         }
