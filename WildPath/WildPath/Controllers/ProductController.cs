@@ -28,9 +28,12 @@ namespace WildPath.Controllers
 
         public IActionResult Category(string category)
         {
-            ProductRepo productRepo = new ProductRepo(_wpdb);
+            ViewData["Category"] = category;
 
-            return View(productRepo.GetByCategory(category));
+            ProductRepo productRepo = new ProductRepo(_wpdb);
+            var products = productRepo.GetByCategory(category);
+
+            return View(products);
         }
 
         public IActionResult Details(int id)
