@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using SendGrid.Helpers.Mail;
 using WildPath.EfModels;
+using WildPath.Models;
 using WildPath.Repositories;
 
 namespace WildPath.Controllers
@@ -26,15 +27,60 @@ namespace WildPath.Controllers
             return View(productRepo.GetAll());
         }
 
-        public IActionResult Category(string category)
+        public IActionResult ShopAll(string sortOrder, string searchString, int? pageNumber)
         {
-            ViewData["Category"] = category;
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["NameSortParm"] = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["PriceSortParm"] = sortOrder == "Price" ? "price_desc" : "Price";
 
-            ProductRepo productRepo = new ProductRepo(_wpdb);
-            var products = productRepo.GetByCategory(category);
+            IQueryable<Item> items = _wpdb.Items;
 
-            return View(products);
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                items = items.Where(p => p.ItemName.Contains(searchString) ||
+                                         p.Supplier.Contains(searchString) ||
+                                         p.Category.Contains(searchString) ||
+                                         p.Weight.ToString().Contains(searchString) ||
+                                         p.Size.Contains(searchString) ||
+                                         p.Colour.Contains(searchString));
+            }
+
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    items = items.OrderByDescending(p => p.ItemName);
+                    break;
+                case "Price":
+                    items = items.OrderBy(p => p.Price);
+                    break;
+                case "price_desc":
+                    items = items.OrderByDescending(p => p.Price);
+                    break;
+                default:
+                    items = items.OrderBy(p => p.ItemName);
+                    break;
+            }
+
+            int pageSize = 4;
+            int pageIndex = pageNumber ?? 1;
+            var count = items.Count();
+            var paginatedItems = items.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList();
+            var paginatedItemsModel = new PaginatedList<Item>(paginatedItems, count, pageIndex, pageSize);
+
+            return View(paginatedItemsModel);
         }
+
+
+
+        //public IActionResult Category(string category)
+        //{
+        //    ViewData["Category"] = category;
+
+        //    ProductRepo productRepo = new ProductRepo(_wpdb);
+        //    var products = productRepo.GetByCategory(category);
+
+        //    return View(products);
+        //}
 
         public IActionResult Details(int id)
         {

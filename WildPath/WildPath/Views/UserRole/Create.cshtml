@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h4>Assign User Role</h4>
+<h4 style="color: #8B0000">Assign User Role</h4>
 <hr />
 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
@@ -31,7 +31,7 @@
                 <input type="hidden" asp-for-"Email" value="Email" />
                 <input type="hidden" asp-for-"RoleName" value="RoleName" />
                 <button id="assignUserRole" type="submit"
-                        class="w-25 btn btn-sm btn-primary">
+                        class="w-25 btn btn-sm btn-primary" style=" background-color: #8B0000">
                     Assign
                 </button>
             </div>
