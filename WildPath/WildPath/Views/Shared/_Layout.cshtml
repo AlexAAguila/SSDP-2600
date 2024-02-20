@@ -42,9 +42,15 @@
                         </li> *@
 
                           @if (User.IsInRole("Admin"))
-                          {
+                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Admin">Admin</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="Index">Products</a>
+                            </li>
+                            <li b-6eg8tbgho9="" class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="UserRole" asp-action="Index">Users</a>
+                            </li>
+                            <li b-6eg8tbgho9="" class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Role" asp-action="Index">Roles</a>
                             </li>
                           } 
                     </ul>
@@ -61,7 +67,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2024 - WildPath
+            &copy; 2024 - WildPath - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
