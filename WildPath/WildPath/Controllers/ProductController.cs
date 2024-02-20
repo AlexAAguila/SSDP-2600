@@ -10,7 +10,6 @@ using WildPath.Repositories;
 
 namespace WildPath.Controllers
 {
-    [Authorize(Roles = "Admin")]
     public class ProductController : Controller
     {
         private readonly WildPathDbContext _wpdb;
@@ -20,6 +19,7 @@ namespace WildPath.Controllers
             _wpdb = wpdb;
         }
 
+        [Authorize(Roles = "Admin")]
         public IActionResult Index()
         {
             ProductRepo productRepo = new ProductRepo(_wpdb);
@@ -29,6 +29,7 @@ namespace WildPath.Controllers
 
         public IActionResult ShopAll(string sortOrder, string searchString, int? pageNumber)
         {
+            ViewData["currentFilter"] = searchString;
             ViewData["CurrentSort"] = sortOrder;
             ViewData["NameSortParm"] = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewData["PriceSortParm"] = sortOrder == "Price" ? "price_desc" : "Price";
