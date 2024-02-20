@@ -26,15 +26,55 @@ namespace WildPath.Controllers
             return View(productRepo.GetAll());
         }
 
-        public IActionResult Category(string category)
+        public IActionResult ShopAll(string sortOrder, string searchString)
         {
-            ViewData["Category"] = category;
+            ViewData["SupplierSortParm"] = string.IsNullOrEmpty(sortOrder) ? "supplier_desc" : "";
+            ViewData["NameSortParm"] = sortOrder == "Name" ? "name_desc" : "Name";
+            ViewData["PriceSortParm"] = sortOrder == "Price" ? "price_desc" : "Price";
 
-            ProductRepo productRepo = new ProductRepo(_wpdb);
-            var products = productRepo.GetByCategory(category);
+            IQueryable<Item> items = _wpdb.Items;
 
-            return View(products);
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                items = items.Where(p => p.ItemName.Contains(searchString) ||
+                                         p.Supplier.Contains(searchString));
+            }
+
+            switch (sortOrder)
+            {
+                case "supplier_desc":
+                    items = items.OrderByDescending(p => p.Supplier);
+                    break;
+                case "Name":
+                    items = items.OrderBy(p => p.ItemName);
+                    break;
+                case "name_desc":
+                    items = items.OrderByDescending(p => p.ItemName);
+                    break;
+                case "Price":
+                    items = items.OrderBy(p => p.Price);
+                    break;
+                case "price_desc":
+                    items = items.OrderByDescending(p => p.Price);
+                    break;
+                default:
+                    items = items.OrderBy(p => p.Supplier);
+                    break;
+            }
+
+            return View(items.ToList());
         }
+
+
+        //public IActionResult Category(string category)
+        //{
+        //    ViewData["Category"] = category;
+
+        //    ProductRepo productRepo = new ProductRepo(_wpdb);
+        //    var products = productRepo.GetByCategory(category);
+
+        //    return View(products);
+        //}
 
         public IActionResult Details(int id)
         {
