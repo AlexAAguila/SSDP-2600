@@ -54,21 +54,9 @@
                                 <li><a class="dropdown-item" asp-area="" asp-controller="Product" asp-action="Category" asp-route-category="Accessories">Accessories</a></li>
                             </ul>
                         </li>
-                    
                         @if (User.IsInRole("Admin"))
                         {
-                            <li class="nav-item d-lg-none">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="UserRole" asp-action="Index">Users</a>
-                            </li>
-                            <li class="nav-item d-lg-none">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Role" asp-action="Index">Roles</a>
-                            </li>
-                        }
-
-                        <!-- Tablet/Desktop View: 'Admin' dropdown, shown on lg and up -->
-                        @if (User.IsInRole("Admin"))
-                        {
-                            <li class="nav-item dropdown d-none d-lg-block">
+                            <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle text-dark" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     Admin
                                 </a>
@@ -78,8 +66,6 @@
                                 </ul>
                             </li>
                         }
-
-
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>
