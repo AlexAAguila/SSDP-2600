@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using WildPath.Models;
+using WildPath.Repositories;
 
 namespace WildPath.Controllers
 {
@@ -16,6 +17,11 @@ namespace WildPath.Controllers
         public IActionResult Index()
         {
             return View();
+        }
+
+        public IActionResult PayPalConfirmation(PayPalConfirmationModel payPalConfirmationModel)
+        {
+            return View(payPalConfirmationModel);
         }
 
         public IActionResult Privacy()
