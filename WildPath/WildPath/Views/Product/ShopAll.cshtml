@@ -1,0 +1,138 @@
+﻿@model IEnumerable<WildPath.EfModels.Item>
+
+@{
+    ViewData["Title"] = "ShopAll";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Shop All</h1>
+
+<div id="paypal-button-container">
+    <form asp-action="ShopAll" method="get">
+        <div class="form-group" style="display: inline-block">
+            <span>Search:</span>
+            <input type="text" name="SearchString" value="@ViewData["currentFilter"]" />
+            <input type="submit" value="Search" class="btn btn-primary" />
+        </div>
+    </form>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Supplier)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ItemName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ItemDetails)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Price)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Category)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Weight)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Size)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Colour)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Any())
+            {
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Supplier)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ItemName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ItemDetails)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Price)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Category)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Weight)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Size)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Colour)
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="8">Item not found.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+<script src="https://www.paypal.com/sdk/js?client-id=AcBnAsIJmldpwwq_VnVJuZz8K7PhPwWM3MYUcNw38oL5egs8hH8e2NVSEFrEAsROQQegDbnQnV0gABkT"></script>
+
+<script>
+    paypal.Buttons({
+        // Set up the transaction
+        createOrder: function (data, actions) {
+            return actions.order.create({
+                purchase_units: [{
+                    amount: {
+                        value: document.getElementById('itemPrice').value,
+                        currency:
+                            document.getElementById('currency').value
+                    }
+                }]
+            });
+        },
+
+        // Finalize the transaction
+        onApprove: function (data, actions) {
+            return actions.order.capture().then(function (details) {
+
+
+                // Redirect to the PayPalConfirmation action method
+                window.location.href =
+                    '/Home/PayPalConfirmation?TransactionId=' +
+                    encodeURIComponent(details.id) + '&Amount=' +
+                    encodeURIComponent(details.purchase_units[0]
+                        .amount.value) + '&PayerName=' +
+                    encodeURIComponent(details.payer.name.given_name);
+            });
+        },
+
+
+        onCancel: function (data) {
+            alert('Transaction was cancelled.');
+        },
+        onError: function (err) {
+            alert('An error occurred during the transaction.');
+        },
+        style: {
+            layout: 'vertical', // 'vertical', 'horizontal'
+            color: 'blue',      // 'gold', 'blue', 'silver', 'black'
+            shape: 'rect',      // 'rect', 'pill'
+            label: 'paypal'     // 'checkout', 'pay', 'buynow', 'paypal'
+        }
+    }).render('#paypal-button-container');
+</script>
