@@ -2,6 +2,113 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
+<style>
+    html, body, .container, div {
+        margin: 0;
+        padding: 0;
+    }
+
+    .banner-image {
+        width: 100%;
+        height: 31vh;
+        object-fit: cover;
+        margin-top: 8px;
+    }
+
+    .free-shipping {
+        background-color: rgba(217, 217, 217, 0.5);
+        color: black;
+        text-align: center;
+        padding: 10px 0;
+        font-size: 15px;
+        margin-top: -15px;
+    }
+
+    .bold-text {
+        font-weight: bold;
+    }
+
+    .not-bold-text {
+        font-weight: normal;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .tents-container, 
+    .backpacks-container, 
+    .accessories-container{
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        background-color: rgba(217, 217, 217, 0.5);
+        margin: 15px;
+        padding: 15px;
+    }
+
+    .tent-container-image {
+        background-image: url('images/camping-tents.jpg');
+        background-size: cover;
+        background-position: center;
+        width: 95%;
+        height: 100%;
+        margin-left: 10px;
+    }
+
+    .backpacks-container-image {
+        background-image: url('images/summer-equipments.jpg');
+        background-size: cover;
+        background-position: center;
+        width: 95%;
+        height: 100%;
+    }
+
+    .accessories-container-image {
+        background-image: url('images/lighting.jpeg');
+        background-size: cover;
+        background-position: 20% center;
+        width: 95%;
+        height: 100%;
+        margin-left: 10px;
+    }
+
+    *, *:before, *:after {
+        box-sizing: border-box;
+    }
+</style>
+
+<div class="free-shipping">
+    <span class="bold-text">FREE SHIPPING</span> <span>ON ORDERS OVER</span> <span class="not-bold-text">$75</span>
+</div>
+
+<div>
+    <img src="~/images/camping-home-page-banner.jpg" alt="Camping Banner" class="banner-image" />
+</div>
+
+<div class="tents-container">
+    <div class="tents-container-text">
+        <h4 style="text-align: center;">Tents</h4>
+        <h6 style="text-align: center;">Shop Now >></h6>
+        <p>Explore the great outdoors with confidence and comfort in our durable camping tents, designed for reliability and convenience during your adventures under the stars.</p>
+    </div>
+    <div class="tent-container-image"></div>
+</div>
+
+<div class="backpacks-container">
+    <div class="backpacks-container-image"></div>
+    <div class="backpacks-container-text">
+        <h4 style="text-align: center;">Backpacks</h4>
+        <h6 style="text-align: center;">Shop Now >></h6>
+        <p>Forge your outdoor path with assurance and ease, carried by our resilient backpacks meticulously crafted for reliability and comfort during your wilderness excursions.</p>
+    </div>
+</div>
+
+<div class="accessories-container">
+    <div class="accessories-container-text">
+        <h4 style="text-align: center;">Accessories</h4>
+        <h6 style="text-align: center;">Shop Now >></h6>
+        <p>Enhance your outdoor experiences with confidence and ease, empowered by our meticulously designed camping accessories crafted for reliability and comfort throughout your wilderness adventures.</p>
+    </div>
+    <div class="accessories-container-image"></div>
 </div>
