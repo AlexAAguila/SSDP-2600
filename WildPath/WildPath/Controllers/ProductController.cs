@@ -27,39 +27,20 @@ namespace WildPath.Controllers
             return View(productRepo.GetAll());
         }
 
-        public IActionResult ShopAll(string sortOrder, string searchString, int? pageNumber)
+        public IActionResult ShopAll(string searchString, int? pageNumber)
         {
             ViewData["currentFilter"] = searchString;
-            ViewData["CurrentSort"] = sortOrder;
-            ViewData["NameSortParm"] = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
-            ViewData["PriceSortParm"] = sortOrder == "Price" ? "price_desc" : "Price";
 
             IQueryable<Item> items = _wpdb.Items;
 
             if (!string.IsNullOrEmpty(searchString))
             {
                 items = items.Where(p => p.ItemName.Contains(searchString) ||
-                                         p.Supplier.Contains(searchString) ||
-                                         p.Category.Contains(searchString) ||
-                                         p.Weight.ToString().Contains(searchString) ||
-                                         p.Size.Contains(searchString) ||
-                                         p.Colour.Contains(searchString));
-            }
-
-            switch (sortOrder)
-            {
-                case "name_desc":
-                    items = items.OrderByDescending(p => p.ItemName);
-                    break;
-                case "Price":
-                    items = items.OrderBy(p => p.Price);
-                    break;
-                case "price_desc":
-                    items = items.OrderByDescending(p => p.Price);
-                    break;
-                default:
-                    items = items.OrderBy(p => p.ItemName);
-                    break;
+                                        p.Supplier.Contains(searchString) ||
+                                        p.Category.Contains(searchString) ||
+                                        p.Weight.ToString().Contains(searchString) ||
+                                        p.Size.Contains(searchString) ||
+                                        p.Colour.Contains(searchString));
             }
 
             int pageSize = 4;
@@ -70,6 +51,7 @@ namespace WildPath.Controllers
 
             return View(paginatedItemsModel);
         }
+
 
 
 
