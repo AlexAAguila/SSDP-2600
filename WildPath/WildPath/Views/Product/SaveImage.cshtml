@@ -1,0 +1,31 @@
+﻿@model WildPath.Models.UploadModel 
+@{ 
+    ViewData["Title"] = "Images"; 
+    Layout = "~/Views/Shared/_Layout.cshtml"; 
+}
+
+<div class="container my-5">
+    <div class="jumbotron text-center">
+        <h2 class="display-4" style="color:blue">Save Image</h2><br />
+        @if (ViewData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success" role="alert">
+                @ViewData["SuccessMessage"]
+            </div>
+        }
+        <div class="row">
+            <div class="col-sm-6 offset-3">
+                <form method="post" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <input asp-for="ImageFile" class="form-control" type="file" accept="image/*" />
+                        <span asp-validation-for="ImageFile" class="text-danger"></span>
+                    </div>
+                    <br /><br />
+                    <button type="submit" class="uploadButton">
+                        <img src="~/Images/SaveImage.png" alt="Upload Image" />
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
