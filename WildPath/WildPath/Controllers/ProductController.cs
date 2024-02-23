@@ -129,5 +129,61 @@ namespace WildPath.Controllers
 
             return RedirectToAction("Index", new { message = repoMessage });
         }
+
+        public IActionResult Images() 
+        { 
+            IEnumerable<ImageStore> images = _wpdb.ImageStores;
+            return View(images); 
+        }
+        public IActionResult SaveImage() 
+        {
+            return View(); 
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveImage(UploadModel uploadModel)
+        {
+            if (ModelState.IsValid)
+            {
+                if (uploadModel.ImageFile != null && uploadModel.ImageFile.Length > 0)
+                {
+                    string contentType = uploadModel.ImageFile.ContentType; 
+                    if (contentType == "image/png" || contentType == "image/jpeg" || contentType == "image/jpg") 
+                    { 
+                        try 
+                        { 
+                            byte[] imageData; 
+                            using (var memoryStream = new MemoryStream()) 
+                            { 
+                                await uploadModel.ImageFile.CopyToAsync(memoryStream); 
+                                imageData = memoryStream.ToArray(); 
+                            } 
+                            var image = new ImageStore 
+                            { 
+                                FileName = Path.GetFileNameWithoutExtension(uploadModel.ImageFile.FileName), Image = imageData 
+                            }; 
+                            _wpdb.ImageStores.Add(image); await _wpdb.SaveChangesAsync(); 
+                            
+                            return RedirectToAction("Index", "Images"); 
+                        } 
+                        catch (Exception ex) 
+                        { 
+                            ModelState.AddModelError("imageUpload", "An error occured uploading your image." + " Please try again."); 
+                            System.Diagnostics.Debug.WriteLine(ex.Message); 
+                        } 
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("imageUpload", "Please upload a PNG, " + "JPG, or JPEG file.");
+                    }
+                }
+                else 
+                { 
+                    ModelState.AddModelError("imageUpload", "Please select an " + " image to upload."); 
+                }
+            }
+            return View(uploadModel);
+        }
     }
 }
+    

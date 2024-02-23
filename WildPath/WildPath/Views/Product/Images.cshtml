@@ -1,0 +1,24 @@
+﻿@model IEnumerable<WildPath.EfModels.ImageStore>
+@{
+    ViewData["Title"] = "Images";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container my-5">
+    <div class="jumbotron text-center">
+        <h2 class="display-4" style="color:blue">Images</h2><br />
+        <div class="row">
+            @foreach (var image in Model)
+            {
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+                    <div class="card">
+                        <img src="data:image/jpeg;base64, @Convert.ToBase64String(image.Image)" alt="@image.FileName" />
+                        <div class="card-body">
+                            <h5 class="card-title">@image.FileName</h5>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

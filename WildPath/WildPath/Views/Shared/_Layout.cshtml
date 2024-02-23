@@ -42,7 +42,12 @@
                         </li>
                         <li class="nav-item d-lg-none">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="ShopAll" asp-route-searchString="Accessories">Accessories</a>
-
+                        </li>
+                        <li class="nav-item d-lg-none">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="Images" >Image</a>
+                        </li>
+                        <li class="nav-item d-lg-none">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="SaveImage" >Save Image</a>
                         </li>
                     
                         <li class="nav-item dropdown d-none d-lg-block">
@@ -61,8 +66,10 @@
                                 <li><a class="dropdown-item" asp-area="" asp-controller="Product" asp-action="ShopAll" asp-route-searchString="Camping Furniture">Camping Furniture</a></li>
                                 <li><a class="dropdown-item" asp-area="" asp-controller="Product" asp-action="ShopAll" asp-route-searchString="Accessories">Accessories</a></li>
                             </ul>
+                        <li class="nav-item d-lg-none">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="Images">Image</a>
                         </li>
-
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="SaveImage">Save Image</a>
                         @if (User.IsInRole("Admin"))
                         {
                             <li class="nav-item dropdown">
