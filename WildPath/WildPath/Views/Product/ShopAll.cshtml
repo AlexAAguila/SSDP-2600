@@ -45,6 +45,7 @@
                     <th>
                         @Html.DisplayNameFor(model => model.First().Colour)
                     </th>
+                    <th>Actions</th> <!-- Added for add/remove buttons -->
                 </tr>
             </thead>
             <tbody>
@@ -74,6 +75,14 @@
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.Colour)
+                        </td>
+                        <td>
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <button onclick="AddOne('@item.PkItemId', @item.Price)">Add</button>
+                                <button onclick="MinusOne('@item.PkItemId', @item.Price)">Remove</button>
+                                <span id="total_@item.PkItemId">0</span> 
+                            }
                         </td>
                     </tr>
                 }
@@ -108,6 +117,14 @@
     </div>
 </div>
 
+<!-- Total quantity and price display -->
+<div>
+    <span>Total Quantity:</span>
+    <span id="totalQuantity">0</span>
+    <br />
+    <span>Total Price:</span>
+    <span id="totalPrice">0</span>
+</div>
 
 
 <script src="https://www.paypal.com/sdk/js?client-id=AcBnAsIJmldpwwq_VnVJuZz8K7PhPwWM3MYUcNw38oL5egs8hH8e2NVSEFrEAsROQQegDbnQnV0gABkT"></script>
@@ -156,4 +173,68 @@
             label: 'paypal'     // 'checkout', 'pay', 'buynow', 'paypal'
         }
     }).render('#paypal-button-container');
+</script>
+
+<script>
+    function AddOne(id, price) {
+        var totalItems = document.getElementById("total_" + id);
+        var total = parseInt(totalItems.textContent);
+        total += 1;
+        totalItems.textContent = total;
+
+        // Assuming you have a way to retrieve the price of each item based on its id
+        // var price = getPriceById(id);
+        var finalPrice = total * price;
+
+        var totalAmount = document.getElementById("amount_" + id);
+        totalAmount.textContent = `${finalPrice.toLocaleString('en-CA', { style: 'currency', currency: 'CAD' })} CAD`;
+
+        var runningQuantityDoc = document.getElementById("totalQuantity");
+        var intRunningQuantity = parseInt(runningQuantityDoc.textContent);
+
+        var runningTotalDoc = document.getElementById("totalPrice");
+        var intRunningTotal = parseFloat(runningTotalDoc.textContent);
+
+        // Update running total price and quantity
+        intRunningTotal += price; // Add the price of the item
+        intRunningQuantity += 1;
+
+        runningTotalDoc.textContent = intRunningTotal.toFixed(2);
+        runningQuantityDoc.textContent = intRunningQuantity;
+    }
+
+
+    function MinusOne(id, price) {
+        var totalItems = document.getElementById("total_" + id);
+        var total = parseInt(totalItems.textContent);
+
+        // If the total quantity of the item is already 0, return
+        if (total === 0) {
+            return;
+        }
+
+        total -= 1;
+        totalItems.textContent = total;
+
+        // Assuming you have a way to retrieve the price of each item based on its id
+        // var price = getPriceById(id);
+        var finalPrice = total * price;
+
+        var totalAmount = document.getElementById("amount_" + id);
+        totalAmount.textContent = `${finalPrice.toLocaleString('en-CA', { style: 'currency', currency: 'CAD' })} CAD`;
+
+        var runningQuantityDoc = document.getElementById("totalQuantity");
+        var intRunningQuantity = parseInt(runningQuantityDoc.textContent);
+
+        var runningTotalDoc = document.getElementById("totalPrice");
+        var intRunningTotal = parseFloat(runningTotalDoc.textContent);
+
+        // Update running total price and quantity
+        intRunningTotal -= price; // Subtract the price of the item
+        intRunningQuantity -= 1;
+
+        runningTotalDoc.textContent = intRunningTotal.toFixed(2);
+        runningQuantityDoc.textContent = intRunningQuantity;
+    }
+
 </script>
