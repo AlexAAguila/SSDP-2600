@@ -17,93 +17,61 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th>
-                        @Html.DisplayNameFor(model => model.First().Supplier)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.First().ItemName)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.First().ItemDetails)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.First().Price)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.First().Category)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.First().Weight)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.First().Size)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.First().Colour)
-                    </th>
+                    <th>Supplier</th>
+                    <th>Item Name</th>
+                    <th>Item Details</th>
+                    <th>Price</th>
+                    <th>Category</th>
+                    <th>Weight</th>
+                    <th>Size</th>
+                    <th>Colour</th>
+                    <th>Action</th> 
                 </tr>
             </thead>
             <tbody>
                 @foreach (var item in Model)
                 {
                     <tr>
+                        <td>@Html.DisplayFor(modelItem => item.Supplier)</td>
+                        <td>@Html.DisplayFor(modelItem => item.ItemName)</td>
+                        <td>@Html.DisplayFor(modelItem => item.ItemDetails)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Price)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Category)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Weight)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Size)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Colour)</td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.Supplier)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.ItemName)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.ItemDetails)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Price)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Category)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Weight)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Size)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Colour)
-                        </td>
-                        @*
-                <div class="col-sm-4 d-none d-md-block">
-                <div class="d-flex flex-column flex-xxl-column"> *@
-                        <td>
-                            <button id="addButton_@item.PkItemId" class="btn btn-primary mb-1"
-                                    onclick="AddOne('@item.PkItemId')"
-                                    data-price="@item.Price">
-                                Add To Cart
-                            </button>
-                            <button id="removeButton_@item.PkItemId" class="btn btn-primary"
-                                    style="border-color:#6E0B14; background-color: #6E0B14;"
-                                    onclick="RemoveOne('@item.PkItemId')"
-                                    data-price="@item.Price">
-                                Remove from Cart
-                            </button>
+                            <div>
+                                <button id="addButton_@item.PkItemId" class="btn btn-primary mb-1"
+                                        onclick="AddOne('@item.PkItemId')"
+                                        data-price="@item.Price">
+                                    Add To Cart
+                                </button>
+                                <button id="removeButton_@item.PkItemId" class="btn btn-primary"
+                                        style="border-color:#6E0B14; background-color: #6E0B14;"
+                                        onclick="RemoveOne('@item.PkItemId')"
+                                        data-price="@item.Price">
+                                    Remove from Cart
+                                </button>
+                            </div>
+                            <div>
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Qty</th>
+                                            <th>Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><span id="total_@item.PkItemId">0</span></td>
+                                            <td>$<span id="amount_@item.PkItemId">0.00</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </td>
                     </tr>
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Qty</th>
-                                <th>Amount</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><span id="total_@item.PkItemId">0</span></td>
-                                <td>$<span id="amount_@item.PkItemId">@item.Price</span></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    @*    </div>
-            </div> *@
                 }
             </tbody>
         </table>
@@ -111,12 +79,12 @@
             <h3>Cart Summary</h3>
             <p>Total Items: <span id="totalItems"></span></p>
             <p>Grand Total: $<span id="grandTotal">0.00</span></p>
-            <input id="currency" type="hidden" value="USD" />
+            <input id="currency" type="hidden" value="CAD" />
         </div>
         <div id="paypal-button-container">
-            <!-- PayPal button will be rendered here by the script below -->
+            @* PayPal button will be rendered here by the script below *@
         </div>
-        <!-- Pagination -->
+        @* Pagination  *@
         <nav>
             <ul class="pagination">
                 <li class="page-item @(Model.HasPreviousPage ? "" : "disabled")">
@@ -157,9 +125,6 @@
         totalElement.textContent = total;
         amountElement.textContent = (total * pricePerItem).toFixed(2);
         updateCartSummary();
-        console.log(total)
-        console.log(amountElement)
-        console.log(totalItems)
     }
     function RemoveOne(id) {
         var totalElement = document.getElementById('total_' + id);
@@ -178,8 +143,6 @@
         totalElement.textContent = total;
         amountElement.textContent = (total * pricePerItem).toFixed(2);
         updateCartSummary();
-        console.log(total)
-        console.log(amountElement)
     }
     function updateCartSummary() {
         var totalItems = 0;
@@ -235,10 +198,3 @@
         }
     }).render('#paypal-button-container');
 </script>
-
-
-
-
-
-
-
