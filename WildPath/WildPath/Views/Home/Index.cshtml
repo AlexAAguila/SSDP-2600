@@ -33,7 +33,7 @@
     }
 
     .container {
-        max-width: 1200px;
+        max-width: 100%;
         margin: 0 auto;
     }
 
@@ -73,6 +73,28 @@
         margin-left: 10px;
     }
 
+    .button-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .shop-now-button {
+        display: inline-block;
+        padding: 10px 20px;
+        text-decoration: none;
+/*      background-color: #f8f9fa;*/        
+        color: #333;
+/*      border: 1px solid #333;*/        
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+    }
+
+/*     .shop-now-button:hover {
+        background-color: #333;
+        color: #f8f9fa;
+    } */
+
     *, *:before, *:after {
         box-sizing: border-box;
     }
@@ -85,30 +107,32 @@
 <div>
     <img src="~/images/camping-home-page-banner.jpg" alt="Camping Banner" class="banner-image" />
 </div>
-
-<div class="tents-container">
-    <div class="tents-container-text">
-        <h4 style="text-align: center;">Tents</h4>
-        <h6 style="text-align: center;">Shop Now >></h6>
-        <p>Explore the great outdoors with confidence and comfort in our durable camping tents, designed for reliability and convenience during your adventures under the stars.</p>
+<div class="home-page-items">
+    <div class="tents-container">
+        <div class="tents-container-text">
+            <h4 style="text-align: center;">Tents</h4>
+            <div class="button-container"><a class="shop-now-button" asp-area="" asp-controller="Product" asp-action="ShopAll" asp-route-searchString="Tents">Shop Now >></a></div>
+            <p>Explore the great outdoors with confidence and comfort in our durable camping tents, designed for reliability and convenience during your adventures under the stars.</p>
+        </div>
+        <div class="tent-container-image"></div>
     </div>
-    <div class="tent-container-image"></div>
-</div>
 
-<div class="backpacks-container">
-    <div class="backpacks-container-image"></div>
-    <div class="backpacks-container-text">
-        <h4 style="text-align: center;">Backpacks</h4>
-        <h6 style="text-align: center;">Shop Now >></h6>
-        <p>Forge your outdoor path with assurance and ease, carried by our resilient backpacks meticulously crafted for reliability and comfort during your wilderness excursions.</p>
+    <div class="backpacks-container">
+        <div class="backpacks-container-image"></div>
+        <div class="backpacks-container-text">
+            <h4 style="text-align: center;">Backpacks</h4>
+            <div class="button-container"><a class="shop-now-button" asp-area="" asp-controller="Product" asp-action="ShopAll" asp-route-searchString="Backpacks">Shop Now >></a></div>
+            <p>Forge your outdoor path with assurance and ease, carried by our resilient backpacks meticulously crafted for reliability and comfort during your wilderness excursions.</p>
+        </div>
     </div>
-</div>
 
-<div class="accessories-container">
-    <div class="accessories-container-text">
-        <h4 style="text-align: center;">Accessories</h4>
-        <h6 style="text-align: center;">Shop Now >></h6>
-        <p>Enhance your outdoor experiences with confidence and ease, empowered by our meticulously designed camping accessories crafted for reliability and comfort throughout your wilderness adventures.</p>
+    <div class="accessories-container">
+        <div class="accessories-container-text">
+            <h4 style="text-align: center;">Accessories</h4>
+            <div class="button-container"><a class="shop-now-button" asp-area="" asp-controller="Product" asp-action="ShopAll" asp-route-searchString="Accessories">Shop Now >></a></div>
+            <p>Enhance your outdoor experiences with confidence and ease, empowered by our meticulously designed camping accessories crafted for reliability and comfort throughout your wilderness adventures.</p>
+        </div>
+        <div class="accessories-container-image"></div>
     </div>
-    <div class="accessories-container-image"></div>
+
 </div>
