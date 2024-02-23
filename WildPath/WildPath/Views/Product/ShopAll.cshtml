@@ -7,7 +7,8 @@
 
 <h1>Shop All</h1>
 
-<div id="paypal-button-container">
+<div>
+
     <form asp-action="ShopAll" method="get">
         <div class="form-group" style="display: inline-block">
             <span>Search:</span>
@@ -76,9 +77,59 @@
                             @Html.DisplayFor(modelItem => item.Colour)
                         </td>
                     </tr>
+                    <div class="col-sm-4 d-none d-md-block">
+                        <div class="d-flex flex-column flex-xxl-column">
+                <td>
+                    <button id="addButton_@item.PkItemId" class="btn btn-primary mb-1"
+                            onclick="AddOne('@item.PkItemId')"
+                            data-price="@item.Price">
+                        Add To Cart
+                    </button>
+                    <button id="removeButton_@item.PkItemId" class="btn btn-primary"
+                            style="border-color:#6E0B14; background-color: #6E0B14;"
+                            onclick="RemoveOne('@item.PkItemId')"
+                            data-price="@item.Price">
+                        Remove from Cart
+                    </button>
+                </td>
+
+
+              
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Qty</th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span id="total_@item.PkItemId">0</span></td>
+                            <td>$<span id="amount_@item.PkItemId">@item.Price</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+                      </div>
+
+        
+                
                 }
             </tbody>
+              
         </table>
+        
+
+    <div class="cart-summary">
+        <h3>Cart Summary</h3>
+        <p>Total Items: <span id="totalItems"></span></p>
+        <p>Grand Total: $<span id="grandTotal">0.00</span></p>
+        <input id="currency" type="hidden" value="USD" />
+    </div>
+
+    <div id="paypal-button-container">
+        <!-- PayPal button will be rendered here by the script below -->
+    </div>
 
         <!-- Pagination -->
         <nav>
@@ -112,6 +163,72 @@
 <script src="https://www.paypal.com/sdk/js?client-id=AcBnAsIJmldpwwq_VnVJuZz8K7PhPwWM3MYUcNw38oL5egs8hH8e2NVSEFrEAsROQQegDbnQnV0gABkT"></script>
 
 <script>
+
+    function AddOne(id) {
+        var totalElement = document.getElementById('total_' + id);
+        var amountElement = document.getElementById('amount_' + id);
+        var addButton = document.getElementById('addButton_' + id);
+        var pricePerItem = parseFloat(addButton.getAttribute('data-price'));
+
+        var total = parseInt(totalElement.textContent);
+        if (isNaN(total)) {
+            total = 0; // Start from zero if it's not a number
+        }
+        total += 1;
+        totalElement.textContent = total;
+        amountElement.textContent = (total * pricePerItem).toFixed(2);
+
+        updateCartSummary();
+        console.log(total)
+        console.log(amountElement)
+        console.log(totalItems)
+    }
+
+    function RemoveOne(id) {
+        var totalElement = document.getElementById('total_' + id);
+        var amountElement = document.getElementById('amount_' + id);
+        var removeButton = document.getElementById('removeButton_' + id);
+        var pricePerItem = parseFloat(removeButton.getAttribute('data-price'));
+
+        var total = parseInt(totalElement.textContent);
+        if (isNaN(total)) {
+            total = 0; // Prevent going negative if it's not a number
+        } else {
+            total -= 1;
+        }
+        if (total < 0) {
+            total = 0;
+        }
+        totalElement.textContent = total;
+        amountElement.textContent = (total * pricePerItem).toFixed(2);
+
+        updateCartSummary();
+        console.log(total)
+        console.log(amountElement)
+    }
+
+    function updateCartSummary() {
+        var totalItems = 0;
+        var grandTotal = 0.0;
+
+        // Loop through all total elements and sum them up
+        document.querySelectorAll('[id^="total_"]').forEach(function (element) {
+            totalItems += parseInt(element.textContent) || 0;
+        });
+
+        // Loop through all amount elements and sum them up
+        document.querySelectorAll('[id^="amount_"]').forEach(function (element) {
+            grandTotal += parseFloat(element.textContent) || 0;
+        });
+
+        // Update the cart summary display
+        document.getElementById('totalItems').textContent = totalItems;
+        document.getElementById('grandTotal').textContent = grandTotal.toFixed(2);
+
+
+    }
+
+
     paypal.Buttons({
         // Set up the transaction
         createOrder: function (data, actions) {
