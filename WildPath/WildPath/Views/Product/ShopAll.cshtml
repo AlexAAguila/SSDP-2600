@@ -46,7 +46,6 @@
                     <th>
                         @Html.DisplayNameFor(model => model.First().Colour)
                     </th>
-                    <th>Actions</th> <!-- Added for add/remove buttons -->
                 </tr>
             </thead>
             <tbody>
@@ -76,14 +75,6 @@
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.Colour)
-                        </td>
-                        <td>
-                            @if (User.Identity.IsAuthenticated)
-                            {
-                                <button onclick="AddOne('@item.PkItemId', @item.Price)">Add</button>
-                                <button onclick="MinusOne('@item.PkItemId', @item.Price)">Remove</button>
-                                <span id="total_@item.PkItemId">0</span> 
-                            }
                         </td>
                     </tr>
                     <div class="col-sm-4 d-none d-md-block">
@@ -167,16 +158,6 @@
         <a asp-action="ShopAll" class="btn btn-primary">Back to List</a>
     </div>
 </div>
-
-<!-- Total quantity and price display -->
-<div>
-    <span>Total Quantity:</span>
-    <span id="totalQuantity">0</span>
-    <br />
-    <span>Total Price:</span>
-    <span id="totalPrice">0</span>
-</div>
-
 
 <script src="https://www.paypal.com/sdk/js?client-id=AcBnAsIJmldpwwq_VnVJuZz8K7PhPwWM3MYUcNw38oL5egs8hH8e2NVSEFrEAsROQQegDbnQnV0gABkT"></script>
 
