@@ -12,6 +12,4 @@ public partial class Transaction
     public DateOnly PurchaseDate { get; set; }
 
     public string ShippingMethod { get; set; } = null!;
-
-    public virtual ICollection<Return> Returns { get; set; } = new List<Return>();
 }
