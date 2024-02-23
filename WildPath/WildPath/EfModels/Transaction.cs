@@ -5,11 +5,17 @@ namespace WildPath.EfModels;
 
 public partial class Transaction
 {
-    public int PkTransactionId { get; set; }
+    public string PaymentId { get; set; } = null!;
 
-    public string Status { get; set; } = null!;
+    public string? CreateTime { get; set; }
 
-    public DateOnly PurchaseDate { get; set; }
+    public string? PayerName { get; set; }
 
-    public string ShippingMethod { get; set; } = null!;
+    public string? PayerEmail { get; set; }
+
+    public string? Amount { get; set; }
+
+    public string? Currency { get; set; }
+
+    public string? PaymentMethod { get; set; }
 }
