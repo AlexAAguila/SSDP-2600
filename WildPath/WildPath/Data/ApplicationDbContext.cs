@@ -11,11 +11,9 @@ namespace WildPath.Data
             : base(options)
         {
         }
-        public DbSet<MyRegisteredUser> MyRegisteredUsers { get; set; }
-        public DbSet<WildPath.ViewModels.RoleVM> RoleVM { get; set; } = default!;
-        public DbSet<WildPath.ViewModels.UserRoleVM> UserRoleVM { get; set; } = default!;
-        public DbSet<WildPath.ViewModels.UserVM> UserVM { get; set; } = default!;
+        //public DbSet<WildPath.ViewModels.RoleVM> RoleVM { get; set; } = default!;
+        //public DbSet<WildPath.ViewModels.UserRoleVM> UserRoleVM { get; set; } = default!;
+        //public DbSet<WildPath.ViewModels.UserVM> UserVM { get; set; } = default!;
 
-        //public DbSet<WildPath.EfModels.Transaction> Transactions { get; set; } = default!;
     }
 }

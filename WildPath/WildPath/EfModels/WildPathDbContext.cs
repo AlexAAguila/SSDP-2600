@@ -17,11 +17,11 @@ public partial class WildPathDbContext : DbContext
 
     public virtual DbSet<Address> Addresses { get; set; }
 
-    public virtual DbSet<ContactInfo> ContactInfos { get; set; }
-
     public virtual DbSet<ImageStore> ImageStores { get; set; }
 
     public virtual DbSet<Item> Items { get; set; }
+
+    public virtual DbSet<MyRegisteredUser> MyRegisteredUsers { get; set; }
 
     public virtual DbSet<Transaction> Transactions { get; set; }
 
@@ -55,27 +55,6 @@ public partial class WildPathDbContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("province");
             entity.Property(e => e.Unit).HasColumnName("unit");
-        });
-
-        modelBuilder.Entity<ContactInfo>(entity =>
-        {
-            entity.HasKey(e => e.PkShippingProfile).HasName("PK__ContactI__335917A3FC92905E");
-
-            entity.ToTable("ContactInfo");
-
-            entity.Property(e => e.PkShippingProfile).HasColumnName("pkShippingProfile");
-            entity.Property(e => e.FkMailingAddressId).HasColumnName("fkMailingAddressId");
-            entity.Property(e => e.FkShippingAddressId).HasColumnName("fkShippingAddressId");
-            entity.Property(e => e.Phone).HasColumnName("phone");
-
-            entity.HasOne(d => d.FkMailingAddress).WithMany(p => p.ContactInfoFkMailingAddresses)
-                .HasForeignKey(d => d.FkMailingAddressId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__ContactIn__fkMai__03BB8E22");
-
-            entity.HasOne(d => d.FkShippingAddress).WithMany(p => p.ContactInfoFkShippingAddresses)
-                .HasForeignKey(d => d.FkShippingAddressId)
-                .HasConstraintName("FK__ContactIn__fkShi__04AFB25B");
         });
 
         modelBuilder.Entity<ImageStore>(entity =>
@@ -123,6 +102,33 @@ public partial class WildPathDbContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("supplier");
             entity.Property(e => e.Weight).HasColumnName("weight");
+        });
+
+        modelBuilder.Entity<MyRegisteredUser>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__MyRegist__3214EC270C4A87ED");
+
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.Email)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.FirstName)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.FkMailingAdressId).HasColumnName("fkMailingAdressId");
+            entity.Property(e => e.FkShippingAdressId).HasColumnName("fkShippingAdressId");
+            entity.Property(e => e.LastName)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.Phone).HasColumnName("phone");
+
+            entity.HasOne(d => d.FkMailingAdress).WithMany(p => p.MyRegisteredUserFkMailingAdresses)
+                .HasForeignKey(d => d.FkMailingAdressId)
+                .HasConstraintName("FK__MyRegiste__fkMai__36470DEF");
+
+            entity.HasOne(d => d.FkShippingAdress).WithMany(p => p.MyRegisteredUserFkShippingAdresses)
+                .HasForeignKey(d => d.FkShippingAdressId)
+                .HasConstraintName("FK__MyRegiste__fkShi__373B3228");
         });
 
         modelBuilder.Entity<Transaction>(entity =>

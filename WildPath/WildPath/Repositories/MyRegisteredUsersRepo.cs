@@ -1,13 +1,13 @@
 ﻿using WildPath.Data;
-using WildPath.Models;
+using WildPath.EfModels;
 
 namespace WildPath.Repositories
 {
     public class MyRegisteredUserRepo
     {
-        private readonly ApplicationDbContext _db;
+        private readonly WildPathDbContext _db;
 
-        public MyRegisteredUserRepo(ApplicationDbContext context)
+        public MyRegisteredUserRepo(WildPathDbContext context)
         {
             _db = context;
         }

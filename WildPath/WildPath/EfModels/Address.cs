@@ -17,7 +17,7 @@ public partial class Address
 
     public string PostalCode { get; set; } = null!;
 
-    public virtual ICollection<ContactInfo> ContactInfoFkMailingAddresses { get; set; } = new List<ContactInfo>();
+    public virtual ICollection<MyRegisteredUser> MyRegisteredUserFkMailingAdresses { get; set; } = new List<MyRegisteredUser>();
 
-    public virtual ICollection<ContactInfo> ContactInfoFkShippingAddresses { get; set; } = new List<ContactInfo>();
+    public virtual ICollection<MyRegisteredUser> MyRegisteredUserFkShippingAdresses { get; set; } = new List<MyRegisteredUser>();
 }

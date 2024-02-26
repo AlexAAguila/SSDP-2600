@@ -1,6 +1,7 @@
 ﻿using WildPath.Data;
 using WildPath.Repositories;
 using WildPath.ViewModels;
+using WildPath.EfModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -12,6 +13,7 @@ namespace WildPath.Controllers
     public class UserRoleController : Controller
     {
         private readonly ApplicationDbContext _db;
+        private readonly WildPathDbContext _wpdb;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly MyRegisteredUserRepo _myRegisteredUserRepo;
@@ -21,13 +23,15 @@ namespace WildPath.Controllers
                                  , UserManager<IdentityUser> userManager
                                  , RoleManager<IdentityRole> roleManager
                                  , MyRegisteredUserRepo myRegisteredUserRepo
-                                 , UserRoleRepo userRoleRepo)
+                                 , UserRoleRepo userRoleRepo
+                                 , WildPathDbContext wpdb)
         {
             _db = context;
             _userManager = userManager;
             _roleManager = roleManager;
             _myRegisteredUserRepo = myRegisteredUserRepo;
             _userRoleRepo = userRoleRepo;
+            _wpdb = wpdb;   
         }
 
         public ActionResult Index(string message)
@@ -42,7 +46,7 @@ namespace WildPath.Controllers
         public async Task<IActionResult> Detail(string userName, string message = "")
         {
             UserRoleRepo userRoleRepo = new UserRoleRepo(_userManager);
-            MyRegisteredUserRepo myRegisteredUserRepo = new MyRegisteredUserRepo(_db);
+            MyRegisteredUserRepo myRegisteredUserRepo = new MyRegisteredUserRepo(_wpdb);
 
             var roles = await userRoleRepo.GetUserRolesAsync(userName);
             var user = await _userManager.FindByNameAsync(userName);
