@@ -15,6 +15,11 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="PkItemId" />
             <div class="form-group">
+                <label asp-for="ItemImageId" class="control-label"></label>
+                <input asp-for="ItemImageId" class="form-control" />
+                <span asp-validation-for="ItemImageId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="Supplier" class="control-label"></label>
                 <input asp-for="Supplier" class="form-control" />
                 <span asp-validation-for="Supplier" class="text-danger"></span>
