@@ -21,6 +21,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using SendGridDemo.Data.Services;
 using WildPath.Data;
+using WildPath.EfModels;
 using WildPath.Models;
 using WildPath.Repositories;
 using static WildPath.Data.Services.ReCAPTCHA;
@@ -36,6 +37,7 @@ namespace WildPath.Areas.Identity.Pages.Account
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
         private readonly ApplicationDbContext _db;
+        private readonly WildPathDbContext _wpdb;
         private readonly MyRegisteredUserRepo _myRegisteredUserRepo;
         private readonly IConfiguration _configuration;
         private readonly IEmailService _emailService;
@@ -49,7 +51,8 @@ namespace WildPath.Areas.Identity.Pages.Account
             ApplicationDbContext db,
             MyRegisteredUserRepo myRegisteredUserRepo,
             IConfiguration configuration,
-            IEmailService emailService)
+            IEmailService emailService,
+            WildPathDbContext wpdb)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -61,6 +64,7 @@ namespace WildPath.Areas.Identity.Pages.Account
             _myRegisteredUserRepo = myRegisteredUserRepo;
             _configuration = configuration;
             _emailService = emailService;
+            _wpdb = wpdb;
         }
 
         /// <summary>
