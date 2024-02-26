@@ -22,6 +22,8 @@ namespace WildPath.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult Index()
         {
+            ViewBag.message = HttpContext.Session.GetString("SessionExample");
+
             ProductRepo productRepo = new ProductRepo(_wpdb);
 
             return View(productRepo.GetAll());

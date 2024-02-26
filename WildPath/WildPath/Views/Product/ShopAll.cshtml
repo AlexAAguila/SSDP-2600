@@ -125,6 +125,38 @@
         totalElement.textContent = total;
         amountElement.textContent = (total * pricePerItem).toFixed(2);
         updateCartSummary();
+
+        fetch('/Transaction/AddToCart?id='+id, {
+            method: 'GET',
+            headers: {
+                // 'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+             }
+             //,
+            // body: JSON.stringify({ id: 1 })
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json(); // Parse the response body as JSON
+            })
+            .then(data => {
+                // Handle the JSON data returned from the server
+                console.log(data); // Example output: { Name: "John Doe", Age: 30, Occupation: "Software Developer" }
+
+                // Manipulating the DOM based on the response
+                // document.getElementById('personName').textContent = data.Name;
+                // document.getElementById('personAge').textContent = data.Age;
+                // document.getElementById('personOccupation').textContent = data.Occupation;
+            })
+            .catch(error => {
+                // Handle errors
+                console.error('Fetch error:', error);
+            });
+
+
+
     }
     function RemoveOne(id) {
         var totalElement = document.getElementById('total_' + id);
