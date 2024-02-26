@@ -165,7 +165,7 @@
             return actions.order.create({
                 purchase_units: [{
                     amount: {
-                        value: document.getElementById('itemPrice').value,
+                        value: parseFloat(document.getElementById('grandTotal').innerText),
                         currency:
                             document.getElementById('currency').value
                     }
@@ -181,7 +181,9 @@
                     encodeURIComponent(details.id) + '&Amount=' +
                     encodeURIComponent(details.purchase_units[0]
                         .amount.value) + '&PayerName=' +
-                    encodeURIComponent(details.payer.name.given_name);
+                    encodeURIComponent(details.payer.name.given_name) + '&PayerEmail=' +
+                    encodeURIComponent(details.payer.email_address) + '&PaymentMethod=' +
+                    encodeURIComponent('PayPal');
             });
         },
         onCancel: function (data) {
