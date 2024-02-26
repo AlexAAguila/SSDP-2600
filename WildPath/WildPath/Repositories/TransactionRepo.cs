@@ -10,9 +10,9 @@ namespace WildPath.Repositories
     public class TransactionRepo
     {
 
-        private readonly ApplicationDbContext _context;
+        private readonly WildPathDbContext _context;
 
-        public TransactionRepo(ApplicationDbContext context)
+        public TransactionRepo(WildPathDbContext context)
         {
             this._context = context;
         }
