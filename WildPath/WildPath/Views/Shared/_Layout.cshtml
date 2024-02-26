@@ -43,13 +43,21 @@
                         <li class="nav-item d-lg-none">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="ShopAll" asp-route-searchString="Accessories">Accessories</a>
                         </li>
-                        <li class="nav-item d-lg-none">
+                    
+                           @if (User.IsInRole("Admin"))
+                        {
+                                <li class="nav-item d-lg-none">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="Images" >Image</a>
                         </li>
                         <li class="nav-item d-lg-none">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="SaveImage" >Save Image</a>
                         </li>
-                    
+
+                            <li><a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="Images">Image</a></li>
+                            <li><a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="SaveImage">Save Image</a></li>
+                           <li> <a class="nav-link text-dark" asp-area="" asp-controller="Transaction" asp-action="Index">Transactions</a></li>
+                        }
+
                         <li class="nav-item dropdown d-none d-lg-block">
                             <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Products
@@ -66,10 +74,8 @@
                                 <li><a class="dropdown-item" asp-area="" asp-controller="Product" asp-action="ShopAll" asp-route-searchString="Camping Furniture">Camping Furniture</a></li>
                                 <li><a class="dropdown-item" asp-area="" asp-controller="Product" asp-action="ShopAll" asp-route-searchString="Accessories">Accessories</a></li>
                             </ul>
-                        <li class="nav-item d-lg-none">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="Images">Image</a>
-                        </li>
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="SaveImage">Save Image</a>
+                 
+
                         @if (User.IsInRole("Admin"))
                         {
                             <li class="nav-item dropdown">
@@ -81,6 +87,10 @@
                                     <li><a class="dropdown-item" asp-area="" asp-controller="Role" asp-action="Index">Roles</a></li>
                                     <li><a class="dropdown-item" asp-area="" asp-controller="Product" asp-action="Index">Products</a></li>
                                 </ul>
+
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="Images">Image</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="SaveImage">Save Image</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Transaction" asp-action="Index">Transactions</a>
 
                             </li>
                         }
