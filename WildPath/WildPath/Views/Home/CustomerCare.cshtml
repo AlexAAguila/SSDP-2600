@@ -1,0 +1,101 @@
+﻿@{
+    ViewData["Title"] = "Customer Care";
+}
+
+<style>
+    html, body, .container, div {
+        margin: 0;
+        padding: 0;
+    }
+
+    .grey-header {
+        background-color: rgba(217, 217, 217, 0.5);
+        color: black;
+        text-align: center;
+        padding: 10px 0;
+        font-size: 15px;
+        margin-top: -15px;
+    }
+
+    .bold-text {
+        font-weight: bold;
+    }
+
+    .container {
+        max-width: 100%;
+        margin: 0 auto;
+    }
+
+    .address p {
+        line-height: 10px;
+    }
+
+    /* CSS */
+    .terms-link {
+        color: #0000FF;
+        text-decoration: none;
+        font-size: 20px;
+        font-weight: bold;
+        transition: color 0.3s; 
+    }
+
+    .terms-link:hover {
+        color: #00008B; 
+    }
+
+    .terms-link:focus {
+        outline: none;
+    }
+
+
+
+</style>
+
+<div class="grey-header">
+    <span class="bold-text">CUSTOMER CARE</span>
+</div>
+
+<h1 class="text-center mt-4 mb-4">ABOUT US</h1>
+<div class="container">
+    <p class="text-left px-5">
+        At Wildpath Gear, we embody the spirit of exploration and adventure. Born from a collective passion for the great outdoors, our store is dedicated to providing high-quality gear and equipment for every nature enthusiast. Whether you're an experienced trailblazer or just starting your journey, we curate a diverse range of products designed to accompany you on your wild path. Committed to sustainability and durability, we aim to equip you with reliable tools, fostering a connection with nature and enabling unforgettable adventures. Join us as we pave the way for exploration, discovery, and an unwavering love for the untamed wilderness.
+    </p>
+</div>
+
+
+<h1 class="text-center mt-5 mb-4">STORE INFO</h1>
+<div class="container">
+    <div class="text-left px-5 address">
+        <p><strong>Address</strong></p>
+        <p>123 Vancouver Rd</p>
+        <p>Vancouver, BC V1A 1A1</p>
+        <p>Canada</p>
+
+        <p class="mt-4"><strong>Phone Number</strong></p>
+        <p>1 (604) 111-1111</p>
+
+        <p class="mt-4"><strong>Email</strong></p>
+        <p>wildpath@wildpath.com</p>
+    </div>
+</div>
+
+
+<h1 class="text-center mt-5 mb-4">SHIPPING INFO</h1>
+<div class="container">
+        <div class="text-left px-5">
+            <strong>Shipping Rates:</strong>
+            <ul>
+                <li>Enjoy free standard shipping on orders over $75 within Canada.</li>
+                <li>For orders under $75, a flat-rate shipping fee of $9.99 will apply for standard delivery.</li>
+            </ul>
+       
+            <strong>Shipping Times:</strong>
+            <ul>
+                <li> Standard Shipping: Orders are processed within 1-2 business days. Estimated delivery times within Canada range from 3 to 7 business days.</li>
+            </ul>
+        </div>
+</div>
+
+<div class="container mt-5">
+    <p class="text-center"> <a href="/Home/TermsAndConditions" class="terms-link">Terms and Conditions</a></p>
+</div>
