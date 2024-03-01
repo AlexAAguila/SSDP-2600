@@ -67,6 +67,8 @@ namespace WildPath.Controllers
                         Id = id,
                         Quantity = 1
                     });
+                    HttpContext.Session.SetString("Cart", JsonSerializer.Serialize(cartItems));
+
                 }
             }
             else
@@ -76,7 +78,7 @@ namespace WildPath.Controllers
 
 
               HttpContext.Session.SetString("Cart", JsonSerializer.Serialize(cartItems));
-                cartSession = HttpContext.Session.GetString("Cart");
+
             }
             return Json("Success");
         }
