@@ -75,7 +75,8 @@ namespace WildPath.Controllers
                                                                                Quantity = 1 } };
 
 
-                HttpContext.Session.SetString("Cart", JsonSerializer.Serialize(cartItems));
+              HttpContext.Session.SetString("Cart", JsonSerializer.Serialize(cartItems));
+                cartSession = HttpContext.Session.GetString("Cart");
             }
             return Json("Success");
         }
