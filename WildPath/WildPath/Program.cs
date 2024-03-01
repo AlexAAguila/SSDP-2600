@@ -33,7 +33,7 @@ builder.Services.AddControllersWithViews();
 //Sesion variables
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromSeconds(10);
+    options.IdleTimeout = TimeSpan.FromMinutes(20);
 });
 
 builder.Services.AddScoped<MyRegisteredUserRepo>();

@@ -1,55 +1,44 @@
-﻿@model PaginatedList<WildPath.EfModels.Item>
+﻿@model List<WildPath.ViewModels.CartItemVM>
+
 @{
-    ViewData["Title"] = "ShopAll";
+    ViewData["Title"] = "ShoppingCart";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<h1>Shop All</h1>
+<h1>Shoping Cart</h1>
+
 <div>
-    <form asp-action="ShopAll" method="get">
-        <div class="form-group" style="display: inline-block">
-            <span>Search:</span>
-            <input type="text" name="SearchString" value="@ViewData["currentFilter"]" />
-            <input type="submit" value="Search" class="btn btn-primary" />
-        </div>
-    </form>
+
     @if (Model.Any())
     {
         <table class="table">
             <thead>
                 <tr>
-                    <th>Supplier</th>
                     <th>Item Name</th>
-                    <th>Item Details</th>
                     <th>Price</th>
                     <th>Category</th>
-                    <th>Weight</th>
                     <th>Size</th>
                     <th>Colour</th>
-                    <th>Action</th> 
                 </tr>
             </thead>
             <tbody>
                 @foreach (var item in Model)
                 {
                     <tr>
-                        <td>@Html.DisplayFor(modelItem => item.Supplier)</td>
                         <td>@Html.DisplayFor(modelItem => item.ItemName)</td>
-                        <td>@Html.DisplayFor(modelItem => item.ItemDetails)</td>
                         <td>@Html.DisplayFor(modelItem => item.Price)</td>
                         <td>@Html.DisplayFor(modelItem => item.Category)</td>
-                        <td>@Html.DisplayFor(modelItem => item.Weight)</td>
                         <td>@Html.DisplayFor(modelItem => item.Size)</td>
                         <td>@Html.DisplayFor(modelItem => item.Colour)</td>
                         <td>
                             <div>
-                                <button id="addButton_@item.PkItemId" class="btn btn-primary mb-1"
+@*                                 <button id="addButton_@item.PkItemId" class="btn btn-primary mb-1"
                                         onclick="AddOne('@item.PkItemId')"
                                         data-price="@item.Price">
                                     Add To Cart
                                 </button>
-                                <button id="removeButton_@item.PkItemId" class="btn btn-primary"
+ *@                                <button id="removeButton_@item.ItemId" class="btn btn-primary"
                                         style="border-color:#6E0B14; background-color: #6E0B14;"
-                                        onclick="RemoveOne('@item.PkItemId')"
+                                        onclick="RemoveOne('@item.ItemId')"
                                         data-price="@item.Price">
                                     Remove from Cart
                                 </button>
@@ -64,8 +53,8 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td><span id="total_@item.PkItemId">0</span></td>
-                                            <td>$<span id="amount_@item.PkItemId">0.00</span></td>
+                                            <td><span id="total_@item.ItemId">0</span></td>
+                                            <td>$<span id="amount_@item.ItemId">0.00</span></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -81,29 +70,10 @@
             <p>Grand Total: $<span id="grandTotal">0.00</span></p>
             <input id="currency" type="hidden" value="CAD" />
         </div>
-@*         <div id="paypal-button-container">
-            @* PayPal button will be rendered here by the script below
-    </div> *@
-        <nav>
-            <ul class="pagination">
-                <li class="page-item @(Model.HasPreviousPage ? "" : "disabled")">
-                    <a class="page-link"
-                       href="@Url.Action("ShopAll", new { sortOrder = ViewData["CurrentSort"], searchString = ViewData["SearchString"], pageNumber = Model.PageIndex - 1 })">
-                        Previous
-                    </a>
-                </li>
-                <li class="page-item @(Model.HasNextPage ? "" : "disabled")">
-                    <a class="page-link"
-                       href="@Url.Action("ShopAll", new { sortOrder = ViewData["CurrentSort"], searchString = ViewData["SearchString"], pageNumber = Model.PageIndex + 1 })">
-                        Next
-                    </a>
-                </li>
-            </ul>
-        </nav>
-        <button id="shoppingCartButton" class="btn btn-primary mb-1">
-            <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="ShoppingCart" >Go To Cart</a>
+        <div id="paypal-button-container">
+            @* PayPal button will be rendered here by the script below *@
+        </div>
 
-        </button>
     }
     else
     {
@@ -128,16 +98,14 @@
         totalElement.textContent = total;
         amountElement.textContent = (total * pricePerItem).toFixed(2);
         updateCartSummary();
-        console.log("TOTAL",total)
 
-        fetch('/Transaction/AddToCart?id='+id, {
-      
+        fetch('/Transaction/AddToCart?id=' + id, {
             method: 'GET',
             headers: {
                 // 'Content-Type': 'application/json',
                 'X-Requested-With': 'XMLHttpRequest'
-             }
-             //,
+            }
+            //,
             // body: JSON.stringify({ id: 1 })
         })
             .then(response => {
@@ -150,7 +118,10 @@
                 // Handle the JSON data returned from the server
                 console.log(data); // Example output: { Name: "John Doe", Age: 30, Occupation: "Software Developer" }
 
-         
+                // Manipulating the DOM based on the response
+                // document.getElementById('personName').textContent = data.Name;
+                // document.getElementById('personAge').textContent = data.Age;
+                // document.getElementById('personOccupation').textContent = data.Occupation;
             })
             .catch(error => {
                 // Handle errors
@@ -179,11 +150,8 @@
         updateCartSummary();
     }
     function updateCartSummary() {
-        console.log("THIS IS!!!")
         var totalItems = 0;
         var grandTotal = 0.0;
-
-        console.log("GRANDTOTAL BEFORE", grandTotal)
         // Loop through all total elements and sum them up
         document.querySelectorAll('[id^="total_"]').forEach(function (element) {
             totalItems += parseInt(element.textContent) || 0;
@@ -195,7 +163,6 @@
         // Update the cart summary display
         document.getElementById('totalItems').textContent = totalItems;
         document.getElementById('grandTotal').textContent = grandTotal.toFixed(2);
-        console.log("GRANDTOTAL AFTER", grandTotal)
     }
     paypal.Buttons({
         // Set up the transaction

@@ -21,7 +21,7 @@ namespace WildPath.Controllers
 
         public IActionResult Index()
         {
-            MyRegisteredUserRepo registeredUserRepo = new MyRegisteredUserRepo(_wpdb);
+            //MyRegisteredUserRepo registeredUserRepo = new MyRegisteredUserRepo(_wpdb);
 
 
             TransactionRepo transactionRepo = new TransactionRepo(_wpdb);
