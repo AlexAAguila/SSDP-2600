@@ -53,3 +53,31 @@ body {
         margin-left: auto;
         margin-right: auto;
     }
+
+    .details-info {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+
+    .details-image, .details-other {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .details-image {
+        align-items: center;
+        justify-content: center;
+    }
+
+    .details-other {
+        align-items: flex-start;
+        justify-content: flex-start;
+        margin-top: 20px;
+    }
+
+    .product-image {
+        width: auto;
+        max-width: 100%;
+    }
+}

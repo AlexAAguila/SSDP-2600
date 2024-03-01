@@ -33,8 +33,10 @@
                 {
                     <tr>
                         <td>@Html.DisplayFor(modelItem => item.Supplier)</td>
-                        <td>@Html.DisplayFor(modelItem => item.ItemName)</td>
-                        <td>@Html.DisplayFor(modelItem => item.ItemDetails)</td>
+                        <td>
+                            <a asp-action="Details" asp-route-id="@item.PkItemId">@Html.DisplayFor(modelItem => item.ItemName)</a>
+                        </td>
+                        <td>@Html.Raw(item.ItemDetails.Replace("\n", "<br/>"))</td>
                         <td>@Html.DisplayFor(modelItem => item.Price)</td>
                         <td>@Html.DisplayFor(modelItem => item.Category)</td>
                         <td>@Html.DisplayFor(modelItem => item.Weight)</td>
@@ -81,10 +83,9 @@
             <p>Grand Total: $<span id="grandTotal">0.00</span></p>
             <input id="currency" type="hidden" value="CAD" />
         </div>
-        <div id="paypal-button-container">
-            @* PayPal button will be rendered here by the script below *@
-        </div>
-        @* Pagination  *@
+@*         <div id="paypal-button-container">
+            @* PayPal button will be rendered here by the script below
+    </div> *@
         <nav>
             <ul class="pagination">
                 <li class="page-item @(Model.HasPreviousPage ? "" : "disabled")">
@@ -101,6 +102,10 @@
                 </li>
             </ul>
         </nav>
+        <button id="shoppingCartButton" class="btn btn-primary mb-1">
+            <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="ShoppingCart" >Go To Cart</a>
+
+        </button>
     }
     else
     {
@@ -124,7 +129,38 @@
         total += 1;
         totalElement.textContent = total;
         amountElement.textContent = (total * pricePerItem).toFixed(2);
+     
+        console.log("TOTAL",total)
+
+        fetch('/Transaction/AddToCart?id='+id, {
+      
+            method: 'GET',
+            headers: {
+                // 'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+             }
+             //,
+            // body: JSON.stringify({ id: 1 })
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json(); // Parse the response body as JSON
+            })
+            .then(data => {
+                // Handle the JSON data returned from the server
+                console.log(data); // Example output: { Name: "John Doe", Age: 30, Occupation: "Software Developer" }
+
+         
+            })
+            .catch(error => {
+                // Handle errors
+                console.error('Fetch error:', error);
+            });
+
         updateCartSummary();
+
     }
     function RemoveOne(id) {
         var totalElement = document.getElementById('total_' + id);
@@ -145,8 +181,11 @@
         updateCartSummary();
     }
     function updateCartSummary() {
+        console.log("THIS IS!!!")
         var totalItems = 0;
         var grandTotal = 0.0;
+
+        console.log("GRANDTOTAL BEFORE", grandTotal)
         // Loop through all total elements and sum them up
         document.querySelectorAll('[id^="total_"]').forEach(function (element) {
             totalItems += parseInt(element.textContent) || 0;
@@ -158,6 +197,7 @@
         // Update the cart summary display
         document.getElementById('totalItems').textContent = totalItems;
         document.getElementById('grandTotal').textContent = grandTotal.toFixed(2);
+        console.log("GRANDTOTAL AFTER", grandTotal)
     }
     paypal.Buttons({
         // Set up the transaction

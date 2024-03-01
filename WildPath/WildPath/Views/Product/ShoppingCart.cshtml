@@ -1,0 +1,173 @@
+﻿@model List<WildPath.ViewModels.CartItemVM>
+
+@{
+    ViewData["Title"] = "ShoppingCart";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Shopping Cart</h1>
+
+<div>
+    @if (Model.Any())
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Item Name</th>
+                    <th>Price</th>
+                    <th>Category</th>
+                    <th>Size</th>
+                    <th>Colour</th>
+                    <th>Qty</th>
+                    <th>Amount</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.ItemName</td>
+                        <td>@item.Price.ToString("C")</td>
+                        <td>@item.Category</td>
+                        <td>@item.Size</td>
+                        <td>@item.Colour</td>
+                        <td><span id="total_@item.ItemId">@item.Quantity</span></td>
+                        <td>$<span id="amount_@item.ItemId">@((item.Quantity * item.Price).ToString("N2"))</span></td>
+                        <td>
+                            <button class="btn btn-primary mb-1"
+                                    onclick="RemoveOne('@item.ItemId')">
+                                Remove from Cart
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <div class="cart-summary">
+            <h3>Cart Summary</h3>
+            <p>Total Items: <span id="totalItems"></span></p>
+            <p>Grand Total: $<span id="grandTotal">0.00</span></p>
+        </div>
+    }
+    else
+    {
+        <p>No items found.</p>
+    }
+
+    <!-- Place to render the PayPal button -->
+    <div id="paypal-button-container"></div>
+</div>
+
+<!-- Add your PayPal SDK script here -->
+
+<script>
+    // Function to update the cart summary
+    function updateCartSummary() {
+        var totalItems = 0;
+        var grandTotal = 0.0;
+
+        // Loop through all quantity elements and sum them up
+        document.querySelectorAll('[id^="total_"]').forEach(function (element) {
+            var quantity = parseInt(element.textContent) || 0;
+            totalItems += quantity;
+
+            // Get the corresponding amount element by replacing 'total_' with 'amount_'
+            var amountId = element.id.replace('total_', 'amount_');
+            var amountElement = document.getElementById(amountId);
+
+            // Calculate the amount based on the quantity and data-price attribute
+            var pricePerItem = parseFloat(document.getElementById('addButton_' + element.id.split('_')[1]).getAttribute('data-price'));
+            var amount = quantity * pricePerItem;
+            amountElement.textContent = amount.toFixed(2);
+
+            grandTotal += amount;
+        });
+
+        // Update the cart summary display
+        document.getElementById('totalItems').textContent = totalItems;
+        document.getElementById('grandTotal').textContent = '$' + grandTotal.toFixed(2);
+    }
+
+    // Remember to call updateCartSummary() at the end of your RemoveOne() function as well.
+
+
+
+
+    function AddOne(id) {
+        var totalElement = document.getElementById('total_' + id);
+        var amountElement = document.getElementById('amount_' + id);
+        var addButton = document.getElementById('addButton_' + id);
+        var pricePerItem = parseFloat(addButton.getAttribute('data-price'));
+        var total = parseInt(totalElement.textContent);
+        if (isNaN(total)) {
+            total = 0; // Start from zero if it's not a number
+        }
+        total += 1;
+        totalElement.textContent = total;
+        amountElement.textContent = (total * pricePerItem).toFixed(2);
+
+        console.log("TOTAL", total)
+
+        fetch('/Transaction/AddToCart?id=' + id, {
+
+            method: 'GET',
+            headers: {
+                // 'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+            //,
+            // body: JSON.stringify({ id: 1 })
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json(); // Parse the response body as JSON
+            })
+            .then(data => {
+                // Handle the JSON data returned from the server
+                console.log(data); // Example output: { Name: "John Doe", Age: 30, Occupation: "Software Developer" }
+
+
+            })
+            .catch(error => {
+                // Handle errors
+                console.error('Fetch error:', error);
+            });
+
+        updateCartSummary();
+
+    }
+
+
+
+
+
+    // Function to remove an item from the cart
+    function RemoveOne(itemId) {
+        // TODO: Implement the logic to remove an item from the cart using fetch
+        // After removing, call updateCartSummary();
+    }
+
+    // Fetch the cart state and update the UI on page load
+    document.addEventListener('DOMContentLoaded', function () {
+        fetch('/Transaction/GetCartState')
+            .then(response => response.json())
+            .then(cartItems => {
+                // Assuming your CartItemVM has the properties ItemId, Quantity, and Amount
+                cartItems.forEach(item => {
+                    var totalElement = document.getElementById('total_' + item.ItemId);
+                    var amountElement = document.getElementById('amount_' + item.ItemId);
+                    if (totalElement && amountElement) {
+                        totalElement.textContent = item.Quantity;
+                        amountElement.textContent = item.Amount.toFixed(2);
+                    }
+                });
+                updateCartSummary();
+            })
+            .catch(error => console.error('Error:', error));
+    });
+
+    // Add your PayPal buttons code here
+</script>
