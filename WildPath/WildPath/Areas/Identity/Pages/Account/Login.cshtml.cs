@@ -117,7 +117,7 @@ namespace WildPath.Areas.Identity.Pages.Account
                
                 if (result.Succeeded)
                 {
-                    Thread.Sleep(10000);
+                    //Thread.Sleep(10000);
                     _logger.LogInformation("User logged in.");
                     return LocalRedirect(returnUrl);
                 }

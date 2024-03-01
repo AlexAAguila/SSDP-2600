@@ -1,6 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SendGrid.Helpers.Mail;
+using System.Drawing;
 using WildPath.EfModels;
+using WildPath.ViewModels;
+using static NuGet.Packaging.PackagingConstants;
+using static WildPath.ViewModels.CartItemVM;
 
 namespace WildPath.Repositories
 {
@@ -29,21 +33,36 @@ namespace WildPath.Repositories
                            .FirstOrDefault(p => p.PkItemId == id);
         }
 
-        public string Add(Item entity)
+        public List<CartItemVM> GetCartVM(List<CartItem> sessionCartItems)
         {
-            string message = string.Empty;
-            try
+            if (sessionCartItems == null)
             {
-                _wpdb.Add(entity);
-                _wpdb.SaveChanges();
-                message = $"{entity.ItemName} saved successfully";
+                return new List<CartItemVM>();
             }
-            catch (Exception e)
-            {
-                message = $" Error saving {entity.ItemName} comment: {e.Message}";
-            }
-            return message;
+
+            var cartItemIds = sessionCartItems.Select(ci => ci.Id).ToList();
+
+            var cartItems = _wpdb.Items
+                .Where(item => cartItemIds.Contains(item.PkItemId))
+                .ToList() // Execute the query and continue in memory
+                .Select(item => {
+                    var sessionCartItem = sessionCartItems.FirstOrDefault(ci => ci.Id == item.PkItemId);
+                    return new CartItemVM
+                    {
+                        ItemId = item.PkItemId,
+                        ItemName = item.ItemName,
+                        ItemDetails = item.ItemDetails,
+                        Price = item.Price,
+                        Category = item.Category,
+                        Size = item.Size,
+                        Colour = item.Colour,
+                        Quantity = sessionCartItem != null ? sessionCartItem.Quantity : 1
+                    };
+                }).ToList();
+
+            return cartItems;
         }
+
 
         public string Update(Item entity)
         {

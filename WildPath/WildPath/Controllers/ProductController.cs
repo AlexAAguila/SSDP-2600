@@ -3,11 +3,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json;
 using SendGrid.Helpers.Mail;
 using WildPath.EfModels;
 using WildPath.Models;
 using WildPath.ViewModels;
 using WildPath.Repositories;
+using WildPath.ViewModels;
 
 namespace WildPath.Controllers
 {
@@ -23,6 +25,8 @@ namespace WildPath.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult Index()
         {
+            ViewBag.message = HttpContext.Session.GetString("Cart");
+
             ProductRepo productRepo = new ProductRepo(_wpdb);
 
             return View(productRepo.GetAll());
@@ -54,17 +58,34 @@ namespace WildPath.Controllers
         }
 
 
+        public IActionResult ShoppingCart()
+        {
+            List<CartItemVM> cartItems = new List<CartItemVM>();
+
+            string cartSession = HttpContext.Session.GetString("Cart");
+
+            if (cartSession != null)
+            {
+                List<CartItem> sessionCartItems = Newtonsoft.Json.JsonConvert.DeserializeObject<List<CartItem>>(cartSession);
+                ProductRepo productRepo = new ProductRepo(_wpdb);
+                cartItems = productRepo.GetCartVM(sessionCartItems);
+            }
+
+            return View(cartItems);
+        }
+
+        public JsonResult GetCartState()
+        {
+            var cart = HttpContext.Session.GetString("Cart");
+            if (!string.IsNullOrEmpty(cart))
+            {
+                var cartItems = Newtonsoft.Json.JsonConvert.DeserializeObject<List<CartItem>>(cart);
+                return Json(cartItems);
+            }
+            return Json(new List<CartItem>());
+        }
 
 
-        //public IActionResult Category(string category)
-        //{
-        //    ViewData["Category"] = category;
-
-        //    ProductRepo productRepo = new ProductRepo(_wpdb);
-        //    var products = productRepo.GetByCategory(category);
-
-        //    return View(products);
-        //}
 
         //public IActionResult Details(int id)
         //{
@@ -99,9 +120,9 @@ namespace WildPath.Controllers
             {
                 ProductRepo productRepo = new ProductRepo(_wpdb);
 
-                string addMessage = productRepo.Add(item);
+                //string addMessage = productRepo.Add(item);
 
-                return RedirectToAction("Index", new { message = addMessage });
+                return RedirectToAction("Index", new { message = "addMessage" });
             }
 
             return View(item);
