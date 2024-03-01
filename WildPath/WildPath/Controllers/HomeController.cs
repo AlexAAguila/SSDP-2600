@@ -31,6 +31,16 @@ namespace WildPath.Controllers
             return View(payPalConfirmationModel);
         }
 
+        public IActionResult CustomerCare()
+        {
+            return View();
+        }
+
+        public IActionResult TermsAndConditions()
+        {
+            return View();
+        }
+
         public IActionResult Privacy()
         {
             return View();
