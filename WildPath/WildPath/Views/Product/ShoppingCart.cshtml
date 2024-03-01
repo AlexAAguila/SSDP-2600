@@ -63,6 +63,34 @@
 
 <script>
     // Function to update the cart summary
+    // function updateCartSummary() {
+    //     var totalItems = 0;
+    //     var grandTotal = 0.0;
+
+    //     // Loop through all quantity elements and sum them up
+    //     document.querySelectorAll('[id^="total_"]').forEach(function (element) {
+    //         var quantity = parseInt(element.textContent) || 0;
+    //         totalItems += quantity;
+
+    //         // Get the corresponding amount element by replacing 'total_' with 'amount_'
+    //         var amountId = element.id.replace('total_', 'amount_');
+    //         var amountElement = document.getElementById(amountId);
+
+    //         // Calculate the amount based on the quantity and data-price attribute
+    //         var pricePerItem = parseFloat(document.getElementById('addButton_' + element.id.split('_')[1]).getAttribute('data-price'));
+    //         var amount = quantity * pricePerItem;
+    //         amountElement.textContent = amount.toFixed(2);
+
+    //         grandTotal += amount;
+    //     });
+
+    //     // Update the cart summary display
+    //     document.getElementById('totalItems').textContent = totalItems;
+    //     document.getElementById('grandTotal').textContent = '$' + grandTotal.toFixed(2);
+    // }
+
+    // Remember to call updateCartSummary() at the end of your RemoveOne() function as well.
+
     function updateCartSummary() {
         var totalItems = 0;
         var grandTotal = 0.0;
@@ -76,20 +104,17 @@
             var amountId = element.id.replace('total_', 'amount_');
             var amountElement = document.getElementById(amountId);
 
-            // Calculate the amount based on the quantity and data-price attribute
-            var pricePerItem = parseFloat(document.getElementById('addButton_' + element.id.split('_')[1]).getAttribute('data-price'));
-            var amount = quantity * pricePerItem;
-            amountElement.textContent = amount.toFixed(2);
-
+            // Assuming amountElement's textContent contains the pre-calculated amount
+            // Extract the numerical value from the amountElement's textContent
+            var amount = parseFloat(amountElement.textContent.replace(/[^0-9.]/g, '')) || 0;
             grandTotal += amount;
         });
 
         // Update the cart summary display
         document.getElementById('totalItems').textContent = totalItems;
-        document.getElementById('grandTotal').textContent = '$' + grandTotal.toFixed(2);
+        document.getElementById('grandTotal').textContent = grandTotal.toFixed(2);
     }
 
-    // Remember to call updateCartSummary() at the end of your RemoveOne() function as well.
 
 
 
@@ -98,6 +123,7 @@
         var totalElement = document.getElementById('total_' + id);
         var amountElement = document.getElementById('amount_' + id);
         var addButton = document.getElementById('addButton_' + id);
+
         var pricePerItem = parseFloat(addButton.getAttribute('data-price'));
         var total = parseInt(totalElement.textContent);
         if (isNaN(total)) {
@@ -152,21 +178,21 @@
 
     // Fetch the cart state and update the UI on page load
     document.addEventListener('DOMContentLoaded', function () {
-        fetch('/Transaction/GetCartState')
-            .then(response => response.json())
-            .then(cartItems => {
-                // Assuming your CartItemVM has the properties ItemId, Quantity, and Amount
-                cartItems.forEach(item => {
-                    var totalElement = document.getElementById('total_' + item.ItemId);
-                    var amountElement = document.getElementById('amount_' + item.ItemId);
-                    if (totalElement && amountElement) {
-                        totalElement.textContent = item.Quantity;
-                        amountElement.textContent = item.Amount.toFixed(2);
-                    }
-                });
+        // fetch('/Transaction/GetCartState')
+        //     .then(response => response.json())
+        //     .then(cartItems => {
+        //         // Assuming your CartItemVM has the properties ItemId, Quantity, and Amount
+        //         cartItems.forEach(item => {
+        //             var totalElement = document.getElementById('total_' + item.ItemId);
+        //             var amountElement = document.getElementById('amount_' + item.ItemId);
+        //             if (totalElement && amountElement) {
+        //                 totalElement.textContent = item.Quantity;
+        //                 amountElement.textContent = item.Amount.toFixed(2);
+        //             }
+        //         });
                 updateCartSummary();
-            })
-            .catch(error => console.error('Error:', error));
+        //     })
+        //     .catch(error => console.error('Error:', error));
     });
 
     // Add your PayPal buttons code here
