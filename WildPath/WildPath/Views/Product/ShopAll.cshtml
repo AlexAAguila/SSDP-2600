@@ -199,44 +199,5 @@
         document.getElementById('grandTotal').textContent = grandTotal.toFixed(2);
         console.log("GRANDTOTAL AFTER", grandTotal)
     }
-    paypal.Buttons({
-        // Set up the transaction
-        createOrder: function (data, actions) {
-            return actions.order.create({
-                purchase_units: [{
-                    amount: {
-                        value: parseFloat(document.getElementById('grandTotal').innerText),
-                        currency:
-                            document.getElementById('currency').value
-                    }
-                }]
-            });
-        },
-        // Finalize the transaction
-        onApprove: function (data, actions) {
-            return actions.order.capture().then(function (details) {
-                // Redirect to the PayPalConfirmation action method
-                window.location.href =
-                    '/Home/PayPalConfirmation?TransactionId=' +
-                    encodeURIComponent(details.id) + '&Amount=' +
-                    encodeURIComponent(details.purchase_units[0]
-                        .amount.value) + '&PayerName=' +
-                    encodeURIComponent(details.payer.name.given_name) + '&PayerEmail=' +
-                    encodeURIComponent(details.payer.email_address) + '&PaymentMethod=' +
-                    encodeURIComponent('PayPal');
-            });
-        },
-        onCancel: function (data) {
-            alert('Transaction was cancelled.');
-        },
-        onError: function (err) {
-            alert('An error occurred during the transaction.');
-        },
-        style: {
-            layout: 'vertical', // 'vertical', 'horizontal'
-            color: 'blue',      // 'gold', 'blue', 'silver', 'black'
-            shape: 'rect',      // 'rect', 'pill'
-            label: 'paypal'     // 'checkout', 'pay', 'buynow', 'paypal'
-        }
-    }).render('#paypal-button-container');
+  
 </script>
