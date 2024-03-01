@@ -4,10 +4,10 @@
     ViewData["Title"] = "ShoppingCart";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<h1>Shoping Cart</h1>
+
+<h1>Shopping Cart</h1>
 
 <div>
-
     @if (Model.Any())
     {
         <table class="table">
@@ -18,47 +18,27 @@
                     <th>Category</th>
                     <th>Size</th>
                     <th>Colour</th>
+                    <th>Qty</th>
+                    <th>Amount</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var item in Model)
                 {
                     <tr>
-                        <td>@Html.DisplayFor(modelItem => item.ItemName)</td>
-                        <td>@Html.DisplayFor(modelItem => item.Price)</td>
-                        <td>@Html.DisplayFor(modelItem => item.Category)</td>
-                        <td>@Html.DisplayFor(modelItem => item.Size)</td>
-                        <td>@Html.DisplayFor(modelItem => item.Colour)</td>
+                        <td>@item.ItemName</td>
+                        <td>@item.Price.ToString("C")</td>
+                        <td>@item.Category</td>
+                        <td>@item.Size</td>
+                        <td>@item.Colour</td>
+                        <td><span id="total_@item.ItemId">@item.Quantity</span></td>
+                        <td>$<span id="amount_@item.ItemId">@((item.Quantity * item.Price).ToString("N2"))</span></td>
                         <td>
-                            <div>
-@*                                 <button id="addButton_@item.PkItemId" class="btn btn-primary mb-1"
-                                        onclick="AddOne('@item.PkItemId')"
-                                        data-price="@item.Price">
-                                    Add To Cart
-                                </button>
- *@                                <button id="removeButton_@item.ItemId" class="btn btn-primary"
-                                        style="border-color:#6E0B14; background-color: #6E0B14;"
-                                        onclick="RemoveOne('@item.ItemId')"
-                                        data-price="@item.Price">
-                                    Remove from Cart
-                                </button>
-                            </div>
-                            <div>
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th>Qty</th>
-                                            <th>Amount</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td><span id="total_@item.ItemId">0</span></td>
-                                            <td>$<span id="amount_@item.ItemId">0.00</span></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+                            <button class="btn btn-primary mb-1"
+                                    onclick="RemoveOne('@item.ItemId')">
+                                Remove from Cart
+                            </button>
                         </td>
                     </tr>
                 }
@@ -68,23 +48,52 @@
             <h3>Cart Summary</h3>
             <p>Total Items: <span id="totalItems"></span></p>
             <p>Grand Total: $<span id="grandTotal">0.00</span></p>
-            <input id="currency" type="hidden" value="CAD" />
         </div>
-        <div id="paypal-button-container">
-            @* PayPal button will be rendered here by the script below *@
-        </div>
-
     }
     else
     {
         <p>No items found.</p>
     }
-    <div>
-        <a asp-action="ShopAll" class="btn btn-primary">Back to List</a>
-    </div>
+
+    <!-- Place to render the PayPal button -->
+    <div id="paypal-button-container"></div>
 </div>
-<script src="https://www.paypal.com/sdk/js?client-id=AcBnAsIJmldpwwq_VnVJuZz8K7PhPwWM3MYUcNw38oL5egs8hH8e2NVSEFrEAsROQQegDbnQnV0gABkT"></script>
+
+<!-- Add your PayPal SDK script here -->
+
 <script>
+    // Function to update the cart summary
+    function updateCartSummary() {
+        var totalItems = 0;
+        var grandTotal = 0.0;
+
+        // Loop through all quantity elements and sum them up
+        document.querySelectorAll('[id^="total_"]').forEach(function (element) {
+            var quantity = parseInt(element.textContent) || 0;
+            totalItems += quantity;
+
+            // Get the corresponding amount element by replacing 'total_' with 'amount_'
+            var amountId = element.id.replace('total_', 'amount_');
+            var amountElement = document.getElementById(amountId);
+
+            // Calculate the amount based on the quantity and data-price attribute
+            var pricePerItem = parseFloat(document.getElementById('addButton_' + element.id.split('_')[1]).getAttribute('data-price'));
+            var amount = quantity * pricePerItem;
+            amountElement.textContent = amount.toFixed(2);
+
+            grandTotal += amount;
+        });
+
+        // Update the cart summary display
+        document.getElementById('totalItems').textContent = totalItems;
+        document.getElementById('grandTotal').textContent = '$' + grandTotal.toFixed(2);
+    }
+
+    // Remember to call updateCartSummary() at the end of your RemoveOne() function as well.
+
+
+
+
     function AddOne(id) {
         var totalElement = document.getElementById('total_' + id);
         var amountElement = document.getElementById('amount_' + id);
@@ -97,9 +106,11 @@
         total += 1;
         totalElement.textContent = total;
         amountElement.textContent = (total * pricePerItem).toFixed(2);
-        updateCartSummary();
+
+        console.log("TOTAL", total)
 
         fetch('/Transaction/AddToCart?id=' + id, {
+
             method: 'GET',
             headers: {
                 // 'Content-Type': 'application/json',
@@ -118,90 +129,45 @@
                 // Handle the JSON data returned from the server
                 console.log(data); // Example output: { Name: "John Doe", Age: 30, Occupation: "Software Developer" }
 
-                // Manipulating the DOM based on the response
-                // document.getElementById('personName').textContent = data.Name;
-                // document.getElementById('personAge').textContent = data.Age;
-                // document.getElementById('personOccupation').textContent = data.Occupation;
+
             })
             .catch(error => {
                 // Handle errors
                 console.error('Fetch error:', error);
             });
 
-
-
-    }
-    function RemoveOne(id) {
-        var totalElement = document.getElementById('total_' + id);
-        var amountElement = document.getElementById('amount_' + id);
-        var removeButton = document.getElementById('removeButton_' + id);
-        var pricePerItem = parseFloat(removeButton.getAttribute('data-price'));
-        var total = parseInt(totalElement.textContent);
-        if (isNaN(total)) {
-            total = 0; // Prevent going negative if it's not a number
-        } else {
-            total -= 1;
-        }
-        if (total < 0) {
-            total = 0;
-        }
-        totalElement.textContent = total;
-        amountElement.textContent = (total * pricePerItem).toFixed(2);
         updateCartSummary();
+
     }
-    function updateCartSummary() {
-        var totalItems = 0;
-        var grandTotal = 0.0;
-        // Loop through all total elements and sum them up
-        document.querySelectorAll('[id^="total_"]').forEach(function (element) {
-            totalItems += parseInt(element.textContent) || 0;
-        });
-        // Loop through all amount elements and sum them up
-        document.querySelectorAll('[id^="amount_"]').forEach(function (element) {
-            grandTotal += parseFloat(element.textContent) || 0;
-        });
-        // Update the cart summary display
-        document.getElementById('totalItems').textContent = totalItems;
-        document.getElementById('grandTotal').textContent = grandTotal.toFixed(2);
+
+
+
+
+
+    // Function to remove an item from the cart
+    function RemoveOne(itemId) {
+        // TODO: Implement the logic to remove an item from the cart using fetch
+        // After removing, call updateCartSummary();
     }
-    paypal.Buttons({
-        // Set up the transaction
-        createOrder: function (data, actions) {
-            return actions.order.create({
-                purchase_units: [{
-                    amount: {
-                        value: parseFloat(document.getElementById('grandTotal').innerText),
-                        currency:
-                            document.getElementById('currency').value
+
+    // Fetch the cart state and update the UI on page load
+    document.addEventListener('DOMContentLoaded', function () {
+        fetch('/Transaction/GetCartState')
+            .then(response => response.json())
+            .then(cartItems => {
+                // Assuming your CartItemVM has the properties ItemId, Quantity, and Amount
+                cartItems.forEach(item => {
+                    var totalElement = document.getElementById('total_' + item.ItemId);
+                    var amountElement = document.getElementById('amount_' + item.ItemId);
+                    if (totalElement && amountElement) {
+                        totalElement.textContent = item.Quantity;
+                        amountElement.textContent = item.Amount.toFixed(2);
                     }
-                }]
-            });
-        },
-        // Finalize the transaction
-        onApprove: function (data, actions) {
-            return actions.order.capture().then(function (details) {
-                // Redirect to the PayPalConfirmation action method
-                window.location.href =
-                    '/Home/PayPalConfirmation?TransactionId=' +
-                    encodeURIComponent(details.id) + '&Amount=' +
-                    encodeURIComponent(details.purchase_units[0]
-                        .amount.value) + '&PayerName=' +
-                    encodeURIComponent(details.payer.name.given_name) + '&PayerEmail=' +
-                    encodeURIComponent(details.payer.email_address) + '&PaymentMethod=' +
-                    encodeURIComponent('PayPal');
-            });
-        },
-        onCancel: function (data) {
-            alert('Transaction was cancelled.');
-        },
-        onError: function (err) {
-            alert('An error occurred during the transaction.');
-        },
-        style: {
-            layout: 'vertical', // 'vertical', 'horizontal'
-            color: 'blue',      // 'gold', 'blue', 'silver', 'black'
-            shape: 'rect',      // 'rect', 'pill'
-            label: 'paypal'     // 'checkout', 'pay', 'buynow', 'paypal'
-        }
-    }).render('#paypal-button-container');
+                });
+                updateCartSummary();
+            })
+            .catch(error => console.error('Error:', error));
+    });
+
+    // Add your PayPal buttons code here
 </script>

@@ -127,7 +127,7 @@
         total += 1;
         totalElement.textContent = total;
         amountElement.textContent = (total * pricePerItem).toFixed(2);
-        updateCartSummary();
+     
         console.log("TOTAL",total)
 
         fetch('/Transaction/AddToCart?id='+id, {
@@ -157,7 +157,7 @@
                 console.error('Fetch error:', error);
             });
 
-
+        updateCartSummary();
 
     }
     function RemoveOne(id) {

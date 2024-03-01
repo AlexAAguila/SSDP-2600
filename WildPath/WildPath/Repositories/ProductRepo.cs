@@ -56,31 +56,12 @@ namespace WildPath.Repositories
                         Category = item.Category,
                         Size = item.Size,
                         Colour = item.Colour,
-                        Quantity = sessionCartItem != null ? sessionCartItem.Quantity : 0
+                        Quantity = sessionCartItem != null ? sessionCartItem.Quantity : 1
                     };
                 }).ToList();
 
             return cartItems;
         }
-
-
-        //public List<CartItemVM> GetCartVM(List<CartItem> sessionCartItems)
-        //{
-        //    List<CartItemVM> cartItems = new List<CartItemVM>();
-
-        //    cartItems = _wpdb.Items.Join(sessionCartItems, p => p.PkItemId, o => o.Id, (p, o) => new CartItemVM {
-        //        ItemId = p.PkItemId,
-        //        ItemName = p.ItemName,
-        //        ItemDetails = p.ItemDetails,
-        //        Price = p.Price,
-        //        Category = p.Category,
-        //        Size = p.Size,
-        //        Colour = p.Colour,
-        //        Quantity = o.Quantity
-        //    }).ToList();
-
-        //    return cartItems;
-        //}
 
 
         public string Update(Item entity)
