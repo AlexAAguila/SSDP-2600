@@ -1,4 +1,5 @@
 ﻿@model WildPath.ViewModels.ProductVM
+@using System.Text
 @{
     ViewData["Title"] = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -10,7 +11,21 @@
         padding: 0;
     }
 
-    .free-shipping {
+    .container {
+        width: 100%;
+        margin: 0 auto;
+        max-width: 100%;
+    }
+
+    .details-page {
+        margin: 0 auto;
+        margin-bottom: 20px;
+        min-height: calc(100vh - 135px);
+        width: 100%;
+        padding: 0;
+    }
+
+    .item-category {
         background-color: rgba(217, 217, 217, 0.5);
         color: black;
         text-align: center;
@@ -19,143 +34,117 @@
         margin-top: -15px;
     }
 
+    .product-image{
+        display: block;
+        margin-top: 20px;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 20px;
+        width: 100%;
+    }
+
+    .details-name{
+        font-weight: bold;
+        font-size: 16px;
+        margin-left: 15px;
+    }
+
+    .details-details{
+        margin-left: 15px;
+        margin-top: 15px;   
+        font-size: 12px;
+    }
+
+    .details-details ul {
+        list-style-type: disc;
+        padding-left: 20px;
+    }
+
+    .details-details ul li {
+        margin-bottom: 0.5em;
+    }
+
+    .details-price{
+        margin-left: 15px;
+        margin-top: 15px;
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    .details-colour,
+    .details-size{
+        margin-left: 15px;
+        font-size: 10px;
+    }
+
     *, *:before, *:after {
         box-sizing: border-box;
     }
 </style>
 
-<div class="free-shipping">
-    <span style="font-weight: bold;">Tents</span>
+<div class="details-page">
+    <div class="item-category">
+        <span style="font-weight: bold;">@Html.DisplayFor(model => model.Item.Category)</span>
+    </div>
+    <div class="details-info">
+        <div class="details-image">
+            @{
+                var image = Model.ImageStore.FirstOrDefault(i => i.ImageId.ToString() == Model.Item.ItemImageId);
+                if (image != null)
+                {
+                    <img src="data:image/jpeg;base64,@Convert.ToBase64String(image.Image)" alt="@image.FileName" class="product-image" />
+                }
+            }
+        </div>
+        <div class="details-other">
+            <div class="details-name">
+                @Html.DisplayFor(model => model.Item.ItemName)
+            </div>
+            <div class="details-details">
+                @{
+                    var lines = Model.Item.ItemDetails.Split(new string[] { "\n" }, StringSplitOptions.None);
+                    bool inList = false;
+                    StringBuilder sb = new StringBuilder();
+                    foreach (string line in lines)
+                    {
+                        string trimmedLine = line.Trim();
+                        if (trimmedLine.StartsWith("•"))
+                        {
+                            if (!inList)
+                            {
+                                sb.AppendLine("<ul>");
+                                inList = true;
+                            }
+                            sb.AppendLine("<li>" + trimmedLine.Substring(1).Trim() + "</li>");
+                        }
+                        else
+                        {
+                            if (inList)
+                            {
+                                sb.AppendLine("</ul>");
+                                inList = false;
+                            }
+                            sb.AppendLine("<p>" + trimmedLine + "</p>");
+                        }
+                    }
+                    if (inList)
+                    {
+                        sb.AppendLine("</ul>");
+                    }
+                }
+                @Html.Raw(sb.ToString())
+            </div>
+            <div class="details-price">
+                $@Html.DisplayFor(model => model.Item.Price)
+            </div>
+            <div class="details-colour">
+                @Html.DisplayNameFor(model => model.Item.Colour):
+                @Html.DisplayFor(model => model.Item.Colour)
+            </div>
+            <div class="details-size">
+                @Html.DisplayNameFor(model => model.Item.Size):
+                @Html.DisplayFor(model => model.Item.Size)
+            </div>
+        </div>
+    </div>
 </div>
-
-<div>
-    @{
-        var image = Model.ImageStore.FirstOrDefault(i => i.ImageId.ToString() == Model.Item.ItemImageId);
-        if (image != null)
-        {
-            <img src="data:image/jpeg;base64,@Convert.ToBase64String(image.Image)" alt="@image.FileName" />
-        }
-    }
-    <dd class="col-sm-10">
-        @Html.DisplayFor(model => model.Item.ItemName)
-    </dd>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Item.Supplier)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Item.Supplier)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Item.ItemDetails)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Item.ItemDetails)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Item.Price)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Item.Price)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Item.Stock)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Item.Stock)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Item.Category)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Item.Category)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Item.Weight)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Item.Weight)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Item.Size)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Item.Size)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Item.Colour)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Item.Colour)
-        </dd>
-    </dl>
-</div>
-
-@* 
-<h1>Details</h1>
-
-<div>
-    <h4>Item</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Supplier)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Supplier)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ItemName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ItemName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ItemDetails)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ItemDetails)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Price)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Price)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Stock)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Stock)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Category)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Category)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Weight)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Weight)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Size)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Size)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Colour)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Colour)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.PkItemId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div> *@
