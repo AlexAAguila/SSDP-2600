@@ -33,8 +33,10 @@
                 {
                     <tr>
                         <td>@Html.DisplayFor(modelItem => item.Supplier)</td>
-                        <td>@Html.DisplayFor(modelItem => item.ItemName)</td>
-                        <td>@Html.DisplayFor(modelItem => item.ItemDetails)</td>
+                        <td>
+                            <a asp-action="Details" asp-route-id="@item.PkItemId">@Html.DisplayFor(modelItem => item.ItemName)</a>
+                        </td>
+                        <td>@Html.Raw(item.ItemDetails.Replace("\n", "<br/>"))</td>
                         <td>@Html.DisplayFor(modelItem => item.Price)</td>
                         <td>@Html.DisplayFor(modelItem => item.Category)</td>
                         <td>@Html.DisplayFor(modelItem => item.Weight)</td>

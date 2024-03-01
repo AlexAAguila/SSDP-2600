@@ -60,6 +60,7 @@ namespace WildPath.Repositories
                 item.Weight = entity.Weight;
                 item.Size = entity.Size;
                 item.Colour = entity.Colour;
+                item.ItemImageId = entity.ItemImageId;
                 _wpdb.SaveChanges();
                 message = $"{entity.ItemName} comment updated successfully";
             }

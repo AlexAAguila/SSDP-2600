@@ -6,6 +6,7 @@ using Microsoft.Extensions.Hosting;
 using SendGrid.Helpers.Mail;
 using WildPath.EfModels;
 using WildPath.Models;
+using WildPath.ViewModels;
 using WildPath.Repositories;
 
 namespace WildPath.Controllers
@@ -65,11 +66,24 @@ namespace WildPath.Controllers
         //    return View(products);
         //}
 
-        public IActionResult Details(int id)
+        //public IActionResult Details(int id)
+        //{
+        //    ProductRepo productRepo = new ProductRepo(_wpdb);
+        //    return View(productRepo.GetById(id));
+        //}
+
+        public ActionResult Details(int id)
         {
-            ProductRepo productRepo = new ProductRepo(_wpdb);
-            return View(productRepo.GetById(id));
+            var item = _wpdb.Items.Find(id);
+            var viewModel = new ProductVM
+            {
+                Item = item,
+                ImageStore = _wpdb.ImageStores.Where(i => i.ImageId.ToString() == item.ItemImageId)
+            };
+
+            return View(viewModel);
         }
+
 
         public IActionResult Create()
         {
