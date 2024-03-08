@@ -176,29 +176,47 @@
 
 
     // Function to remove an item from the cart
+    // Function to remove an item from the cart
     function RemoveOne(itemId) {
-        // TODO: Implement the logic to remove an item from the cart using fetch
-        // After removing, call updateCartSummary();
+        fetch('/Transaction/RemoveToCart?id=' + itemId, {
+            method: 'GET',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                // After removing the item, update the cart summary
+                updateCartSummary();
+            })
+            .catch(error => {
+                console.error('Fetch error:', error);
+            });
     }
 
     // Fetch the cart state and update the UI on page load
     document.addEventListener('DOMContentLoaded', function () {
-        // fetch('/Transaction/GetCartState')
-        //     .then(response => response.json())
-        //     .then(cartItems => {
-        //         // Assuming your CartItemVM has the properties ItemId, Quantity, and Amount
-        //         cartItems.forEach(item => {
-        //             var totalElement = document.getElementById('total_' + item.ItemId);
-        //             var amountElement = document.getElementById('amount_' + item.ItemId);
-        //             if (totalElement && amountElement) {
-        //                 totalElement.textContent = item.Quantity;
-        //                 amountElement.textContent = item.Amount.toFixed(2);
-        //             }
-        //         });
+        fetch('/Transaction/GetCartState')
+            .then(response => response.json())
+            .then(cartItems => {
+                cartItems.forEach(item => {
+                    var totalElement = document.getElementById('total_' + item.ItemId);
+                    var amountElement = document.getElementById('amount_' + item.ItemId);
+                    if (totalElement && amountElement) {
+                        totalElement.textContent = item.Quantity;
+                        amountElement.textContent = item.Amount.toFixed(2);
+                    }
+                });
+                // After updating the UI with cart state, update the cart summary
                 updateCartSummary();
-        //     })
-        //     .catch(error => console.error('Error:', error));
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
     });
+
 
     // Add your PayPal buttons code here
 </script>
