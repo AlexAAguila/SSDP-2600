@@ -33,55 +33,41 @@ namespace WildPath.Controllers
 
         }
 
-        public JsonResult AddToCart(int id)
+        public JsonResult AddToCart(int id, int quantity)
         {
-
             string cartSession = HttpContext.Session.GetString("Cart");
+            List<CartItem> cartItems;
 
             if (cartSession != null)
             {
-
-                List<CartItem> cartItems = Newtonsoft.Json.JsonConvert.DeserializeObject<List<CartItem>>(cartSession);
-
-                if (cartItems.Any(c => c.Id == id))
-                {                   
-                    CartItem cartItem = cartItems.FirstOrDefault(c => c.Id == id);
-
-                    int index = cartItems.FindIndex(c => c.Id == id);
-
-                    if(index != -1)
-                    {
-                        cartItems[index] = new CartItem
-                        {
-                            Id = id,
-                            Quantity = cartItem.Quantity + 1
-                        };
-                    }
-                    HttpContext.Session.SetString("Cart", JsonSerializer.Serialize(cartItems));
-                }
-                else
-                {
-
-                    cartItems.Add(new CartItem
-                    {
-                        Id = id,
-                        Quantity = 1
-                    });
-                    HttpContext.Session.SetString("Cart", JsonSerializer.Serialize(cartItems));
-
-                }
+                cartItems = Newtonsoft.Json.JsonConvert.DeserializeObject<List<CartItem>>(cartSession);
             }
             else
             {
-                List<CartItem> cartItems = new List<CartItem> { new CartItem { Id = id,
-                                                                               Quantity = 1 } };
-
-
-              HttpContext.Session.SetString("Cart", JsonSerializer.Serialize(cartItems));
-
+                cartItems = new List<CartItem>();
             }
+
+            CartItem cartItem = cartItems.FirstOrDefault(c => c.Id == id);
+
+            if (cartItem != null)
+            {
+                cartItem.Quantity += quantity; // Increment the quantity by the specified amount
+            }
+            else
+            {
+                cartItems.Add(new CartItem
+                {
+                    Id = id,
+                    Quantity = quantity
+                });
+            }
+
+            HttpContext.Session.SetString("Cart", JsonSerializer.Serialize(cartItems));
+
             return Json("Success");
         }
+
+
 
         public JsonResult RemoveToCart(int id)
         {
