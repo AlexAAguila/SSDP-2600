@@ -71,8 +71,43 @@ namespace WildPath.Controllers
 
         public JsonResult RemoveToCart(int id)
         {
+            // Retrieve cart items from session
+            string cartSession = HttpContext.Session.GetString("Cart");
+            List<CartItem> cartItems = new List<CartItem>();
 
-            return Json("");
+            if (!string.IsNullOrEmpty(cartSession))
+            {
+                cartItems = JsonSerializer.Deserialize<List<CartItem>>(cartSession);
+            }
+
+            // Find and remove the item with the specified ID
+            CartItem itemToRemove = cartItems.FirstOrDefault(c => c.Id == id);
+            if (itemToRemove != null)
+            {
+                cartItems.Remove(itemToRemove);
+            }
+
+            // Update session with modified cart
+            HttpContext.Session.SetString("Cart", JsonSerializer.Serialize(cartItems));
+
+            // Return success message
+            return Json(new { success = true, message = "Item removed successfully" });
         }
-    }
+
+        public IActionResult GetCartState()
+        {
+            // Retrieve cart items from session
+            string cartSession = HttpContext.Session.GetString("Cart");
+            List<CartItem> cartItems = new List<CartItem>();
+
+            if (!string.IsNullOrEmpty(cartSession))
+            {
+                cartItems = JsonSerializer.Deserialize<List<CartItem>>(cartSession);
+            }
+
+            // Return cart items as JSON
+            return Json(cartItems);
+        }
+    
+}
 }
