@@ -49,14 +49,17 @@
             <p>Total Items: <span id="totalItems"></span></p>
             <p>Grand Total: $<span id="grandTotal">0.00</span></p>
         </div>
+        <!-- Place to render the PayPal button -->
+        <div id="paypal-button-container"></div>
+        <script src="https://www.paypal.com/sdk/js?client-id=AcYzUTriY360UFrFnBT_Tns0NkqucbwhYUVTnIFEa6zp1QpPScRPxWqiFot7SYxKTX5JL2wl0d16pFn7"></script>
+
     }
     else
     {
         <p>No items found.</p>
     }
 
-    <!-- Place to render the PayPal button -->
-    <div id="paypal-button-container"></div>
+
 </div>
 
 <!-- Add your PayPal SDK script here -->
@@ -113,6 +116,8 @@
         // Update the cart summary display
         document.getElementById('totalItems').textContent = totalItems;
         document.getElementById('grandTotal').textContent = grandTotal.toFixed(2);
+
+      
     }
 
 
@@ -196,4 +201,54 @@
     });
 
     // Add your PayPal buttons code here
+</script>
+
+<script>
+    
+    paypal.Buttons({
+        // Set up the transaction
+        createOrder: function (data, actions) {
+            return actions.order.create({
+                purchase_units: [{
+                    amount: {
+                        value: parseFloat(document.getElementById('grandTotal').innerText),
+                        currency:
+                            "CAD"
+                    }
+                }]
+            });
+        },
+
+        // Finalize the transaction
+        onApprove: function (data, actions) {
+            return actions.order.capture().then(function (details) {
+
+                console.log(details);
+                // Redirect to the PayPalConfirmation action method
+                window.location.href =
+                    '/Home/PayPalConfirmation?TransactionId=' +
+                    encodeURIComponent(details.id) + '&Amount=' +
+                    encodeURIComponent(details.purchase_units[0]
+                        .amount.value) + '&PayerName=' +
+                    encodeURIComponent(details.payer.name.given_name) + '&PayerEmail=' +
+                    encodeURIComponent(details.payer.email_address) + '&PaymentMethod=' +
+                    encodeURIComponent('PayPal');
+
+            });
+        },
+
+
+        onCancel: function (data) {
+            alert('Transaction was cancelled.');
+        },
+        onError: function (err) {
+            alert('An error occurred during the transaction.');
+        },
+        style: {
+            layout: 'horizontal', // 'vertical', 'horizontal'
+            color: 'silver',      // 'gold', 'blue', 'silver', 'black'
+            shape: 'rect',      // 'rect', 'pill'
+            label: 'checkout'     // 'checkout', 'pay', 'buynow', 'paypal'
+        }
+    }).render('#paypal-button-container');
 </script>
