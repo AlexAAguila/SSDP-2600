@@ -86,13 +86,6 @@ namespace WildPath.Controllers
         }
 
 
-
-        //public IActionResult Details(int id)
-        //{
-        //    ProductRepo productRepo = new ProductRepo(_wpdb);
-        //    return View(productRepo.GetById(id));
-        //}
-
         public ActionResult Details(int id)
         {
             var item = _wpdb.Items.Find(id);
@@ -114,19 +107,65 @@ namespace WildPath.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(Item item)
+        public async Task<IActionResult> Create(Item item, IFormFile imageFile)
         {
             if (ModelState.IsValid)
             {
-                ProductRepo productRepo = new ProductRepo(_wpdb);
+                try
+                {
+                    int imageId = -1;
 
-                //string addMessage = productRepo.Add(item);
+                    if (imageFile != null && imageFile.Length > 0)
+                    {
+                        string contentType = imageFile.ContentType;
+                        if (contentType == "image/png" || contentType == "image/jpeg" || contentType == "image/jpg")
+                        {
+                            byte[] imageData;
+                            using (var memoryStream = new MemoryStream())
+                            {
+                                await imageFile.CopyToAsync(memoryStream);
+                                imageData = memoryStream.ToArray();
+                            }
 
-                return RedirectToAction("Index", new { message = "addMessage" });
+                            var image = new ImageStore
+                            {
+                                FileName = Path.GetFileNameWithoutExtension(imageFile.FileName),
+                                Image = imageData
+                            };
+
+                            _wpdb.ImageStores.Add(image);
+                            await _wpdb.SaveChangesAsync();
+
+                            imageId = image.ImageId;
+                        }
+                        else
+                        {
+                            ModelState.AddModelError("ItemImageId", "Please upload a PNG, JPG, or JPEG file.");
+                            return View(item);
+                        }
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("ItemImageId", "Please select an image to upload.");
+                        return View(item);
+                    }
+
+                    item.ItemImageId = imageId.ToString();
+
+                    _wpdb.Items.Add(item);
+                    await _wpdb.SaveChangesAsync();
+
+                    return RedirectToAction("Index", new { message = "Product created successfully" });
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("ItemImageId", "An error occurred while saving the image: " + ex.Message);
+                    return View(item);
+                }
             }
-
             return View(item);
         }
+
         public IActionResult Edit(int id)
         {
             ProductRepo productRepo = new ProductRepo(_wpdb);
