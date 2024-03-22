@@ -1,0 +1,92 @@
+﻿@model WildPath.ViewModels.CheckoutVM
+
+@{
+    ViewData["Title"] = "Checkout";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Checkout</h1>
+
+@if (!Model.IsLoggedIn)
+{
+    <h2>Contact Details</h2>
+    <form>
+        <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" class="form-control" id="email" placeholder="Enter email">
+        </div>
+        <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input type="tel" class="form-control" id="phone" placeholder="Enter phone number">
+        </div>
+    </form>
+}
+
+<h2>Delivery Address</h2>
+<form>
+    <div class="form-group">
+        <label for="firstName">First Name</label>
+        <input type="text" class="form-control" id="firstName" placeholder="Enter first name">
+    </div>
+    <div class="form-group">
+        <label for="lastName">Last Name</label>
+        <input type="text" class="form-control" id="lastName" placeholder="Enter last name">
+    </div>
+    <div class="form-group">
+        <label for="address1">Address Line 1</label>
+        <input type="text" class="form-control" id="address1" placeholder="Enter address">
+    </div>
+    <div class="form-group">
+        <label for="country">Country</label>
+        <select class="form-control" id="country">
+            <option value="Canada">Canada</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="province">Province</label>
+        <input type="text" class="form-control" id="province" placeholder="Enter province">
+    </div>
+    <div class="form-group">
+        <label for="city">City/Town</label>
+        <input type="text" class="form-control" id="city" placeholder="Enter city or town">
+    </div>
+    <div class="form-group">
+        <label for="postalCode">Postal Code</label>
+        <input type="text" class="form-control" id="postalCode" placeholder="Enter postal code">
+    </div>
+</form>
+
+<h2>Shipping Method</h2>
+<form>
+    <!-- Shipping Method Selection -->
+    <div class="form-group">
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="shippingMethod" id="standardShipping" value="Standard Shipping" checked>
+            <label class="form-check-label" for="standardShipping">
+                Free Standard Shipping for order <br/>
+                over $75.99 within Canada <br/>
+                $0.00 - 3 to 7 Business Days
+            </label> 
+        </div> <br/>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="shippingMethod" id="expressShipping" value="Express Shipping">
+            <label class="form-check-label" for="expressShipping">
+                Flat Standard Shipping for order <br/>
+                under $75.99 within Canada <br/>
+                $7.99 - 3 to 7 Business Days
+            </label>
+        </div>
+    </div>
+</form>
+
+
+<div class="cart-summary">
+    <h2>Order Summary</h2>
+    <p>Total Items: <span id="totalItems"></span></p>
+    <p>Grand Total: $<span id="grandTotal">0.00</span></p>
+
+</div>
+
+<!-- Submit Button -->
+<button type="submit" class="btn btn-primary">Go to Payment</button>

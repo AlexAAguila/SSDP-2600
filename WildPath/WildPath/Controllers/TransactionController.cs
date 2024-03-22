@@ -108,6 +108,17 @@ namespace WildPath.Controllers
             // Return cart items as JSON
             return Json(cartItems);
         }
-    
-}
+        public IActionResult Checkout()
+        {
+            var isLoggedIn = User.Identity.IsAuthenticated;
+
+            var model = new CheckoutVM
+            {
+                IsLoggedIn = isLoggedIn,
+            };
+
+            return View(model);
+        }
+
+    }
 }
