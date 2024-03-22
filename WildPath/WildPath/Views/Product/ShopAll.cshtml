@@ -1,4 +1,4 @@
-﻿@model PaginatedList<WildPath.EfModels.Item>
+﻿@model PaginatedList<WildPath.ViewModels.ProductVM>
 @{
     ViewData["Title"] = "ShopAll";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -12,185 +12,142 @@
             <input type="submit" value="Search" class="btn btn-primary" />
         </div>
     </form>
-    @if (Model.Any())
-    {
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Supplier</th>
-                    <th>Item Name</th>
-                    <th>Item Details</th>
-                    <th>Price</th>
-                    <th>Category</th>
-                    <th>Weight</th>
-                    <th>Size</th>
-                    <th>Colour</th>
-@*                     <th>Action</th> 
- *@                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model)
-                {
-                    <tr>
-                        <td>@Html.DisplayFor(modelItem => item.Supplier)</td>
-                        <td>
-                            <a asp-action="Details" asp-route-id="@item.PkItemId">@Html.DisplayFor(modelItem => item.ItemName)</a>
-                        </td>
-                        <td>@Html.Raw(item.ItemDetails.Replace("\n", "<br/>"))</td>
-                        <td>@Html.DisplayFor(modelItem => item.Price)</td>
-                        <td>@Html.DisplayFor(modelItem => item.Category)</td>
-                        <td>@Html.DisplayFor(modelItem => item.Weight)</td>
-                        <td>@Html.DisplayFor(modelItem => item.Size)</td>
-                        <td>@Html.DisplayFor(modelItem => item.Colour)</td>
-                        <td>
-                            <div>
-                          
-                            
-                            </div>
-                            <div>
-                                <table class="table" type="hidden" style="display: none;">
-                                    <thead>
-                                        <tr>
-                                            <th type="hidden">Qty</th>
-                                            <th type="hidden">Amount</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td type="hidden"><span id="total_@item.PkItemId">0</span></td>
-                                            <td type="hidden">$<span id="amount_@item.PkItemId">0.00</span></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-        <div class="cart-summary" style="display: none;">
-            <h3>Cart Summary</h3>
-            <p type="hidden">Total Items: <span id="totalItems"></span></p>
-            <p type="hidden">Grand Total: $<span id="grandTotal">0.00</span></p>
-            <input id="currency" type="hidden" value="CAD" />
-        </div>
-@*         <div id="paypal-button-container">
-            @* PayPal button will be rendered here by the script below
-    </div> *@
-        <nav>
-            <ul class="pagination">
-                <li class="page-item @(Model.HasPreviousPage ? "" : "disabled")">
-                    <a class="page-link"
-                       href="@Url.Action("ShopAll", new { sortOrder = ViewData["CurrentSort"], searchString = ViewData["SearchString"], pageNumber = Model.PageIndex - 1 })">
-                        Previous
-                    </a>
-                </li>
-                <li class="page-item @(Model.HasNextPage ? "" : "disabled")">
-                    <a class="page-link"
-                       href="@Url.Action("ShopAll", new { sortOrder = ViewData["CurrentSort"], searchString = ViewData["SearchString"], pageNumber = Model.PageIndex + 1 })">
-                        Next
-                    </a>
-                </li>
-            </ul>
-        </nav>
-        <button id="shoppingCartButton" class="btn btn-primary mb-1">
-            <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="ShoppingCart" >Go To Cart</a>
 
-        </button>
+  @if (Model.Any())
+    {
+        <div class="product-grid">
+            @foreach (var ProVM in Model)
+            {
+                var imageBase64 = "";
+                var imageAltText = "Product Image";
+                var image = ProVM.ImageStore; // This needs to match your model's image store property
+
+                if (image != null && image.ImageId.ToString() == ProVM.Item.ItemImageId)
+                {
+                    imageBase64 = Convert.ToBase64String(image.Image);
+                    imageAltText = image.FileName;
+                }
+                else
+                {
+                    var placeholderImagePath = "~/images/placeholder.jpeg";
+                }
+
+                <div class="product-card">
+                    @if (!String.IsNullOrEmpty(imageBase64))
+                    {
+                        <img src="data:image/jpeg;base64,@imageBase64" alt="@imageAltText" class="product-image" />
+                    }
+                    else
+                    {
+                    <img src="@Url.Content("~/images/placeholder.jpeg")" alt="Placeholder Image" class="product-image" />
+                    }
+                    <div class="product-info">
+                        <h3>
+                     @ProVM.Item.ItemName
+                        </h3>
+                        <p>@Html.Raw(ProVM.Item.ItemDetails.Replace("\n", "<br/>"))</p>
+                        <p class="price">$@ProVM.Item.Price</p>
+                    </div>
+                </div>
+            }
+            <nav>
+                <ul class="pagination">
+                    <li class="page-item @(Model.HasPreviousPage ? "" : "disabled")">
+                        <a class="page-link"
+                           href="@Url.Action("ShopAll", new { sortOrder = ViewData["CurrentSort"], searchString = ViewData["SearchString"], pageNumber = Model.PageIndex - 1 })">
+                            Previous
+                        </a>
+                    </li>
+                    <li class="page-item @(Model.HasNextPage ? "" : "disabled")">
+                        <a class="page-link"
+                           href="@Url.Action("ShopAll", new { sortOrder = ViewData["CurrentSort"], searchString = ViewData["SearchString"], pageNumber = Model.PageIndex + 1 })">
+                            Next
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <button id="shoppingCartButton" class="btn btn-primary mb-1">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="ShoppingCart">Go To Cart</a>
+
+            </button>
+        </div>
     }
     else
     {
         <p>No items found.</p>
     }
-    <div>
-        <a asp-action="ShopAll" class="btn btn-primary">Back to List</a>
-    </div>
-</div>
-<script src="https://www.paypal.com/sdk/js?client-id=AcBnAsIJmldpwwq_VnVJuZz8K7PhPwWM3MYUcNw38oL5egs8hH8e2NVSEFrEAsROQQegDbnQnV0gABkT"></script>
-<script>
-    // function AddOne(id) {
-    //     var totalElement = document.getElementById('total_' + id);
-    //     var amountElement = document.getElementById('amount_' + id);
-    //     var addButton = document.getElementById('addButton_' + id);
-    //     var qtyAmount = document.getElementById('QtyAmount_' + id).value;
 
-    //     var pricePerItem = parseFloat(addButton.getAttribute('data-price'));
-    //     var total = parseInt(totalElement.textContent);
-    //     if (isNaN(total)) {
-    //         total = 0; // Start from zero if it's not a number
-    //     }
-    //     if (qtyAmount > 0 && !NaN && !null) {
-    //         console.log("qty:", qtyAmount);
+</div>  
 
-    //         var quantity = parseInt(qtyAmount.value); // Parse the quantity input value
-    //         console.log("Quantity:", quantity); // Check the quantity value in the console
+<style>
 
-    //         total += quantity; // Add the parsed quantity to the total
-    //         totalElement.textContent = total;
-    //         amountElement.textContent = (total * pricePerItem).toFixed(2);
+.product-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 20px;
+    justify-content: space-between;
+}
 
-    //         console.log("TOTAL", total);
+.product-card {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    display:flex;
+    align-items:center;
+    padding:1rem;
+    gap:1rem;
+}
 
-    //         fetch('/Transaction/AddToCart?id=' + id + '&quantity=' + qtyAmount, {
-    //             method: 'GET',
-    //             headers: {
-    //                 'X-Requested-With': 'XMLHttpRequest'
-    //             }
-    //         })
-    //             .then(response => {
-    //                 if (!response.ok) {
-    //                     throw new Error('Network response was not ok');
-    //                 }
-    //                 return response.json(); // Parse the response body as JSON
-    //             })
-    //             .then(data => {
-    //                 console.log(data); // Log the data returned from the server
-    //             })
-    //             .catch(error => {
-    //                 console.error('Fetch error:', error);
-    //             });
+.product-image {
+    width: 40%;
+    height: fit-content;
+    display: block;
+}
 
-    //         updateCartSummary();
-    //     }
-    // }
+.product-info {
+    padding: 15px;
+}
+
+.product-info h3 {
+    margin-top: 0;
+    color: #333;
+}
+
+.product-info p {
+    margin-bottom: 5px;
+    line-height: 1.4;
+    height: 3em; /* Adjust the height as needed, based on your line-height and desired number of lines */
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* Number of lines you want to display */
+    -webkit-box-orient: vertical;
+    text-overflow: ellipsis;
+}
 
 
-    // function RemoveOne(id) {
-    //     var totalElement = document.getElementById('total_' + id);
-    //     var amountElement = document.getElementById('amount_' + id);
-    //     var removeButton = document.getElementById('removeButton_' + id);
-    //     var pricePerItem = parseFloat(removeButton.getAttribute('data-price'));
-    //     var total = parseInt(totalElement.textContent);
-    //     if (isNaN(total)) {
-    //         total = 0; // Prevent going negative if it's not a number
-    //     } else {
-    //         total -= 1;
-    //     }
-    //     if (total < 0) {
-    //         total = 0;
-    //     }
-    //     totalElement.textContent = total;
-    //     amountElement.textContent = (total * pricePerItem).toFixed(2);
-    //     updateCartSummary();
-    // }
-    // function updateCartSummary() {
-    //     console.log("THIS IS!!!")
-    //     var totalItems = 0;
-    //     var grandTotal = 0.0;
+.price {
+    font-weight: bold;
+    color: #E44D26;
+}
 
-    //     console.log("GRANDTOTAL BEFORE", grandTotal)
-    //     // Loop through all total elements and sum them up
-    //     document.querySelectorAll('[id^="total_"]').forEach(function (element) {
-    //         totalItems += parseInt(element.textContent) || 0;
-    //     });
-    //     // Loop through all amount elements and sum them up
-    //     document.querySelectorAll('[id^="amount_"]').forEach(function (element) {
-    //         grandTotal += parseFloat(element.textContent) || 0;
-    //     });
-    //     // Update the cart summary display
-    //     document.getElementById('totalItems').textContent = totalItems;
-    //     document.getElementById('grandTotal').textContent = grandTotal.toFixed(2);
-    //     console.log("GRANDTOTAL AFTER", grandTotal)
-    // }
-  
-</script>
+.form-group {
+    margin-bottom: 20px;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+
+
+
+</style>
