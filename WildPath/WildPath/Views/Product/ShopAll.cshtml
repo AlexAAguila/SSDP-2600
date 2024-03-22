@@ -51,27 +51,29 @@
                     </div>
                 </a>
             }
-            <nav>
-                <ul class="pagination">
-                    <li class="page-item @(Model.HasPreviousPage ? "" : "disabled")">
-                        <a class="page-link"
-                           href="@Url.Action("ShopAll", new { sortOrder = ViewData["CurrentSort"], searchString = ViewData["SearchString"], pageNumber = Model.PageIndex - 1 })">
-                            Previous
-                        </a>
-                    </li>
-                    <li class="page-item @(Model.HasNextPage ? "" : "disabled")">
-                        <a class="page-link"
-                           href="@Url.Action("ShopAll", new { sortOrder = ViewData["CurrentSort"], searchString = ViewData["SearchString"], pageNumber = Model.PageIndex + 1 })">
-                            Next
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-            <button id="shoppingCartButton" class="btn btn-primary mb-1">
-                <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="ShoppingCart">Go To Cart</a>
-
-            </button>
+        
+          
         </div>
+        <nav>
+            <ul class="pagination">
+                <li class="page-item @(Model.HasPreviousPage ? "" : "disabled")">
+                    <a class="page-link"
+                       href="@Url.Action("ShopAll", new { sortOrder = ViewData["CurrentSort"], searchString = ViewData["SearchString"], pageNumber = Model.PageIndex - 1 })">
+                        Previous
+                    </a>
+                </li>
+                <li class="page-item @(Model.HasNextPage ? "" : "disabled")">
+                    <a class="page-link"
+                       href="@Url.Action("ShopAll", new { sortOrder = ViewData["CurrentSort"], searchString = ViewData["SearchString"], pageNumber = Model.PageIndex + 1 })">
+                        Next
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <button id="shoppingCartButton" class="btn btn-primary mb-1">
+            <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="ShoppingCart">Go To Cart</a>
+
+        </button>
     }
     else
     {
