@@ -80,6 +80,100 @@
     *, *:before, *:after {
         box-sizing: border-box;
     }
+
+    .quantity-label{
+        margin-top: 15px;
+        margin-left: 15px;
+    }
+
+    .controls-wrapper {
+        display: flex;
+        align-items: center;
+        margin-left: 15px;
+    }
+
+    .add-to-cart-btn {
+        background-color: #ACCAC3;
+        color: #FFFFFF;
+        border: none;
+        margin-left: 20px;
+        height: 35px;
+        width: 400px;
+
+    }
+
+    .add-to-cart-btn:hover {
+        background-color: #99b3a9;
+        color: #FFFFFF;
+    }
+
+    #quantity {
+        width: 30px;
+        text-align: center;
+    }
+
+    .quantity-controls {
+        display: flex;
+        border: 1px solid #ccc;
+        border-radius: 2px;
+    }
+
+    .quantity-controls button {
+        background-color: transparent;
+        border: none;
+        padding: 0 5px;
+        cursor: pointer;
+    }
+
+    .quantity-controls input {
+        border: none;
+        width: 40px;
+        text-align: center;
+    }
+
+    .quantity-controls button:hover {
+        background-color: #f0f0f0;
+    }
+
+    .quantity-controls button, .quantity-controls input {
+        height: 35px;
+    }
+
+    .custom-alert {
+        display: none; 
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%; 
+        height: 100%; 
+        overflow: auto; 
+        background-color: rgba(0,0,0,0.4); 
+    }
+
+    .custom-alert-content {
+        background-color: #fefefe;
+        margin: 15% auto; 
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%; 
+        max-width: 500px; 
+    }
+
+    .custom-alert-close {
+        color: #aaaaaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+    .custom-alert-close:hover,
+    .custom-alert-close:focus {
+        color: #000;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
 </style>
 
 <div class="details-page">
@@ -145,6 +239,79 @@
                 @Html.DisplayNameFor(model => model.Item.Size):
                 @Html.DisplayFor(model => model.Item.Size)
             </div>
+            <div class="details-quantity">
+                <div class="quantity-label">
+                    <label for="quantity">Quantity:</label>
+                </div>
+                <div class="controls-wrapper">
+                    <div class="quantity-controls">
+                        <button type="button" onclick="decreaseQuantity()">-</button>
+                        <input type="text" id="quantity" value="1" readonly>
+                        <button type="button" onclick="increaseQuantity()">+</button>
+                    </div>
+                    <button class="btn add-to-cart-btn" onclick="addToCart(@Model.Item.PkItemId, '@Model.Item.ItemName')">Add to Cart</button>
+                </div>
+            </div>
+            <div id="customAlert" class="custom-alert">
+                <div class="custom-alert-content">
+                    <span class="custom-alert-close" onclick="closeCustomAlert()">&times;</span>
+                    <p id="customAlertMessage"></p>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
+
+<script>
+    function increaseQuantity() {
+        var quantityInput = document.getElementById('quantity');
+        var currentQuantity = parseInt(quantityInput.value);
+        quantityInput.value = currentQuantity + 1;
+    }
+
+    function decreaseQuantity() {
+        var quantityInput = document.getElementById('quantity');
+        var currentQuantity = parseInt(quantityInput.value);
+        if (currentQuantity > 1) {
+            quantityInput.value = currentQuantity - 1;
+        }
+    }
+
+    function addToCart(itemId, itemName) {
+        var quantityInput = document.getElementById('quantity');
+        var quantity = parseInt(quantityInput.value);
+
+        fetch('/Transaction/AddToCart?id=' + itemId + '&quantity=' + quantity, {
+            method: 'GET',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(data);
+                showCustomAlert('has been added sucessfully! ', itemName);
+                quantityInput.value = 1;
+            })
+            .catch(error => {
+                console.error('Fetch error:', error);
+            });
+    }
+
+    function showCustomAlert(message, itemName) {
+        document.getElementById('customAlertMessage').innerText = `🎉 ${itemName} ${message}`;
+        document.getElementById('customAlert').style.display = 'block';
+    }
+
+
+    function closeCustomAlert() {
+        document.getElementById('customAlert').style.display = 'none';
+    }
+
+</script>

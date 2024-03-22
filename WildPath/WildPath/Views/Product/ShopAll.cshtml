@@ -25,8 +25,8 @@
                     <th>Weight</th>
                     <th>Size</th>
                     <th>Colour</th>
-                    <th>Action</th> 
-                </tr>
+@*                     <th>Action</th> 
+ *@                </tr>
             </thead>
             <tbody>
                 @foreach (var item in Model)
@@ -44,30 +44,21 @@
                         <td>@Html.DisplayFor(modelItem => item.Colour)</td>
                         <td>
                             <div>
-                                <button id="addButton_@item.PkItemId" class="btn btn-primary mb-1"
-                                        onclick="AddOne('@item.PkItemId')"
-                                        data-price="@item.Price">
-                                    Add To Cart
-                                </button>
-                                <button id="removeButton_@item.PkItemId" class="btn btn-primary"
-                                        style="border-color:#6E0B14; background-color: #6E0B14;"
-                                        onclick="RemoveOne('@item.PkItemId')"
-                                        data-price="@item.Price">
-                                    Remove from Cart
-                                </button>
+                          
+                            
                             </div>
                             <div>
-                                <table class="table">
+                                <table class="table" type="hidden" style="display: none;">
                                     <thead>
                                         <tr>
-                                            <th>Qty</th>
-                                            <th>Amount</th>
+                                            <th type="hidden">Qty</th>
+                                            <th type="hidden">Amount</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td><span id="total_@item.PkItemId">0</span></td>
-                                            <td>$<span id="amount_@item.PkItemId">0.00</span></td>
+                                            <td type="hidden"><span id="total_@item.PkItemId">0</span></td>
+                                            <td type="hidden">$<span id="amount_@item.PkItemId">0.00</span></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -77,10 +68,10 @@
                 }
             </tbody>
         </table>
-        <div class="cart-summary">
+        <div class="cart-summary" style="display: none;">
             <h3>Cart Summary</h3>
-            <p>Total Items: <span id="totalItems"></span></p>
-            <p>Grand Total: $<span id="grandTotal">0.00</span></p>
+            <p type="hidden">Total Items: <span id="totalItems"></span></p>
+            <p type="hidden">Grand Total: $<span id="grandTotal">0.00</span></p>
             <input id="currency" type="hidden" value="CAD" />
         </div>
 @*         <div id="paypal-button-container">
@@ -117,87 +108,89 @@
 </div>
 <script src="https://www.paypal.com/sdk/js?client-id=AcBnAsIJmldpwwq_VnVJuZz8K7PhPwWM3MYUcNw38oL5egs8hH8e2NVSEFrEAsROQQegDbnQnV0gABkT"></script>
 <script>
-    function AddOne(id) {
-        var totalElement = document.getElementById('total_' + id);
-        var amountElement = document.getElementById('amount_' + id);
-        var addButton = document.getElementById('addButton_' + id);
-        var pricePerItem = parseFloat(addButton.getAttribute('data-price'));
-        var total = parseInt(totalElement.textContent);
-        if (isNaN(total)) {
-            total = 0; // Start from zero if it's not a number
-        }
-        total += 1;
-        totalElement.textContent = total;
-        amountElement.textContent = (total * pricePerItem).toFixed(2);
-     
-        console.log("TOTAL",total)
+    // function AddOne(id) {
+    //     var totalElement = document.getElementById('total_' + id);
+    //     var amountElement = document.getElementById('amount_' + id);
+    //     var addButton = document.getElementById('addButton_' + id);
+    //     var qtyAmount = document.getElementById('QtyAmount_' + id).value;
 
-        fetch('/Transaction/AddToCart?id='+id, {
-      
-            method: 'GET',
-            headers: {
-                // 'Content-Type': 'application/json',
-                'X-Requested-With': 'XMLHttpRequest'
-             }
-             //,
-            // body: JSON.stringify({ id: 1 })
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json(); // Parse the response body as JSON
-            })
-            .then(data => {
-                // Handle the JSON data returned from the server
-                console.log(data); // Example output: { Name: "John Doe", Age: 30, Occupation: "Software Developer" }
+    //     var pricePerItem = parseFloat(addButton.getAttribute('data-price'));
+    //     var total = parseInt(totalElement.textContent);
+    //     if (isNaN(total)) {
+    //         total = 0; // Start from zero if it's not a number
+    //     }
+    //     if (qtyAmount > 0 && !NaN && !null) {
+    //         console.log("qty:", qtyAmount);
 
-         
-            })
-            .catch(error => {
-                // Handle errors
-                console.error('Fetch error:', error);
-            });
+    //         var quantity = parseInt(qtyAmount.value); // Parse the quantity input value
+    //         console.log("Quantity:", quantity); // Check the quantity value in the console
 
-        updateCartSummary();
+    //         total += quantity; // Add the parsed quantity to the total
+    //         totalElement.textContent = total;
+    //         amountElement.textContent = (total * pricePerItem).toFixed(2);
 
-    }
-    function RemoveOne(id) {
-        var totalElement = document.getElementById('total_' + id);
-        var amountElement = document.getElementById('amount_' + id);
-        var removeButton = document.getElementById('removeButton_' + id);
-        var pricePerItem = parseFloat(removeButton.getAttribute('data-price'));
-        var total = parseInt(totalElement.textContent);
-        if (isNaN(total)) {
-            total = 0; // Prevent going negative if it's not a number
-        } else {
-            total -= 1;
-        }
-        if (total < 0) {
-            total = 0;
-        }
-        totalElement.textContent = total;
-        amountElement.textContent = (total * pricePerItem).toFixed(2);
-        updateCartSummary();
-    }
-    function updateCartSummary() {
-        console.log("THIS IS!!!")
-        var totalItems = 0;
-        var grandTotal = 0.0;
+    //         console.log("TOTAL", total);
 
-        console.log("GRANDTOTAL BEFORE", grandTotal)
-        // Loop through all total elements and sum them up
-        document.querySelectorAll('[id^="total_"]').forEach(function (element) {
-            totalItems += parseInt(element.textContent) || 0;
-        });
-        // Loop through all amount elements and sum them up
-        document.querySelectorAll('[id^="amount_"]').forEach(function (element) {
-            grandTotal += parseFloat(element.textContent) || 0;
-        });
-        // Update the cart summary display
-        document.getElementById('totalItems').textContent = totalItems;
-        document.getElementById('grandTotal').textContent = grandTotal.toFixed(2);
-        console.log("GRANDTOTAL AFTER", grandTotal)
-    }
+    //         fetch('/Transaction/AddToCart?id=' + id + '&quantity=' + qtyAmount, {
+    //             method: 'GET',
+    //             headers: {
+    //                 'X-Requested-With': 'XMLHttpRequest'
+    //             }
+    //         })
+    //             .then(response => {
+    //                 if (!response.ok) {
+    //                     throw new Error('Network response was not ok');
+    //                 }
+    //                 return response.json(); // Parse the response body as JSON
+    //             })
+    //             .then(data => {
+    //                 console.log(data); // Log the data returned from the server
+    //             })
+    //             .catch(error => {
+    //                 console.error('Fetch error:', error);
+    //             });
+
+    //         updateCartSummary();
+    //     }
+    // }
+
+
+    // function RemoveOne(id) {
+    //     var totalElement = document.getElementById('total_' + id);
+    //     var amountElement = document.getElementById('amount_' + id);
+    //     var removeButton = document.getElementById('removeButton_' + id);
+    //     var pricePerItem = parseFloat(removeButton.getAttribute('data-price'));
+    //     var total = parseInt(totalElement.textContent);
+    //     if (isNaN(total)) {
+    //         total = 0; // Prevent going negative if it's not a number
+    //     } else {
+    //         total -= 1;
+    //     }
+    //     if (total < 0) {
+    //         total = 0;
+    //     }
+    //     totalElement.textContent = total;
+    //     amountElement.textContent = (total * pricePerItem).toFixed(2);
+    //     updateCartSummary();
+    // }
+    // function updateCartSummary() {
+    //     console.log("THIS IS!!!")
+    //     var totalItems = 0;
+    //     var grandTotal = 0.0;
+
+    //     console.log("GRANDTOTAL BEFORE", grandTotal)
+    //     // Loop through all total elements and sum them up
+    //     document.querySelectorAll('[id^="total_"]').forEach(function (element) {
+    //         totalItems += parseInt(element.textContent) || 0;
+    //     });
+    //     // Loop through all amount elements and sum them up
+    //     document.querySelectorAll('[id^="amount_"]').forEach(function (element) {
+    //         grandTotal += parseFloat(element.textContent) || 0;
+    //     });
+    //     // Update the cart summary display
+    //     document.getElementById('totalItems').textContent = totalItems;
+    //     document.getElementById('grandTotal').textContent = grandTotal.toFixed(2);
+    //     console.log("GRANDTOTAL AFTER", grandTotal)
+    // }
   
 </script>
