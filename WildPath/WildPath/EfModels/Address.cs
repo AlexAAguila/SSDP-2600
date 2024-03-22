@@ -20,4 +20,6 @@ public partial class Address
     public virtual ICollection<MyRegisteredUser> MyRegisteredUserFkMailingAdresses { get; set; } = new List<MyRegisteredUser>();
 
     public virtual ICollection<MyRegisteredUser> MyRegisteredUserFkShippingAdresses { get; set; } = new List<MyRegisteredUser>();
+
+    public virtual ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
 }
