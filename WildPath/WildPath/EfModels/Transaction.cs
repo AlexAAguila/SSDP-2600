@@ -7,15 +7,21 @@ public partial class Transaction
 {
     public string PaymentId { get; set; } = null!;
 
-    public string? CreateTime { get; set; }
+    public string CreateTime { get; set; } = null!;
 
-    public string? PayerName { get; set; }
+    public string PayerName { get; set; } = null!;
 
-    public string? PayerEmail { get; set; }
+    public string PayerEmail { get; set; } = null!;
 
-    public string? Amount { get; set; }
+    public string Amount { get; set; } = null!;
 
-    public string? Currency { get; set; }
+    public string Currency { get; set; } = null!;
 
-    public string? PaymentMethod { get; set; }
+    public string PaymentMethod { get; set; } = null!;
+
+    public string ShippingMethod { get; set; } = null!;
+
+    public int FkAddressId { get; set; }
+
+    public virtual Address FkAddress { get; set; } = null!;
 }

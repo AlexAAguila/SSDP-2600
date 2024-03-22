@@ -25,9 +25,9 @@ public partial class WildPathDbContext : DbContext
 
     public virtual DbSet<Transaction> Transactions { get; set; }
 
-//    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-//        => optionsBuilder.UseSqlServer("Server=tcp:wildpathserver.database.windows.net,1433;Initial Catalog=WildPathDb;Persist Security Info=False;User ID=WildPathAdmin;Password=P@ssw0rd!;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Server=tcp:wildpathserver.database.windows.net,1433;Initial Catalog=WildPathDb;Persist Security Info=False;User ID=WildPathAdmin;Password=P@ssw0rd!;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -133,7 +133,7 @@ public partial class WildPathDbContext : DbContext
 
         modelBuilder.Entity<Transaction>(entity =>
         {
-            entity.HasKey(e => e.PaymentId).HasName("PK__Transact__A0D9EFC68C8F4A22");
+            entity.HasKey(e => e.PaymentId).HasName("PK__Transact__A0D9EFC6948C3813");
 
             entity.Property(e => e.PaymentId)
                 .HasMaxLength(100)
@@ -151,6 +151,7 @@ public partial class WildPathDbContext : DbContext
                 .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("currency");
+            entity.Property(e => e.FkAddressId).HasColumnName("fkAddressId");
             entity.Property(e => e.PayerEmail)
                 .HasMaxLength(100)
                 .IsUnicode(false)
@@ -163,6 +164,15 @@ public partial class WildPathDbContext : DbContext
                 .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("paymentMethod");
+            entity.Property(e => e.ShippingMethod)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("shippingMethod");
+
+            entity.HasOne(d => d.FkAddress).WithMany(p => p.Transactions)
+                .HasForeignKey(d => d.FkAddressId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__Transacti__fkAdd__44952D46");
         });
 
         OnModelCreatingPartial(modelBuilder);
