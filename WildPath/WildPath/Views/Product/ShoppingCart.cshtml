@@ -246,7 +246,9 @@
                 }
                 return response.json();
             })
-            
+             .then(data => {
+                showCustomAlert('has been removed! ', itemName);
+            })            
             .catch(error => {
                 console.error('Fetch error:', error);
             });
