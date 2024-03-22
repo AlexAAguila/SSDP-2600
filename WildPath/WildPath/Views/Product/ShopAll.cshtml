@@ -15,12 +15,13 @@
 
   @if (Model.Any())
     {
-        <div class="product-grid">
+        <div class="product-grids">
             @foreach (var ProVM in Model)
             {
                 var imageBase64 = "";
                 var imageAltText = "Product Image";
-                var image = ProVM.ImageStore; // This needs to match your model's image store property
+                var image = ProVM.ImageStore;
+                var productUrl = Url.Action("Details", new { id = ProVM.Item.PkItemId });
 
                 if (image != null && image.ImageId.ToString() == ProVM.Item.ItemImageId)
                 {
@@ -32,14 +33,14 @@
                     var placeholderImagePath = "~/images/placeholder.jpeg";
                 }
 
-                <div class="product-card">
-                    @if (!String.IsNullOrEmpty(imageBase64))
+                <a asp-action="Details" asp-route-id="@ProVM.Item.PkItemId" class="product-cards">
+                @if (!String.IsNullOrEmpty(imageBase64))
                     {
-                        <img src="data:image/jpeg;base64,@imageBase64" alt="@imageAltText" class="product-image" />
+                        <img src="data:image/jpeg;base64,@imageBase64" alt="@imageAltText" class="product-images" />
                     }
                     else
                     {
-                    <img src="@Url.Content("~/images/placeholder.jpeg")" alt="Placeholder Image" class="product-image" />
+                    <img src="@Url.Content("~/images/placeholder.jpeg")" alt="Placeholder Image" class="product-images" />
                     }
                     <div class="product-info">
                         <h3>
@@ -48,7 +49,7 @@
                         <p>@Html.Raw(ProVM.Item.ItemDetails.Replace("\n", "<br/>"))</p>
                         <p class="price">$@ProVM.Item.Price</p>
                     </div>
-                </div>
+                </a>
             }
             <nav>
                 <ul class="pagination">
@@ -80,73 +81,6 @@
 </div>  
 
 <style>
-
-.product-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    padding: 20px;
-    justify-content: space-between;
-}
-
-.product-card {
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    overflow: hidden;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    display:flex;
-    align-items:center;
-    padding:1rem;
-    gap:1rem;
-}
-
-.product-image {
-    width: 40%;
-    height: fit-content;
-    display: block;
-}
-
-.product-info {
-    padding: 15px;
-}
-
-.product-info h3 {
-    margin-top: 0;
-    color: #333;
-}
-
-.product-info p {
-    margin-bottom: 5px;
-    line-height: 1.4;
-    height: 3em; /* Adjust the height as needed, based on your line-height and desired number of lines */
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-line-clamp: 3; /* Number of lines you want to display */
-    -webkit-box-orient: vertical;
-    text-overflow: ellipsis;
-}
-
-
-.price {
-    font-weight: bold;
-    color: #E44D26;
-}
-
-.form-group {
-    margin-bottom: 20px;
-}
-
-.btn-primary {
-    background-color: #007bff;
-    border-color: #007bff;
-    color: white;
-}
-
-.btn-primary:hover {
-    background-color: #0056b3;
-    border-color: #0056b3;
-}
-
 
 
 
