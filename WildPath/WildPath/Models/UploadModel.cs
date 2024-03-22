@@ -2,8 +2,8 @@
 namespace WildPath.Models 
 { 
     public class UploadModel 
-    { 
-        [Required(ErrorMessage = "Please select a file.")] 
+    {
+        [DataType(DataType.Upload)]
         public IFormFile ImageFile { get; set; } 
     } 
 }

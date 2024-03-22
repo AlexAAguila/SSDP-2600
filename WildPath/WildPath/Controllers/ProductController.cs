@@ -310,5 +310,18 @@ namespace WildPath.Controllers
             }
             return View(uploadModel);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteImage(int id)
+        {
+            var image = await _wpdb.ImageStores.FindAsync(id);
+            if (image != null)
+            {
+                _wpdb.ImageStores.Remove(image);
+                await _wpdb.SaveChangesAsync();
+            }
+            return RedirectToAction("Images");
+        }
+
     }
 }
