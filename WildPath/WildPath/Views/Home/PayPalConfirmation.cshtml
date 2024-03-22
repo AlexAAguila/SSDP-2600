@@ -32,7 +32,9 @@
             <span>
                 Your shipment with tracking number: <br />
                 @Model.TrackingNumber is ready. </span><br />
-            <span>Estimated delivery date: @Model.EstimatedDeliveryDate.ToString("MMMM dd, yyyy")</span>
+            <span>Estimated delivery date:<br />
+                @Model.EstimatedDeliveryDate.ToString("MMMM dd, yyyy")</span><br />
+
             <span>Your $</span><span>@Model.Amount</span>
             <span>CAD</span>
             <span> </span>
