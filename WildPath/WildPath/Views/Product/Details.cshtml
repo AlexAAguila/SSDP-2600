@@ -183,10 +183,25 @@
     <div class="details-info">
         <div class="details-image">
             @{
-                var image = Model.ImageStore.FirstOrDefault(i => i.ImageId.ToString() == Model.Item.ItemImageId);
-                if (image != null)
+                var imageBase64 = "";
+                var imageAltText = "Product Image";
+                var image = Model.ImageStore;
+
+                if (image != null && image.ImageId.ToString() == Model.Item.ItemImageId)
                 {
-                    <img src="data:image/jpeg;base64,@Convert.ToBase64String(image.Image)" alt="@image.FileName" class="product-image" />
+                    imageBase64 = Convert.ToBase64String(image.Image);
+                    imageAltText = image.FileName;
+                }
+                else
+                {
+                    var placeholderImagePath = "~/images/placeholder.jpeg";
+                    var placeholderImageUrl = Url.Content(placeholderImagePath);
+                    <img src="@placeholderImageUrl" alt="Placeholder Image" class="product-image" />
+                }
+
+                if (!String.IsNullOrEmpty(imageBase64))
+                {
+                    <img src="data:image/jpeg;base64,@imageBase64" alt="@imageAltText" class="product-image" />
                 }
             }
         </div>
