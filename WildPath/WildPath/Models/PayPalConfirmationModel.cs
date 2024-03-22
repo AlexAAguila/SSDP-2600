@@ -7,5 +7,9 @@
         public string PayerName { get; set; }
         public string PayerEmail { get; set; }
         public string PaymentMethod { get; set;}
+        public string TrackingNumber { get; set; }
+        public DateTime EstimatedDeliveryDate { get; set; }
+
+
     }
 }

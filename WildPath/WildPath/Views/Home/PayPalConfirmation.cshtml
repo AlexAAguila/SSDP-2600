@@ -3,9 +3,45 @@
     ViewData["Title"] = "Payment Confirmation";
 }
 
+<style>
+    html, body, .container, div {
+        margin: 0;
+        padding: 0;
+    }
+
+    .grey-header {
+        background-color: rgba(217, 217, 217, 0.5);
+        color: black;
+        text-align: center;
+        padding: 10px 0;
+        font-size: 15px;
+        margin-top: -15px;
+    }
+</style>
 
 <br />
 <br />
+<div class="grey-header">
+    <span class="bold-text">Your order has shipped</span>
+</div>
+
+<div class="confirmation-message">
+    <span class="text-left">
+        <span style="font-size: 2em;">Hi @Model.PayerName,</span><br />
+        <span style="font-size: 1.4em;">
+            <span>
+                Your shipment with tracking number: <br />
+                @Model.TrackingNumber is ready. </span><br />
+            <span>Estimated delivery date: @Model.EstimatedDeliveryDate.ToString("MMMM dd, yyyy")</span>
+            <span>Your $</span><span>@Model.Amount</span>
+            <span>CAD</span>
+            <span> </span>
+            <span>@Model.PaymentMethod transaction was Successful</span>
+        </span>
+    </span><br /><br />
+</div>
+
+
 <div class="text-center" style="color:darkred;">
     <span class="text-center">
         <span style="font-size: 2em;">Congratulations @Model.PayerName!</span><br /><br /><br /><br />
