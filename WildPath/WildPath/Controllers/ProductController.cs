@@ -32,29 +32,40 @@ namespace WildPath.Controllers
             return View(productRepo.GetAll());
         }
 
+
+
+
         public IActionResult ShopAll(string searchString, int? pageNumber)
         {
             ViewData["currentFilter"] = searchString;
 
-            IQueryable<Item> items = _wpdb.Items;
+            IQueryable<Item> itemsQuery = _wpdb.Items;
 
             if (!string.IsNullOrEmpty(searchString))
             {
-                items = items.Where(p => p.ItemName.Contains(searchString) ||
-                                        p.Supplier.Contains(searchString) ||
-                                        p.Category.Contains(searchString) ||
-                                        p.Weight.ToString().Contains(searchString) ||
-                                        p.Size.Contains(searchString) ||
-                                        p.Colour.Contains(searchString));
+                itemsQuery = itemsQuery.Where(p => p.ItemName.Contains(searchString) ||
+                                            p.Supplier.Contains(searchString) ||
+                                            p.Category.Contains(searchString) ||
+                                            p.Weight.ToString().Contains(searchString) ||
+                                            p.Size.Contains(searchString) ||
+                                            p.Colour.Contains(searchString));
             }
 
             int pageSize = 4;
             int pageIndex = pageNumber ?? 1;
-            var count = items.Count();
-            var paginatedItems = items.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList();
-            var paginatedItemsModel = new PaginatedList<Item>(paginatedItems, count, pageIndex, pageSize);
+            var count = itemsQuery.Count();
+            var items = itemsQuery.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList();
 
-            return View(paginatedItemsModel);
+            // Convert Items to ProductVM
+            var productVMList = items.Select(item => new ProductVM
+            {
+                Item = item,
+                ImageStore = _wpdb.ImageStores.FirstOrDefault(i => i.ImageId.ToString() == item.ItemImageId)
+            }).ToList();
+
+            var paginatedProductVMs = new PaginatedList<ProductVM>(productVMList, count, pageIndex, pageSize);
+
+            return View(paginatedProductVMs);
         }
 
 
