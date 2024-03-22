@@ -92,7 +92,7 @@ namespace WildPath.Controllers
             var viewModel = new ProductVM
             {
                 Item = item,
-                ImageStore = _wpdb.ImageStores.Where(i => i.ImageId.ToString() == item.ItemImageId)
+                ImageStore = _wpdb.ImageStores.FirstOrDefault(i => i.ImageId.ToString() == item.ItemImageId)
             };
 
             return View(viewModel);
