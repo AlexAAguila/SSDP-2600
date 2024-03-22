@@ -26,9 +26,21 @@ namespace WildPath.Controllers
 
         public IActionResult PayPalConfirmation(PayPalConfirmationModel payPalConfirmationModel)
         {
+            payPalConfirmationModel.TrackingNumber = GenerateTrackingNumber();
+
+            payPalConfirmationModel.EstimatedDeliveryDate = DateTime.Now.AddDays(14);
+
             var transRepo = new TransactionRepo(_wpdb);
             transRepo.Add(payPalConfirmationModel);
             return View(payPalConfirmationModel);
+        }
+
+        private string GenerateTrackingNumber()
+        {
+            Random random = new Random();
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            return new string(Enumerable.Repeat(chars, 10)
+              .Select(s => s[random.Next(s.Length)]).ToArray());
         }
 
         public IActionResult CustomerCare()
