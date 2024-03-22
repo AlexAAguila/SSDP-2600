@@ -1,4 +1,4 @@
-﻿@model WildPath.EfModels.Item
+﻿@model WildPath.ViewModels.ProductVM
 
 <style>
     #itemDetails {
@@ -6,6 +6,17 @@
         max-height: 400px;
         overflow-y: auto;
         resize: none;
+    }
+
+    .product-image {
+        display: block;
+        margin-top: 20px;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 20px;
+        width: 100%; /* Set the width to 100% to make the image responsive */
+        max-width: 400px; /* Set a maximum width for the image */
+        height: auto; /* Let the height adjust automatically to maintain aspect ratio */
     }
 </style>
 
@@ -20,64 +31,85 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form asp-action="Edit" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="PkItemId" />
+            <input type="hidden" asp-for="Item.PkItemId" />
             <div class="form-group">
-                <label asp-for="ItemImageId" class="control-label"></label>
-                <input asp-for="ItemImageId" class="form-control" />
-                <span asp-validation-for="ItemImageId" class="text-danger"></span>
+                @{
+                    var imageBase64 = "";
+                    var imageAltText = "Product Image";
+                    var image = Model.ImageStore;
+
+                    if (image != null && image.ImageId.ToString() == Model.Item.ItemImageId)
+                    {
+                        imageBase64 = Convert.ToBase64String(image.Image);
+                        imageAltText = image.FileName;
+                    }
+                    else
+                    {
+                        var placeholderImagePath = "~/images/placeholder.jpeg";
+                        var placeholderImageUrl = Url.Content(placeholderImagePath);
+                        <img src="@placeholderImageUrl" alt="Placeholder Image" class="product-image" />
+                    }
+
+                    if (!String.IsNullOrEmpty(imageBase64))
+                    {
+                        <img src="data:image/jpeg;base64,@imageBase64" alt="@imageAltText" class="product-image" />
+                    }
+                }
+                <input type="file" asp-for="ImageFile" class="form-control" />
+                <span asp-validation-for="ImageFile" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Supplier" class="control-label"></label>
-                <input asp-for="Supplier" class="form-control" />
-                <span asp-validation-for="Supplier" class="text-danger"></span>
+                <label asp-for="Item.Supplier" class="control-label"></label>
+                <input asp-for="Item.Supplier" class="form-control" />
+                <span asp-validation-for="Item.Supplier" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ItemName" class="control-label"></label>
-                <input asp-for="ItemName" class="form-control" />
-                <span asp-validation-for="ItemName" class="text-danger"></span>
+                <label asp-for="Item.ItemName" class="control-label"></label>
+                <input asp-for="Item.ItemName" class="form-control" />
+                <span asp-validation-for="Item.ItemName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ItemDetails" class="control-label"></label>
-                <textarea asp-for="ItemDetails" id="itemDetails" class="form-control"></textarea>
-                <span asp-validation-for="ItemDetails" class="text-danger"></span>
+                <label asp-for="Item.ItemDetails" class="control-label"></label>
+                <textarea asp-for="Item.ItemDetails" id="itemDetails" class="form-control"></textarea>
+                <span asp-validation-for="Item.ItemDetails" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Price" class="control-label"></label>
-                <input asp-for="Price" class="form-control" />
-                <span asp-validation-for="Price" class="text-danger"></span>
+                <label asp-for="Item.Price" class="control-label"></label>
+                <input asp-for="Item.Price" class="form-control" />
+                <span asp-validation-for="Item.Price" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Stock" class="control-label"></label>
-                <input asp-for="Stock" class="form-control" />
-                <span asp-validation-for="Stock" class="text-danger"></span>
+                <label asp-for="Item.Stock" class="control-label"></label>
+                <input asp-for="Item.Stock" class="form-control" />
+                <span asp-validation-for="Item.Stock" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Category" class="control-label"></label>
-                <select asp-for="Category" class="form-control">
-                    <option value="Backpacks" selected="@(Model.Category == "Backpacks")">Backpacks</option>
-                    <option value="Tents" selected="@(Model.Category == "Tents")">Tents</option>
-                    <option value="Sleeping Gear" selected="@(Model.Category == "Sleeping Gear")">Sleeping Gear</option>
-                    <option value="Camping Furniture" selected="@(Model.Category == "Camping Furniture")">Camping Furniture</option>
-                    <option value="Accessories" selected="@(Model.Category == "Accessories")">Accessories</option>
+                <label asp-for="Item.Category" class="control-label"></label>
+                <select asp-for="Item.Category" class="form-control">
+                    <option value="Backpacks" selected="@(Model.Item.Category == "Backpacks")">Backpacks</option>
+                    <option value="Tents" selected="@(Model.Item.Category == "Tents")">Tents</option>
+                    <option value="Sleeping Gear" selected="@(Model.Item.Category == "Sleeping Gear")">Sleeping Gear</option>
+                    <option value="Camping Furniture" selected="@(Model.Item.Category == "Camping Furniture")">Camping Furniture</option>
+                    <option value="Accessories" selected="@(Model.Item.Category == "Accessories")">Accessories</option>
                 </select>
-                <span asp-validation-for="Category" class="text-danger"></span>
+                <span asp-validation-for="Item.Category" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Weight" class="control-label"></label>
-                <input asp-for="Weight" class="form-control" />
-                <span asp-validation-for="Weight" class="text-danger"></span>
+                <label asp-for="Item.Weight" class="control-label"></label>
+                <input asp-for="Item.Weight" class="form-control" />
+                <span asp-validation-for="Item.Weight" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Size" class="control-label"></label>
-                <input asp-for="Size" class="form-control" />
-                <span asp-validation-for="Size" class="text-danger"></span>
+                <label asp-for="Item.Size" class="control-label"></label>
+                <input asp-for="Item.Size" class="form-control" />
+                <span asp-validation-for="Item.Size" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Colour" class="control-label"></label>
-                <input asp-for="Colour" class="form-control" />
-                <span asp-validation-for="Colour" class="text-danger"></span>
+                <label asp-for="Item.Colour" class="control-label"></label>
+                <input asp-for="Item.Colour" class="form-control" />
+                <span asp-validation-for="Item.Colour" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

@@ -64,12 +64,13 @@ namespace WildPath.Repositories
         }
 
 
-        public string Update(Item entity)
+        public string Update(Item entity, IFormFile imageFile)
         {
             string message = string.Empty;
             try
             {
                 Item item = GetById(entity.PkItemId) ?? new Item();
+
                 item.Supplier = entity.Supplier;
                 item.ItemName = entity.ItemName;
                 item.ItemDetails = entity.ItemDetails;
@@ -79,16 +80,48 @@ namespace WildPath.Repositories
                 item.Weight = entity.Weight;
                 item.Size = entity.Size;
                 item.Colour = entity.Colour;
-                item.ItemImageId = entity.ItemImageId;
+
+                if (imageFile != null && imageFile.Length > 0)
+                {
+                    string contentType = imageFile.ContentType;
+                    if (contentType == "image/png" || contentType == "image/jpeg" || contentType == "image/jpg")
+                    {
+                        byte[] imageData;
+                        using (var memoryStream = new MemoryStream())
+                        {
+                            imageFile.CopyTo(memoryStream);
+                            imageData = memoryStream.ToArray();
+                        }
+
+                        var image = new ImageStore
+                        {
+                            FileName = Path.GetFileNameWithoutExtension(imageFile.FileName),
+                            Image = imageData
+                        };
+
+                        _wpdb.ImageStores.Add(image);
+                        _wpdb.SaveChanges();
+
+                        item.ItemImageId = image.ImageId.ToString();
+                    }
+                    else
+                    {
+                        return "Please upload a PNG, JPG, or JPEG file for the image.";
+                    }
+                }
+
+                _wpdb.Items.Update(item);
                 _wpdb.SaveChanges();
-                message = $"{entity.ItemName} comment updated successfully";
+
+                message = $"{entity.ItemName} updated successfully";
             }
             catch (Exception e)
             {
-                message = $" Error updating {entity.ItemName} comment: {e.Message}";
+                message = $"Error updating {entity.ItemName}: {e.Message}";
             }
             return message;
         }
+
 
         public string Delete(int id)
         {

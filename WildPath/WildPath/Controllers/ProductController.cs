@@ -169,24 +169,75 @@ namespace WildPath.Controllers
         public IActionResult Edit(int id)
         {
             ProductRepo productRepo = new ProductRepo(_wpdb);
+            var item = productRepo.GetById(id);
 
-            return View(productRepo.GetById(id));
+            if (item == null)
+            {
+                return NotFound();
+            }
+
+            var viewModel = new ProductVM
+            {
+                Item = item,
+                ImageStore = _wpdb.ImageStores.FirstOrDefault(i => i.ImageId.ToString() == item.ItemImageId)
+            };
+
+            return View(viewModel);
         }
 
+
         [HttpPost]
-        public IActionResult Edit(Item item)
+        public async Task<IActionResult> Edit(Item item, IFormFile imageFile)
         {
             if (ModelState.IsValid)
             {
-                ProductRepo productRepo = new ProductRepo(_wpdb);
+                try
+                {
+                    if (imageFile != null && imageFile.Length > 0)
+                    {
+                        string contentType = imageFile.ContentType;
+                        if (contentType == "image/png" || contentType == "image/jpeg" || contentType == "image/jpg")
+                        {
+                            byte[] imageData;
+                            using (var memoryStream = new MemoryStream())
+                            {
+                                await imageFile.CopyToAsync(memoryStream);
+                                imageData = memoryStream.ToArray();
+                            }
 
-                string repoMessage = productRepo.Update(item);
+                            var image = new ImageStore
+                            {
+                                FileName = Path.GetFileNameWithoutExtension(imageFile.FileName),
+                                Image = imageData
+                            };
 
-                return RedirectToAction("Index", new { message = repoMessage });
+                            _wpdb.ImageStores.Add(image);
+                            await _wpdb.SaveChangesAsync();
+
+                            item.ItemImageId = image.ImageId.ToString();
+                        }
+                        else
+                        {
+                            ModelState.AddModelError("ItemImageId", "Please upload a PNG, JPG, or JPEG file.");
+                            return View(item);
+                        }
+                    }
+
+                    _wpdb.Items.Update(item);
+                    await _wpdb.SaveChangesAsync();
+
+                    return RedirectToAction("Index", new { message = "Product updated successfully" });
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("ItemImageId", "An error occurred while saving the image: " + ex.Message);
+                    return View(item);
+                }
             }
 
             return View(item);
         }
+
         public IActionResult Delete(int id)
         {
             ProductRepo productRepo = new ProductRepo(_wpdb);
@@ -204,14 +255,14 @@ namespace WildPath.Controllers
             return RedirectToAction("Index", new { message = repoMessage });
         }
 
-        public IActionResult Images() 
-        { 
-            IEnumerable<ImageStore> images = _wpdb.ImageStores;
-            return View(images); 
-        }
-        public IActionResult SaveImage() 
+        public IActionResult Images()
         {
-            return View(); 
+            IEnumerable<ImageStore> images = _wpdb.ImageStores;
+            return View(images);
+        }
+        public IActionResult SaveImage()
+        {
+            return View();
         }
 
         [HttpPost]
@@ -221,43 +272,43 @@ namespace WildPath.Controllers
             {
                 if (uploadModel.ImageFile != null && uploadModel.ImageFile.Length > 0)
                 {
-                    string contentType = uploadModel.ImageFile.ContentType; 
-                    if (contentType == "image/png" || contentType == "image/jpeg" || contentType == "image/jpg") 
-                    { 
-                        try 
-                        { 
-                            byte[] imageData; 
-                            using (var memoryStream = new MemoryStream()) 
-                            { 
-                                await uploadModel.ImageFile.CopyToAsync(memoryStream); 
-                                imageData = memoryStream.ToArray(); 
-                            } 
-                            var image = new ImageStore 
-                            { 
-                                FileName = Path.GetFileNameWithoutExtension(uploadModel.ImageFile.FileName), Image = imageData 
-                            }; 
-                            _wpdb.ImageStores.Add(image); await _wpdb.SaveChangesAsync(); 
-                            
-                            return RedirectToAction("Index", "Images"); 
-                        } 
-                        catch (Exception ex) 
-                        { 
-                            ModelState.AddModelError("imageUpload", "An error occured uploading your image." + " Please try again."); 
-                            System.Diagnostics.Debug.WriteLine(ex.Message); 
-                        } 
+                    string contentType = uploadModel.ImageFile.ContentType;
+                    if (contentType == "image/png" || contentType == "image/jpeg" || contentType == "image/jpg")
+                    {
+                        try
+                        {
+                            byte[] imageData;
+                            using (var memoryStream = new MemoryStream())
+                            {
+                                await uploadModel.ImageFile.CopyToAsync(memoryStream);
+                                imageData = memoryStream.ToArray();
+                            }
+                            var image = new ImageStore
+                            {
+                                FileName = Path.GetFileNameWithoutExtension(uploadModel.ImageFile.FileName),
+                                Image = imageData
+                            };
+                            _wpdb.ImageStores.Add(image); await _wpdb.SaveChangesAsync();
+
+                            return RedirectToAction("Index", "Images");
+                        }
+                        catch (Exception ex)
+                        {
+                            ModelState.AddModelError("imageUpload", "An error occured uploading your image." + " Please try again.");
+                            System.Diagnostics.Debug.WriteLine(ex.Message);
+                        }
                     }
                     else
                     {
                         ModelState.AddModelError("imageUpload", "Please upload a PNG, " + "JPG, or JPEG file.");
                     }
                 }
-                else 
-                { 
-                    ModelState.AddModelError("imageUpload", "Please select an " + " image to upload."); 
+                else
+                {
+                    ModelState.AddModelError("imageUpload", "Please select an " + " image to upload.");
                 }
             }
             return View(uploadModel);
         }
     }
 }
-    
