@@ -8,6 +8,8 @@
         public string PayerEmail { get; set; }
         public string PaymentMethod { get; set;}
         public string TrackingNumber { get; set; }
+        public string ShippingMethod { get; set; }
+        public int FkAddressId { get; set; }
         public DateTime EstimatedDeliveryDate { get; set; }
 
 

@@ -110,14 +110,42 @@ namespace WildPath.Controllers
         }
         public IActionResult Checkout()
         {
+            List<CartItemVM> cartItems = new List<CartItemVM>();
+
             var isLoggedIn = User.Identity.IsAuthenticated;
 
-            var model = new CheckoutVM
-            {
-                IsLoggedIn = isLoggedIn,
-            };
+            string cartSession = HttpContext.Session.GetString("Cart");
 
-            return View(model);
+            if (cartSession != null)
+            {
+                List<CartItem> sessionCartItems = Newtonsoft.Json.JsonConvert.DeserializeObject<List<CartItem>>(cartSession);
+                ProductRepo productRepo = new ProductRepo(_wpdb);
+                cartItems = productRepo.GetCartVM(sessionCartItems);
+
+                double totalPrice = 0;
+                int totalItems = 0;
+
+                foreach (var item in cartItems)
+                {
+                    totalPrice += item.Price * item.Quantity;
+                    totalItems += item.Quantity;
+                }
+               
+
+                var model = new CheckoutVM
+                {
+                    IsLoggedIn = isLoggedIn,
+                    totalPrice = totalPrice,
+                    totalItems = totalItems
+                };
+
+
+                return View(model);
+            }
+            else
+            {
+                return View();
+            }
         }
 
     }

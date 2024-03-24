@@ -35,7 +35,10 @@ namespace WildPath.Repositories
                 PayerEmail = payPalConfirmationModel.PayerEmail,
                 Amount = payPalConfirmationModel.Amount,
                 Currency = "CAD",
-                PaymentMethod = payPalConfirmationModel.PaymentMethod
+                PaymentMethod = payPalConfirmationModel.PaymentMethod,
+                ShippingMethod = payPalConfirmationModel.ShippingMethod,
+                FkAddressId = payPalConfirmationModel.FkAddressId
+                
             };
             _context.Transactions.Add(transaction);
             _context.SaveChanges();
