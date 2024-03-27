@@ -28,7 +28,7 @@ namespace WildPath.Controllers
             return View(transactionRepo.GetAll());
         }
 
-        public IActionResult TransactionsForLoggedInUser()
+        public IActionResult UserTransactions()
         {
             string userEmail = User.Identity.Name;
             TransactionRepo transactionRepo = new TransactionRepo(_wpdb);
