@@ -24,6 +24,14 @@ namespace WildPath.Repositories
             return _context.Transactions;
         }
 
+        public IEnumerable<Transaction> GetByEmail(string userEmail)
+        {
+            var transactions = _context.Transactions
+                .Where(t => t.PayerEmail == userEmail)
+                .ToList();
+
+            return transactions;
+        }
 
         public string Add(PayPalConfirmationModel payPalConfirmationModel)
         {
@@ -45,6 +53,9 @@ namespace WildPath.Repositories
             return "Transaction added successfully";
         }
 
-
+        public IEnumerable<Transaction> GetAllTransactions()
+        {
+            return _context.Transactions;
+        }
     }
 }
