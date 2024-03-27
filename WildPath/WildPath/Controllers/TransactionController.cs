@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using WildPath.Data;
 using WildPath.Repositories;
 using WildPath.EfModels;
@@ -19,18 +20,20 @@ namespace WildPath.Controllers
             _wpdb = wpdb;
         }
 
+        [Authorize(Roles = "Admin")]
         public IActionResult Index()
         {
-            //MyRegisteredUserRepo registeredUserRepo = new MyRegisteredUserRepo(_wpdb);
-
-
             TransactionRepo transactionRepo = new TransactionRepo(_wpdb);
 
-
-
-
             return View(transactionRepo.GetAll());
+        }
 
+        public IActionResult TransactionsForLoggedInUser()
+        {
+            string userEmail = User.Identity.Name;
+            TransactionRepo transactionRepo = new TransactionRepo(_wpdb);
+            var transactionsForUser = transactionRepo.GetByEmail(userEmail);
+            return View(transactionsForUser);
         }
 
         public JsonResult AddToCart(int id, int quantity)
@@ -147,6 +150,5 @@ namespace WildPath.Controllers
                 return View();
             }
         }
-
     }
 }

@@ -33,8 +33,6 @@ namespace WildPath.Controllers
         }
 
 
-
-
         public IActionResult ShopAll(string searchString, int? pageNumber)
         {
             ViewData["currentFilter"] = searchString;
