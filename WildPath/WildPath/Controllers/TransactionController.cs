@@ -133,25 +133,57 @@ namespace WildPath.Controllers
             {
                 List<CartItem> sessionCartItems = Newtonsoft.Json.JsonConvert.DeserializeObject<List<CartItem>>(cartSession);
                 ProductRepo productRepo = new ProductRepo(_wpdb);
+                TransactionRepo transactionRepo = new TransactionRepo(_wpdb);
                 cartItems = productRepo.GetCartVM(sessionCartItems);
 
                 double totalPrice = 0;
                 int totalItems = 0;
+                CheckoutVM model;
 
                 foreach (var item in cartItems)
                 {
                     totalPrice += item.Price * item.Quantity;
                     totalItems += item.Quantity;
                 }
-               
-
-                var model = new CheckoutVM
+                if (isLoggedIn)
                 {
-                    IsLoggedIn = isLoggedIn,
-                    totalPrice = totalPrice,
-                    totalItems = totalItems
-                };
+                    var addresses = transactionRepo.GetAddress(User.Identity.Name);
+                    var address = addresses.FirstOrDefault();
+                    if (address != null)
+                    {
+                        model = new CheckoutVM
+                        {
+                            IsLoggedIn = isLoggedIn,
+                            hasAddress = true,
+                            totalPrice = totalPrice,
+                            totalItems = totalItems,
+               
+                            Address = address
+                            
+                        };
+                    }
+                    else
+                    {
+                        model = new CheckoutVM
+                        {
+                            IsLoggedIn = isLoggedIn,
+                            hasAddress = false,
+                            totalPrice = totalPrice,
+                            totalItems = totalItems
+                        };
+                    }
+                }
 
+                else
+                {
+                     model = new CheckoutVM
+                    {
+                        IsLoggedIn = isLoggedIn,
+                        hasAddress = false,
+                        totalPrice = totalPrice,
+                        totalItems = totalItems
+                    };
+                }
 
                 return View(model);
             }

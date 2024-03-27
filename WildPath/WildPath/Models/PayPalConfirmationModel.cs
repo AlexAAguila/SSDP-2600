@@ -1,4 +1,6 @@
-﻿namespace WildPath.Models
+﻿using WildPath.EfModels;
+
+namespace WildPath.Models
 {
     public class PayPalConfirmationModel
     {
@@ -9,7 +11,8 @@
         public string PaymentMethod { get; set;}
         public string TrackingNumber { get; set; }
         public string ShippingMethod { get; set; }
-        public int FkAddressId { get; set; }
+        //public int FkAddressId { get; set; }
+        public Address Address { get; set; }
         public DateTime EstimatedDeliveryDate { get; set; }
 
 
