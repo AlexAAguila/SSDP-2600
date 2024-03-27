@@ -31,10 +31,16 @@ CREATE TABLE ContactInfo
 -- Create the Transactions table
 CREATE TABLE Transactions
 (
-    pkTransactionId INT PRIMARY KEY IDENTITY,
-	status VARCHAR (100) NOT NULL,
-	purchaseDate DATE NOT NULL,
-	shippingMethod VARCHAR(100) NOT NULL,
+    paymentId VARCHAR (100) PRIMARY KEY,
+	createTime VARCHAR (100) NOT NULL,
+	payerName VARCHAR (100) NOT NULL,
+	payerEmail VARCHAR(100) NOT NULL,
+	amount VARCHAR (100) NOT NULL,
+	currency VARCHAR (100) NOT NULL,
+	paymentMethod VARCHAR (100) NOT NULL,
+	shippingMethod VARCHAR (100) NOT NULL,
+	fkAddressId INT FOREIGN KEY REFERENCES Address (pkAddressId) NOT NULL,
+	fkUserId INT FOREIGN KEY REFERENCES MyRegisteredUsers (ID) NULL,
 );
 
 -- Create the Items table

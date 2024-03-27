@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using WildPath.Data;
 using WildPath.Repositories;
 using WildPath.EfModels;
 using WildPath.ViewModels;
 using System.Text.Json;
+using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace WildPath.Controllers
 {
@@ -12,26 +15,36 @@ namespace WildPath.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IConfiguration _configuration;
         private readonly WildPathDbContext _wpdb;
-        public TransactionController(ILogger<HomeController> logger, IConfiguration configuration, WildPathDbContext wpdb)
+        private readonly TransactionRepo _transactionRepo;
+        public TransactionController(ILogger<HomeController> logger, IConfiguration configuration, WildPathDbContext wpdb, TransactionRepo transactionRepo)
         {
             _logger = logger;
             _configuration = configuration;
             _wpdb = wpdb;
+            _transactionRepo = transactionRepo;
         }
 
+        [Authorize(Roles = "Admin")]
         public IActionResult Index()
         {
-            //MyRegisteredUserRepo registeredUserRepo = new MyRegisteredUserRepo(_wpdb);
-
-
             TransactionRepo transactionRepo = new TransactionRepo(_wpdb);
 
-
-
-
             return View(transactionRepo.GetAll());
-
         }
+
+        [Authorize]
+        public IActionResult UserTransactions()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var userTransactions = _wpdb.Transactions
+                .Include(t => t.FkAddress)
+                .Where(t => t.FkUserId == userId)
+                .ToList();
+
+            return View(userTransactions);
+        }
+
 
         public JsonResult AddToCart(int id, int quantity)
         {
@@ -179,6 +192,5 @@ namespace WildPath.Controllers
                 return View();
             }
         }
-
     }
 }

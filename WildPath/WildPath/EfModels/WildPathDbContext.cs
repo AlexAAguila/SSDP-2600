@@ -133,7 +133,7 @@ public partial class WildPathDbContext : DbContext
 
         modelBuilder.Entity<Transaction>(entity =>
         {
-            entity.HasKey(e => e.PaymentId).HasName("PK__Transact__A0D9EFC6948C3813");
+            entity.HasKey(e => e.PaymentId).HasName("PK__Transact__A0D9EFC6A43F7BC0");
 
             entity.Property(e => e.PaymentId)
                 .HasMaxLength(100)
@@ -152,6 +152,9 @@ public partial class WildPathDbContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("currency");
             entity.Property(e => e.FkAddressId).HasColumnName("fkAddressId");
+            entity.Property(e => e.FkUserId)
+                .HasMaxLength(450)
+                .HasColumnName("fkUserId");
             entity.Property(e => e.PayerEmail)
                 .HasMaxLength(100)
                 .IsUnicode(false)
@@ -172,7 +175,7 @@ public partial class WildPathDbContext : DbContext
             entity.HasOne(d => d.FkAddress).WithMany(p => p.Transactions)
                 .HasForeignKey(d => d.FkAddressId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Transacti__fkAdd__44952D46");
+                .HasConstraintName("FK__Transacti__fkAdd__5C6CB6D7");
         });
 
         OnModelCreatingPartial(modelBuilder);

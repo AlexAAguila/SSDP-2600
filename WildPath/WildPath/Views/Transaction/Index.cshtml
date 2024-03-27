@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
+<h1>Transactions</h1>
 
 <table class="table">
     <thead>
@@ -28,31 +28,40 @@
             <th>
                 @Html.DisplayNameFor(model => model.PaymentMethod)
             </th>
-            <th></th>
+            <th>
+                Address
+            </th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreateTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PayerName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PayerEmail)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Amount)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Currency)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PaymentMethod)
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreateTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PayerName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PayerEmail)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Amount)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Currency)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PaymentMethod)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FkAddress.Address1)<br />
+                    @Html.DisplayFor(modelItem => item.FkAddress.City),
+                    @Html.DisplayFor(modelItem => item.FkAddress.Province)<br />
+                    @Html.DisplayFor(modelItem => item.FkAddress.PostalCode)
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

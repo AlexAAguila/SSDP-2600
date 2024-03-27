@@ -24,6 +24,11 @@ namespace WildPath.Repositories
             return _context.Transactions;
         }
 
+        public IEnumerable<Transaction> GetTransactionsByUserId(string userId)
+        {
+            return _context.Transactions.Where(t => t.FkUserId == userId).ToList();
+        }
+
 
         public string Add(PayPalConfirmationModel payPalConfirmationModel)
         {
@@ -56,15 +61,17 @@ namespace WildPath.Repositories
             return "Transaction added successfully";
         }
 
+        public IEnumerable<Transaction> GetAllTransactions()
+        {
+            return _context.Transactions;
+        }
         public IEnumerable<Address> GetAddress(string id)
         {
-            var registeredUserId = _context.MyRegisteredUsers.FirstOrDefault(p => p.Email == id); 
+            var registeredUserId = _context.MyRegisteredUsers.FirstOrDefault(p => p.Email == id);
 
             var address = _context.Addresses.Where(a => a.PkAddressId == registeredUserId.FkShippingAdressId);
 
             return address.ToList();
         }
-
-
     }
 }

@@ -58,7 +58,17 @@ html {
 }
 
     .product-info h3 {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2; /* Limit to two lines */
+        overflow: hidden;
+        text-overflow: ellipsis;
         margin-top: 0;
+        margin-bottom: 0.5em; /* Adjust as needed */
+        
+        line-height: 1.2em; /* Adjust line height as needed */
+        height: 2.4em; /* Double the line-height to accommodate two lines */
+        word-wrap: break-word;
         color: #ACCAC3;
     }
 

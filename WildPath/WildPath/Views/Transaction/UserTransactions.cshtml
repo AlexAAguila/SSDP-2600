@@ -1,0 +1,67 @@
+﻿@model IEnumerable<WildPath.EfModels.Transaction>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Transactions</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CreateTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PayerName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PayerEmail)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Amount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Currency)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PaymentMethod)
+            </th>
+            <th>
+                Address
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreateTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PayerName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PayerEmail)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Amount)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Currency)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PaymentMethod)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FkAddress.Address1)<br />
+                    @Html.DisplayFor(modelItem => item.FkAddress.City),
+                    @Html.DisplayFor(modelItem => item.FkAddress.Province)<br />
+                    @Html.DisplayFor(modelItem => item.FkAddress.PostalCode)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
