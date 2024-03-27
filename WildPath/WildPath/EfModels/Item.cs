@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace WildPath.EfModels;
 
@@ -10,9 +9,8 @@ public partial class Item
 
     public string Supplier { get; set; } = null!;
 
-    [Display(Name = "Item Name")]
     public string ItemName { get; set; } = null!;
-    [Display(Name = "Item Details")]
+
     public string ItemDetails { get; set; } = null!;
 
     public double Price { get; set; }
@@ -26,6 +24,6 @@ public partial class Item
     public string? Size { get; set; }
 
     public string? Colour { get; set; }
-    [Display(Name = "Item Image")]
+
     public string? ItemImageId { get; set; }
 }

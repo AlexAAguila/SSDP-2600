@@ -23,5 +23,9 @@ public partial class Transaction
 
     public int FkAddressId { get; set; }
 
+    public int? FkUserId { get; set; }
+
     public virtual Address FkAddress { get; set; } = null!;
+
+    public virtual MyRegisteredUser? FkUser { get; set; }
 }
