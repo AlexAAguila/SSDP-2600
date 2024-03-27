@@ -22,5 +22,8 @@ namespace WildPath.ViewModels
 
         public byte[] Image { get; set; }
         public int Quantity { get; set; }
+
+        public ImageStore ImageStore { get; set; }
+        public IFormFile ImageFile { get; set; }
     }
 }

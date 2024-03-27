@@ -39,28 +39,64 @@ namespace WildPath.Repositories
             {
                 return new List<CartItemVM>();
             }
-
             var cartItemIds = sessionCartItems.Select(ci => ci.Id).ToList();
 
-            var cartItems = _wpdb.Items
+            // You need to include the ImageStore data in your query
+            var cartItemsWithImages = _wpdb.Items
                 .Where(item => cartItemIds.Contains(item.PkItemId))
-                .ToList() // Execute the query and continue in memory
-                .Select(item => {
-                    var sessionCartItem = sessionCartItems.FirstOrDefault(ci => ci.Id == item.PkItemId);
-                    return new CartItemVM
+                .Select(item => new {
+                    Item = item,
+                    ImageStore = _wpdb.ImageStores.FirstOrDefault(i => i.ImageId.ToString() == item.ItemImageId) // Assuming ItemImageId is of compatible type with ImageId
+                })
+                .ToList();
+
+            var cartItems = cartItemIds
+                .Select(itemId => {
+                    var data = cartItemsWithImages.FirstOrDefault(x => x.Item.PkItemId == itemId);
+                    if (data != null)
                     {
-                        ItemId = item.PkItemId,
-                        ItemName = item.ItemName,
-                        ItemDetails = item.ItemDetails,
-                        Price = item.Price,
-                        Category = item.Category,
-                        Size = item.Size,
-                        Colour = item.Colour,
-                        Quantity = sessionCartItem != null ? sessionCartItem.Quantity : 1
-                    };
-                }).ToList();
+                        var sessionCartItem = sessionCartItems.FirstOrDefault(ci => ci.Id == data.Item.PkItemId);
+                        return new CartItemVM
+                        {
+                            ItemId = data.Item.PkItemId,
+                            ItemName = data.Item.ItemName,
+                            ItemDetails = data.Item.ItemDetails,
+                            Price = data.Item.Price,
+                            Category = data.Item.Category,
+                            Size = data.Item.Size,
+                            Colour = data.Item.Colour,
+                            Quantity = sessionCartItem != null ? sessionCartItem.Quantity : 1,
+                            ImageStore = data.ImageStore, // Now you have the image data
+                        };
+                    }
+                    return null; // Handle the case where the item is not found
+                })
+                .Where(cartItemVM => cartItemVM != null)
+                .ToList();
 
             return cartItems;
+
+            //var cartItemIds = sessionCartItems.Select(ci => ci.Id).ToList();
+
+            //var cartItems = _wpdb.Items
+            //    .Where(item => cartItemIds.Contains(item.PkItemId))
+            //    .ToList() // Execute the query and continue in memory
+            //    .Select(item => {
+            //        var sessionCartItem = sessionCartItems.FirstOrDefault(ci => ci.Id == item.PkItemId);
+            //        return new CartItemVM
+            //        {
+            //            ItemId = item.PkItemId,
+            //            ItemName = item.ItemName,
+            //            ItemDetails = item.ItemDetails,
+            //            Price = item.Price,
+            //            Category = item.Category,
+            //            Size = item.Size,
+            //            Colour = item.Colour,
+            //            Quantity = sessionCartItem != null ? sessionCartItem.Quantity : 1
+            //        };
+            //    }).ToList();
+
+            //return cartItems;
         }
 
 
