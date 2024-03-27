@@ -103,8 +103,14 @@
 
                     </ul>
                     <partial name="_LoginPartial" />
-                    <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="ShoppingCart">Shopping Cart</a>
+                    @{
+                        if (User.Identity.IsAuthenticated)
+                        {
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Transaction" asp-action="UserTransactions">Transactions</a>
 
+                        }
+                    }
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="ShoppingCart">Shopping Cart</a>
                 </div>
             </div>
         </nav>
