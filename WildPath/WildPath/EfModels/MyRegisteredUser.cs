@@ -22,6 +22,4 @@ public partial class MyRegisteredUser
     public virtual Address? FkMailingAdress { get; set; }
 
     public virtual Address? FkShippingAdress { get; set; }
-
-    public virtual ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
 }

@@ -24,14 +24,11 @@ namespace WildPath.Repositories
             return _context.Transactions;
         }
 
-        public IEnumerable<Transaction> GetByEmail(string userEmail)
+        public IEnumerable<Transaction> GetTransactionsByUserId(string userId)
         {
-            var transactions = _context.Transactions
-                .Where(t => t.PayerEmail == userEmail)
-                .ToList();
-
-            return transactions;
+            return _context.Transactions.Where(t => t.FkUserId == userId).ToList();
         }
+
 
         public string Add(PayPalConfirmationModel payPalConfirmationModel)
         {
