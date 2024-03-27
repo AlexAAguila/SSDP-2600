@@ -24,17 +24,25 @@ namespace WildPath.Controllers
             return View();
         }
 
-        public IActionResult PayPalConfirmation(PayPalConfirmationModel payPalConfirmationModel)
+        [HttpPost]
+        public IActionResult ProcessTransaction([FromBody] PayPalConfirmationModel payPalConfirmationModel)
         {
             payPalConfirmationModel.TrackingNumber = GenerateTrackingNumber();
 
             payPalConfirmationModel.EstimatedDeliveryDate = DateTime.Now.AddDays(14);
 
             var transRepo = new TransactionRepo(_wpdb);
+            //var address = transRepo.AddAddress(payPalConfirmationModel);
+            //Console.WriteLine(address);
             transRepo.Add(payPalConfirmationModel);
-            return View(payPalConfirmationModel);
+            return RedirectToAction("PayPalConfirmation", payPalConfirmationModel);
         }
 
+
+        public IActionResult PayPalConfirmation(PayPalConfirmationModel payPalConfirmationModel)
+        {
+            return View("PayPalConfirmation", payPalConfirmationModel);
+        }
         private string GenerateTrackingNumber()
         {
             Random random = new Random();
