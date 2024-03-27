@@ -14,9 +14,9 @@
         margin-left: auto;
         margin-right: auto;
         padding: 20px;
-        width: 100%; /* Set the width to 100% to make the image responsive */
-        max-width: 400px; /* Set a maximum width for the image */
-        height: auto; /* Let the height adjust automatically to maintain aspect ratio */
+        width: 100%;
+        max-width: 400px;
+        height: auto;
     }
 </style>
 
@@ -58,8 +58,9 @@
                     }
                 }
                 <input type="file" asp-for="ImageFile" class="form-control" />
-                <span asp-validation-for="ImageFile" class="text-danger"></span>
+                <span class="text-muted">Optional: Choose a new image or leave it blank to keep the existing one.</span>
             </div>
+
             <div class="form-group">
                 <label asp-for="Item.Supplier" class="control-label"></label>
                 <input asp-for="Item.Supplier" class="form-control" />
