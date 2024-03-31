@@ -5,6 +5,25 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <style>
+    .cart-summary{
+        display:flex;
+        flex-direction:column;
+        justify-content:center;
+        align-items:center;
+        border: 1px solid #0000001f;
+        border-radius:5px;
+        padding:1rem;
+        margin:1rem;
+    }
+
+    .cart-box{
+        display:flex;
+        justify-content:flex-start;
+        gap:2rem;
+        
+
+    }
+
     .custom-alert {
         display: none;
         position: fixed;
@@ -41,14 +60,17 @@
         }
 </style>
 
-<h1>Shopping Cart</h1>
+
+
+<hr/>
 
 <div>
     @if (Model.Any())
     {
         <table class="table">
             <thead>
-                <tr>
+              @*   <tr>
+                    <th>Image</th>
                     <th>Item Name</th>
                     <th>Price</th>
                     <th>Category</th>
@@ -57,13 +79,41 @@
                     <th>Qty</th>
                     <th>Amount</th>
                     <th>Action</th>
-                </tr>
+                </tr> *@
             </thead>
+           
             <tbody>
                 @foreach (var item in Model)
                 {
-                    <tr>
-                        <td>@item.ItemName</td>
+                    var imageBase64 = "";
+                    var imageAltText = "Product Image";
+                    var image = item.ImageStore; // Adjust according to your CartItemVM structure
+                    var productUrl = Url.Action("Details", new { id = item.ItemId }); // Adjust if needed
+                    var placeholderImagePath = Url.Content("~/images/placeholder.jpeg");
+
+                    if (image != null && image.ImageId.ToString() == item.ImageStore.ImageId.ToString())
+                    {
+                        imageBase64 = Convert.ToBase64String(image.Image);
+                        imageAltText = image.FileName;
+                    }
+                    else
+                    {
+                        placeholderImagePath = Url.Content("~/images/placeholder.jpeg");
+                    }
+
+                 @*    <tr style="display:flex;flex-direction:column;">
+                        <td>
+                            @if (!String.IsNullOrEmpty(imageBase64))
+                            {
+                                <img src="data:image/jpeg;base64,@imageBase64" alt="@imageAltText" style="width:100px; height:auto;" />
+                            }
+                            else
+                            {
+                                <img src="@placeholderImagePath" alt="Placeholder Image" style="width:100px; height:auto;" />
+                            }
+                        </td>
+                        <td>@Html.ActionLink(item.ItemName, "Details", new { id = item.ItemId })</td>
+                     
                         <td>@item.Price.ToString("C")</td>
                         <td>@item.Category</td>
                         <td>@item.Size</td>
@@ -75,6 +125,39 @@
                                     onclick="RemoveOne('@item.ItemId', '@item.ItemName')">
                                 Remove from Cart
                             </button>
+                        </td>
+                    </tr> *@
+
+                    <tr>
+                        <td colspan="2" style="width:100%; padding:10px;">
+                            <div class="row">
+                                <!-- Image column -->
+                                <div class="col-5" style="padding-right:10px;">
+                                    @if (!String.IsNullOrEmpty(imageBase64))
+                                    {
+                                        <img src="data:image/jpeg;base64,@imageBase64" alt="@imageAltText" style="width:100%; height:auto;" />
+                                    }
+                                    else
+                                    {
+                                        <img src="@Url.Content("~/images/placeholder.jpeg")" alt="Placeholder Image" style="width:100%; height:auto;" />
+                                    }
+                                </div>
+
+                                <!-- Details column -->
+                                <div class="col-7" style="display:flex; flex-direction:column; justify-content:center;">
+                                    <h4>@item.ItemName</h4>
+                                  
+                                
+                                    <div class="cart-box">
+                                    <p>@item.Size</p>
+                                    <p>@item.Colour</p>
+                                    <p><span id="total_@item.ItemId">@item.Quantity</span></p>
+                                    </div>
+                                    <p>$<span id="amount_@item.ItemId">@((item.Quantity * item.Price).ToString("N2"))</span></p>
+                                    <!-- Other details -->
+                                    <button class="btn btn-primary mb-1" onclick="RemoveOne('@item.ItemId', '@item.ItemName')">Remove from Cart</button>
+                                </div>
+                            </div>
                         </td>
                     </tr>
 
@@ -88,10 +171,14 @@
             </div>
         </div>
         <div class="cart-summary">
-            <h3>Cart Summary</h3>
-            <p>Total Items: <span id="totalItems"></span></p>
-            <p>Grand Total: $<span id="grandTotal">0.00</span></p>
-            <a href="@Url.Action("Checkout", "Transaction")" class="btn btn-success">Checkout Now</a>
+            <h3>Order Summary</h3>
+            <p>Total Items: <span id="totalItems"></span></p> 
+             <p>Subtotal: $<span id="grandTotal">0.00</span></p>
+                <div style="display:flex;justify-content:center;">
+                    <div style="display:flex;justify-content:center;width:100%">
+                        <a href="@Url.Action("Checkout", "Transaction")" class="btn btn-success" style="width:100%">Proceed to checkout</a>
+                    </div>
+                </div>
 
         </div>
     
@@ -105,37 +192,8 @@
 
 </div>
 
-<!-- Add your PayPal SDK script here -->
-
 <script>
-    // Function to update the cart summary
-    // function updateCartSummary() {
-    //     var totalItems = 0;
-    //     var grandTotal = 0.0;
 
-    //     // Loop through all quantity elements and sum them up
-    //     document.querySelectorAll('[id^="total_"]').forEach(function (element) {
-    //         var quantity = parseInt(element.textContent) || 0;
-    //         totalItems += quantity;
-
-    //         // Get the corresponding amount element by replacing 'total_' with 'amount_'
-    //         var amountId = element.id.replace('total_', 'amount_');
-    //         var amountElement = document.getElementById(amountId);
-
-    //         // Calculate the amount based on the quantity and data-price attribute
-    //         var pricePerItem = parseFloat(document.getElementById('addButton_' + element.id.split('_')[1]).getAttribute('data-price'));
-    //         var amount = quantity * pricePerItem;
-    //         amountElement.textContent = amount.toFixed(2);
-
-    //         grandTotal += amount;
-    //     });
-
-    //     // Update the cart summary display
-    //     document.getElementById('totalItems').textContent = totalItems;
-    //     document.getElementById('grandTotal').textContent = '$' + grandTotal.toFixed(2);
-    // }
-
-    // Remember to call updateCartSummary() at the end of your RemoveOne() function as well.
 
     function updateCartSummary() {
         var totalItems = 0;
@@ -150,7 +208,6 @@
             var amountId = element.id.replace('total_', 'amount_');
             var amountElement = document.getElementById(amountId);
 
-            // Assuming amountElement's textContent contains the pre-calculated amount
             // Extract the numerical value from the amountElement's textContent
             var amount = parseFloat(amountElement.textContent.replace(/[^0-9.]/g, '')) || 0;
             grandTotal += amount;
@@ -158,25 +215,18 @@
 
         // Update the cart summary display
         document.getElementById('totalItems').textContent = totalItems;
-        document.getElementById('grandTotal').textContent = grandTotal.toFixed(2);
-
-      
+        document.getElementById('grandTotal').textContent = grandTotal.toFixed(2);   
     }
-
-
 
     function showCustomAlert(message, itemName) {
         document.getElementById('customAlertMessage').innerText = ` ${itemName} ${message}`;
         document.getElementById('customAlert').style.display = 'block';
     }
 
-
     function closeCustomAlert() {
         document.getElementById('customAlert').style.display = 'none';
         updateCartSummary();
         window.location.reload();
-
-
     }
 
 
@@ -193,9 +243,6 @@
         total += 1;
         totalElement.textContent = total;
         amountElement.textContent = (total * pricePerItem).toFixed(2);
-
-        console.log("TOTAL", total)
-
         fetch('/Transaction/AddToCart?id=' + id, {
 
             method: 'GET',
@@ -203,8 +250,7 @@
                 // 'Content-Type': 'application/json',
                 'X-Requested-With': 'XMLHttpRequest'
             }
-            //,
-            // body: JSON.stringify({ id: 1 })
+         
         })
             .then(response => {
                 if (!response.ok) {
@@ -227,11 +273,6 @@
 
     }
 
-
-
-
-
-    // Function to remove an item from the cart
     // Function to remove an item from the cart
     function RemoveOne(itemId, itemName) {
         fetch('/Transaction/RemoveToCart?id=' + itemId, {
@@ -277,7 +318,5 @@
             });
     });
 
-
-    // Add your PayPal buttons code here
 </script>
 
