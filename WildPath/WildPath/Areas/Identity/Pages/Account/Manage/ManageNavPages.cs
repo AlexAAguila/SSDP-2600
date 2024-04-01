@@ -59,6 +59,8 @@ namespace  WildPath.Areas.Identity.Pages.Account.Manage
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
+        /// 
+        public static string Transactions => "Transactions";
         public static string TwoFactorAuthentication => "TwoFactorAuthentication";
 
         /// <summary>
@@ -107,6 +109,8 @@ namespace  WildPath.Areas.Identity.Pages.Account.Manage
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
+        /// 
+        public static string TransactionsNavClass(ViewContext viewContext) => PageNavClass(viewContext, Transactions);
         public static string TwoFactorAuthenticationNavClass(ViewContext viewContext) => PageNavClass(viewContext, TwoFactorAuthentication);
 
         /// <summary>
