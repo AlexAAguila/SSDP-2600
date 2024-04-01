@@ -99,13 +99,16 @@ namespace WildPath.Repositories
             //return cartItems;
         }
 
-
-        public string Update(Item entity, IFormFile imageFile)
+        public async Task<string> UpdateAsync(Item entity, IFormFile imageFile)
         {
             string message = string.Empty;
             try
             {
-                Item item = GetById(entity.PkItemId) ?? new Item();
+                var item = await _wpdb.Items.FindAsync(entity.PkItemId);
+                if (item == null)
+                {
+                    return "Item not found.";
+                }
 
                 item.Supplier = entity.Supplier;
                 item.ItemName = entity.ItemName;
@@ -125,7 +128,7 @@ namespace WildPath.Repositories
                         byte[] imageData;
                         using (var memoryStream = new MemoryStream())
                         {
-                            imageFile.CopyTo(memoryStream);
+                            await imageFile.CopyToAsync(memoryStream);
                             imageData = memoryStream.ToArray();
                         }
 
@@ -136,7 +139,7 @@ namespace WildPath.Repositories
                         };
 
                         _wpdb.ImageStores.Add(image);
-                        _wpdb.SaveChanges();
+                        await _wpdb.SaveChangesAsync();
 
                         item.ItemImageId = image.ImageId.ToString();
                     }
@@ -147,7 +150,7 @@ namespace WildPath.Repositories
                 }
 
                 _wpdb.Items.Update(item);
-                _wpdb.SaveChanges();
+                await _wpdb.SaveChangesAsync();
 
                 message = $"{entity.ItemName} updated successfully";
             }

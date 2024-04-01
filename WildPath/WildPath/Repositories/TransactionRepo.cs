@@ -4,6 +4,7 @@ using WildPath.ViewModels;
 using System;
 using System.Collections.Generic;
 using WildPath.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace WildPath.Repositories
 {
@@ -20,8 +21,7 @@ namespace WildPath.Repositories
 
         public IEnumerable<Transaction> GetAll()
         {
-            var s = _context;
-            return _context.Transactions;
+            return _context.Transactions.Include(t => t.FkAddress);
         }
 
         public IEnumerable<Transaction> GetTransactionsByUserId(string userId)
