@@ -9,6 +9,6 @@ namespace WildPath.ViewModels
         public ImageStore ImageStore { get; set; }
 
         [Display(Name = "Image")]
-        public IFormFile ImageFile { get; set; }
+        public IFormFile? ImageFile { get; set; }
     }
 }

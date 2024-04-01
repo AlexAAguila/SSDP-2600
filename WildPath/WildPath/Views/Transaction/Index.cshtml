@@ -56,11 +56,18 @@
                     @Html.DisplayFor(modelItem => item.PaymentMethod)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.FkAddress.Address1)<br />
-                    @Html.DisplayFor(modelItem => item.FkAddress.City),
-                    @Html.DisplayFor(modelItem => item.FkAddress.Province)<br />
-                    @Html.DisplayFor(modelItem => item.FkAddress.PostalCode)
+                    @if (item.FkAddress != null)
+                    {
+                        <div>@item.FkAddress.Address1</div>
+                        <div>@item.FkAddress.City, @item.FkAddress.Province</div>
+                        <div>@item.FkAddress.PostalCode</div>
+                    }
+                    else
+                    {
+                        <span>No address available</span>
+                    }
                 </td>
+
             </tr>
         }
     </tbody>
