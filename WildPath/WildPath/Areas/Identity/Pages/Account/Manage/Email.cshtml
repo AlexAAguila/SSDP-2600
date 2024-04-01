@@ -22,6 +22,11 @@
         border: none;
         margin-bottom: 15px;
     }
+
+    #change-email-button:hover {
+        background-color: #99b3a9;
+        color: #FFFFFF;
+    }
 </style>
 
 <h3>@ViewData["Title"]</h3>
@@ -53,7 +58,7 @@
                 <label asp-for="Input.NewEmail" class="form-label"></label>
                 <span asp-validation-for="Input.NewEmail" class="text-danger"></span>
             </div>
-            <button id="change-email-button" type="submit" asp-page-handler="ChangeEmail" class="w-100 btn btn-lg btn-primary">Change email</button>
+            <button id="change-email-button" type="submit" asp-page-handler="ChangeEmail" class="w-100 btn btn-lg btn-primary">Change Email</button>
         </form>
     </div>
 </div>
