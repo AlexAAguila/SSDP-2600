@@ -9,12 +9,17 @@
         display:flex;
         flex-direction:column;
         justify-content:center;
-        align-items:center;
         border: 1px solid #0000001f;
-        border-radius:5px;
+        border-radius:20px;
         padding:1rem;
         margin:1rem;
     }
+
+    .cart-summary h3{
+       align-self:center;
+
+    }
+   
 
     .cart-box{
         display:flex;
@@ -58,6 +63,54 @@
             text-decoration: none;
             cursor: pointer;
         }
+
+      #quantity {
+        width: 30px;
+        text-align: center;
+    }
+
+    .quantity-controls {
+        display: flex;
+        border: 1px solid #ccc;
+        border-radius: 2px;
+    }
+
+    .quantity-controls button {
+        background-color: transparent;
+        border: none;
+        padding: 0 5px;
+        cursor: pointer;
+    }
+
+    .quantity-controls input {
+        border: none;
+        width: 40px;
+        text-align: center;
+    }
+
+    .quantity-controls button:hover {
+        background-color: #f0f0f0;
+    }
+
+    .quantity-controls button, .quantity-controls input {
+        height: 25px;
+    }
+
+    .details-quantity{
+        width:80px;
+    }
+
+    .controls-wrapper{
+        display:flex;
+        align-items:center;
+        gap:1rem;
+    }
+
+       @@media (min-width: 768px) { /* Adjust the max-width as needed for your target tablet size */
+       .cart-summary{
+           margin:8rem;
+       }
+    }
 </style>
 
 
@@ -68,27 +121,14 @@
     @if (Model.Any())
     {
         <table class="table">
-            <thead>
-              @*   <tr>
-                    <th>Image</th>
-                    <th>Item Name</th>
-                    <th>Price</th>
-                    <th>Category</th>
-                    <th>Size</th>
-                    <th>Colour</th>
-                    <th>Qty</th>
-                    <th>Amount</th>
-                    <th>Action</th>
-                </tr> *@
-            </thead>
-           
+        
             <tbody>
                 @foreach (var item in Model)
                 {
                     var imageBase64 = "";
                     var imageAltText = "Product Image";
-                    var image = item.ImageStore; // Adjust according to your CartItemVM structure
-                    var productUrl = Url.Action("Details", new { id = item.ItemId }); // Adjust if needed
+                    var image = item.ImageStore; 
+                    var productUrl = Url.Action("Details", new { id = item.ItemId }); 
                     var placeholderImagePath = Url.Content("~/images/placeholder.jpeg");
 
                     if (image != null && image.ImageId.ToString() == item.ImageStore.ImageId.ToString())
@@ -144,11 +184,14 @@
                                                     <button id="addButton_@item.ItemId" data-price="@item.Price" onclick="AddOne('@item.ItemId')">+</button>
 
                                         </div>
+                                         <button class="btn btn-primary mb-1" onclick="removeFromCart('@item.ItemId', '@item.ItemName')">Remove</button>
                                     </div>
                                 </div>
                                     </div>
                                  
-                                  @*   <button class="btn btn-primary mb-1" onclick="RemoveOne('@item.ItemId', '@item.ItemName')">Remove from Cart</button> *@
+                                    
+                                   
+
                                 </div>
                             </div>
                         </td>
@@ -165,8 +208,12 @@
         </div>
         <div class="cart-summary">
             <h3>Order Summary</h3>
+            <hr />
             <p>Total Items: <span id="totalItems"></span></p> 
+              <hr />
              <p>Subtotal: $<span id="grandTotal">0.00</span></p>
+               <hr />
+             <p>Tax will be calculated once the shipping address has been confirmed.</p>
                 <div style="display:flex;justify-content:center;">
                     <div style="display:flex;justify-content:center;width:100%">
                         <a href="@Url.Action("Checkout", "Transaction")" class="btn btn-success" style="width:100%">Proceed to checkout</a>
@@ -230,6 +277,7 @@
         var amountElement = document.getElementById('amount_' + id);
         var addButton = document.getElementById('addButton_' + id);
         var quantityInput = document.getElementById('quantity_' + id); 
+        var quantity = parseInt(quantityInput.value);
 
         var pricePerItem = parseFloat(addButton.getAttribute('data-price'));
         var total = parseInt(totalElement.textContent);
@@ -241,7 +289,7 @@
         totalElement.textContent = total;
         quantityInput.value = total; 
         amountElement.textContent = (total * pricePerItem).toFixed(2);
-        fetch('/Transaction/AddToCart?id=' + id, {
+        fetch('/Transaction/AddToCart?id=' + id + '&quantity=' + quantity, {
 
             method: 'GET',
             headers: {
@@ -257,7 +305,7 @@
                 return response.json(); // Parse the response body as JSON
             })
             .then(data => {
-                console.log("hello");
+                
 
 
             })
@@ -270,50 +318,71 @@
 
     }
 
+function RemoveOne(id) {
+    var totalElement = document.getElementById('total_' + id);
+    var amountElement = document.getElementById('amount_' + id);
+    var quantityInput = document.getElementById('quantity_' + id); // Ensure this targets the specific item's quantity input
+    var addButton = document.getElementById('addButton_' + id);
 
-   function RemoveOne(id) {
-        var totalElement = document.getElementById('total_' + id);
-        var amountElement = document.getElementById('amount_' + id);
-        var addButton = document.getElementById('addButton_' + id);
-         var quantityInput = document.getElementById('quantity_' + id); 
+    var pricePerItem = parseFloat(addButton.getAttribute('data-price'));
+    var total = parseInt(totalElement.textContent);
+    if (isNaN(total)) { total = 0; }
 
-        var pricePerItem = parseFloat(addButton.getAttribute('data-price'));
-        var total = parseInt(totalElement.textContent);
-        if (isNaN(total)) {
-            total = 0; // Start from zero if it's not a number
-         
-        }
-        total -= 1;
+    // Check if total is greater than 0 before decrementing
+    if (total > 0) {
+        total -= 1; // Decrement only if above 0
         totalElement.textContent = total;
-        quantityInput.value = total; 
+        quantityInput.value = total; // Update the input field to the new total
         amountElement.textContent = (total * pricePerItem).toFixed(2);
-        fetch('/Transaction/RemoveOneFromCart?id=' + id, {
 
+        // Logic to handle the server-side update and UI refresh
+        fetch('/Transaction/RemoveOneFromCart?id=' + id, {
             method: 'GET',
             headers: {
-                // 'Content-Type': 'application/json',
                 'X-Requested-With': 'XMLHttpRequest'
             }
-         
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Handle successful response
+            updateCartSummary();
+        })
+        .catch(error => {
+            console.error('Fetch error:', error);
+        });
+    } else {
+        // Optionally, provide feedback to the user that the quantity cannot be reduced further
+        console.log("Item quantity cannot be less than 0.");
+        // Or, use your custom alert function to notify the user
+        // showCustomAlert("Cannot reduce the quantity below 0.", "Notice");
+    }
+}
+
+   // Function to remove an item from the cart
+    function removeFromCart(itemId, itemName) {
+        fetch('/Transaction/RemoveToCart?id=' + itemId, {
+            method: 'GET',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
         })
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
-                return response.json(); // Parse the response body as JSON
+                return response.json();
             })
-            .then(data => {
-                console.log(data);
-
-
-            })
+             .then(data => {
+                showCustomAlert('has been removed! ', itemName);
+            })            
             .catch(error => {
-                // Handle errors
                 console.error('Fetch error:', error);
             });
-
-        updateCartSummary();
-
     }
 
 
@@ -323,7 +392,7 @@
             .then(response => response.json())
             .then(cartItems => {
                 cartItems.forEach(item => {
-                    console.log("HIIIIIII!!!")
+                   
                     var totalElement = document.getElementById('total_' + item.ItemId);
                     var amountElement = document.getElementById('amount_' + item.ItemId);
                     if (totalElement && amountElement) {
