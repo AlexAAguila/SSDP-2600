@@ -7,7 +7,29 @@
 
 <h1>Transactions</h1>
 
-<table class="table">
+<div class="mobile-cards">
+    @foreach (var item in Model)
+    {
+        <div class="mobile-card">
+            <div><strong>Date:</strong> @Html.DisplayFor(modelItem => item.CreateTime)</div>
+            <div><strong>Payer:</strong> @Html.DisplayFor(modelItem => item.PayerName)</div>
+            <div><strong>Email:</strong> @Html.DisplayFor(modelItem => item.PayerEmail)</div>
+            <div><strong>Amount:</strong> @Html.DisplayFor(modelItem => item.Amount) @Html.DisplayFor(modelItem => item.Currency)</div>
+            <div><strong>Method:</strong> @Html.DisplayFor(modelItem => item.PaymentMethod)</div>
+            <div>
+                <strong>Address:</strong> @if (item.FkAddress != null)
+                {
+                    <span>@item.FkAddress.Address1, @item.FkAddress.City, @item.FkAddress.Province @item.FkAddress.PostalCode</span>
+                }
+                else
+                {
+                    <span>No address available</span>
+                }
+            </div>
+        </div>
+    }
+</div>
+<table class="transaction-table">
     <thead>
         <tr>
             <th>
