@@ -27,13 +27,13 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="CustomerCare">Customer Care</a>
-                        </li>
+                        @*                         <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="CustomerCare">Customer Care</a>
+                        </li> *@
 
                         <!-- Mobile View: Direct category links, hidden on lg and up -->
                         <li class="nav-item d-lg-none">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="ShopAll" >Shop All</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="ShopAll">Shop All</a>
                         </li>
                         <li class="nav-item d-lg-none">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="ShopAll" asp-route-searchString="Backpacks">Backpacks</a>
@@ -50,19 +50,19 @@
                         <li class="nav-item d-lg-none">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="ShopAll" asp-route-searchString="Accessories">Accessories</a>
                         </li>
-                    
-                           @if (User.IsInRole("Admin"))
+
+                        @if (User.IsInRole("Admin"))
                         {
-                                <li class="nav-item d-lg-none">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="Images" >Image</a>
-                        </li>
-                        <li class="nav-item d-lg-none">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="SaveImage" >Save Image</a>
-                        </li>
+                            <li class="nav-item d-lg-none">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="Images">Image</a>
+                            </li>
+                            <li class="nav-item d-lg-none">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="SaveImage">Save Image</a>
+                            </li>
 
                             <li><a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="Images">Image</a></li>
                             <li><a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="SaveImage">Save Image</a></li>
-                           <li> <a class="nav-link text-dark" asp-area="" asp-controller="Transaction" asp-action="Index">Transactions</a></li>
+                            <li> <a class="nav-link text-dark" asp-area="" asp-controller="Transaction" asp-action="Index">Transactions</a></li>
                         }
 
                         <li class="nav-item dropdown d-none d-lg-block">
@@ -71,7 +71,7 @@
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <li>
-                                    <a class="dropdown-item" asp-area="" asp-controller="Product" asp-action="ShopAll" >Shop All</a>
+                                    <a class="dropdown-item" asp-area="" asp-controller="Product" asp-action="ShopAll">Shop All</a>
                                 </li>
                                 <li>
                                     <a class="dropdown-item" asp-area="" asp-controller="Product" asp-action="ShopAll" asp-route-searchString="Backpacks">Backpacks</a>
@@ -81,10 +81,10 @@
                                 <li><a class="dropdown-item" asp-area="" asp-controller="Product" asp-action="ShopAll" asp-route-searchString="Camping Furniture">Camping Furniture</a></li>
                                 <li><a class="dropdown-item" asp-area="" asp-controller="Product" asp-action="ShopAll" asp-route-searchString="Accessories">Accessories</a></li>
                             </ul>
-                 
 
-                        @if (User.IsInRole("Admin"))
-                        {
+
+                            @if (User.IsInRole("Admin"))
+                            {
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle text-dark" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     Admin
@@ -98,10 +98,10 @@
                                     <li><a class="dropdown-item" asp-area="" asp-controller="Transaction" asp-action="Index">Transactions</a></li>
                                 </ul>
 
-                  
+
 
                             </li>
-                        }
+                            }
 
                     </ul>
                     <partial name="_LoginPartial" />
@@ -117,8 +117,8 @@
 
     <div class="container">
         @RenderBody()
-@*         <main role="main" class="pb-3">
-            @RenderBody()
+        @*         <main role="main" class="pb-3">
+        @RenderBody()
         </main> *@
     </div>
 
@@ -136,9 +136,9 @@
                     </a>
                 </div>
                 <div class="footer-links">
+                    <a href="/Home/CustomerCare" class="footer-link">Customer Care</a> -
                     <a href="/Home/TermsAndConditions" class="footer-link">Terms & Conditions</a> -
-                    <a href="#" class="footer-link">Privacy & Security</a> -
-                    <a href="#" class="footer-link">Cookie Policy</a>
+                    <a href="#" class="footer-link">Privacy & Security</a>
                 </div>
                 <p class="footer-text">Copyright &copy; Wild Path Gear Ltd - Company Registration <br />No: 3417738 VAT Registered: GB 796 3471 82</p>
             </div>
