@@ -1,4 +1,6 @@
-﻿@inject SignInManager<IdentityUser> SignInManager
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
 @{
     var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
 }
@@ -28,4 +30,10 @@
     }
     <li class="nav-item"><a class="account-nav-link @ManageNavPages.TransactionsNavClass(ViewContext)" id="transactions" asp-controller="Transaction" asp-action="UserTransactions">Order History</a></li>
     <li class="nav-item"><a class="account-nav-link @ManageNavPages.PersonalDataNavClass(ViewContext)" id="personal-data" asp-page="./PersonalData">Personal data</a></li>
+    <li class="nav-item">
+        <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" class="form-inline" style="margin-bottom: 20px;">
+            <button type="submit" class="account-nav-link btn btn-link" style="padding: 0; border: none; background: none;">Logout</button>
+        </form>
+    </li>
+
 </ul>
