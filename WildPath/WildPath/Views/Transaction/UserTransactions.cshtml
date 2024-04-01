@@ -1,11 +1,30 @@
 ﻿@model IEnumerable<WildPath.EfModels.Transaction>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Order History";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Transactions</h1>
+<style>
+    .btn-custom {
+        background-color: #ACCAC3;
+        color: #fff;
+    }
+
+        .btn-custom:hover {
+            color: white;
+            background-color: #99b3a9;
+        }
+
+</style>
+
+<h1>Order History</h1>
+
+<div class="return-button">
+    <a class="btn btn-custom" asp-area="Identity" asp-page="/Account/Manage/Index">Back to Manage Account</a>
+</div>
+
+
 
 <div class="mobile-cards">
     @foreach (var item in Model)
