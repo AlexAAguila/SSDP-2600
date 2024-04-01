@@ -23,6 +23,8 @@ public partial class WildPathDbContext : DbContext
 
     public virtual DbSet<MyRegisteredUser> MyRegisteredUsers { get; set; }
 
+    public virtual DbSet<ShippingInfo> ShippingInfos { get; set; }
+
     public virtual DbSet<Transaction> Transactions { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -129,6 +131,26 @@ public partial class WildPathDbContext : DbContext
             entity.HasOne(d => d.FkShippingAdress).WithMany(p => p.MyRegisteredUserFkShippingAdresses)
                 .HasForeignKey(d => d.FkShippingAdressId)
                 .HasConstraintName("FK__MyRegiste__fkShi__373B3228");
+        });
+
+        modelBuilder.Entity<ShippingInfo>(entity =>
+        {
+            entity.HasKey(e => e.PkShippingInfo).HasName("PK__Shipping__B41F2E4BA67265D1");
+
+            entity.ToTable("ShippingInfo");
+
+            entity.Property(e => e.PkShippingInfo).HasColumnName("pkShippingInfo");
+            entity.Property(e => e.CaTax).HasColumnName("caTax");
+            entity.Property(e => e.CurrencyCode)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("currencyCode");
+            entity.Property(e => e.CurrencySymbol)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("currencySymbol");
+            entity.Property(e => e.FreeShippingThreshold).HasColumnName("freeShippingThreshold");
+            entity.Property(e => e.ShippingRate).HasColumnName("shippingRate");
         });
 
         modelBuilder.Entity<Transaction>(entity =>
