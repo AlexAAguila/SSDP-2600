@@ -1,4 +1,4 @@
-﻿@model WildPath.Models.PayPalConfirmationModel
+﻿@model WildPath.ViewModels.CheckoutVM
 @{
     ViewData["Title"] = "Payment Confirmation";
 }
@@ -27,18 +27,18 @@
 
 <div class="confirmation-message">
     <span class="text-left">
-        <span style="font-size: 2em;">Hi @Model.PayerName,</span><br />
+        <span style="font-size: 2em;">Hi @Model.PayerFullName,</span><br />
         <span style="font-size: 1.4em;">
             <span>
                 Your shipment with tracking number: <br />
                 @Model.TrackingNumber is ready. </span><br />
             <span>Estimated delivery date:<br />
-                @Model.EstimatedDeliveryDate.ToString("MMMM dd, yyyy")</span><br />
+                @Model.EstimatedDeliveryDate</span><br />
 
-            <span>Your $</span><span>@Model.Amount</span>
+            <span>Your $</span><span>@Model.TotalPrice</span>
             <span>CAD</span>
             <span> </span>
-            <span>@Model.PaymentMethod transaction was Successful</span>
+            <span>@Model.CaptureId transaction was Successful</span>
         </span>
     </span><br /><br />
 </div>
@@ -46,11 +46,11 @@
 
 <div class="text-center" style="color:darkred;">
     <span class="text-center">
-        <span style="font-size: 2em;">Congratulations @Model.PayerName!</span><br /><br /><br /><br />
+        <span style="font-size: 2em;">Congratulations @Model.PayerFullName!</span><br /><br /><br /><br />
         <span style="font-size: 1.4em;">
-            <span>Your $</span><span>@Model.Amount</span>
+            <span>Your $</span><span>@Model.TotalPrice</span>
             <span>CAD</span>
-            <span>@Model.PaymentMethod transaction was Successful</span>
+            <span>@Model.CaptureId transaction was Successful</span>
         </span>
     </span><br /><br />
     <span class="text-center" style="font-size: 1.2em;">Keep this transaction Id for future reference.</span>

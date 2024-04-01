@@ -169,6 +169,12 @@ namespace WildPath.Controllers
         }
         public IActionResult Checkout()
         {
+            const string CURRENCY_CODE = "CAD";           //Should be pulled from the database!
+            const string CURRENCY_SYMBOL = "$";           //Should be pulled from the database!
+            const double CA_TAX = .12;                    //Should be pulled from the database!
+            const double SHIPPING_RATE = 7.99;            //Should be pulled from the database!
+            const double FREE_SHIPPING_THRESHOLD = 74.99; //Should be pulled from the database!
+
             List<CartItemVM> cartItems = new List<CartItemVM>();
 
             var isLoggedIn = User.Identity.IsAuthenticated;
@@ -191,44 +197,42 @@ namespace WildPath.Controllers
                     totalPrice += item.Price * item.Quantity;
                     totalItems += item.Quantity;
                 }
+
+                double shipping = totalPrice > FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_RATE;
+                double tax = totalPrice * CA_TAX;
+                double grandTotal = totalPrice + shipping + tax;
+
+                model = new CheckoutVM
+                {
+                    IsLoggedIn = isLoggedIn,
+                    hasAddress = false,
+                    Address = new Address(),
+                    TotalItems = totalItems,
+                    TotalPrice = totalPrice,
+                    Shipping = shipping,
+                    ShippingRate = SHIPPING_RATE,
+                    ShippingMethod = shipping == 0 ? "Standard Shipping" : "Express Shipping",
+                    FreeShippingThreshold = FREE_SHIPPING_THRESHOLD,
+                    IsFreeShipping = shipping == 0 ? true : false,
+                    Tax = tax,
+                    GrandTotal = grandTotal,
+                    CurrencyCode = CURRENCY_CODE,
+                    CurrencySymbol = CURRENCY_SYMBOL,
+                };
+
                 if (isLoggedIn)
                 {
+                    //model.Email = User.Identity.Name;
                     var addresses = transactionRepo.GetAddress(User.Identity.Name);
-                    var address = addresses.FirstOrDefault();
-                    if (address != null)
-                    {
-                        model = new CheckoutVM
-                        {
-                            IsLoggedIn = isLoggedIn,
-                            hasAddress = true,
-                            totalPrice = totalPrice,
-                            totalItems = totalItems,
-               
-                            Address = address
-                            
-                        };
-                    }
-                    else
-                    {
-                        model = new CheckoutVM
-                        {
-                            IsLoggedIn = isLoggedIn,
-                            hasAddress = false,
-                            totalPrice = totalPrice,
-                            totalItems = totalItems
-                        };
-                    }
-                }
+                    Address address = new Address();
 
-                else
-                {
-                     model = new CheckoutVM
+                    if (addresses.Count() > 0)
                     {
-                        IsLoggedIn = isLoggedIn,
-                        hasAddress = false,
-                        totalPrice = totalPrice,
-                        totalItems = totalItems
-                    };
+                        model.hasAddress = true;
+
+                        address = addresses.FirstOrDefault();
+                        model.Address = address;
+                    }
                 }
 
                 return View(model);
@@ -238,5 +242,6 @@ namespace WildPath.Controllers
                 return View();
             }
         }
+
     }
 }

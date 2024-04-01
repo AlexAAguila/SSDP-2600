@@ -3,6 +3,7 @@ using System.Diagnostics;
 using WildPath.EfModels;
 using WildPath.Models;
 using WildPath.Repositories;
+using WildPath.ViewModels;
 
 namespace WildPath.Controllers
 {
@@ -25,24 +26,35 @@ namespace WildPath.Controllers
         }
 
         [HttpPost]
-        public IActionResult ProcessTransaction([FromBody] PayPalConfirmationModel payPalConfirmationModel)
+        public IActionResult ProcessTransaction(CheckoutVM CheckoutVM)
         {
-            payPalConfirmationModel.TrackingNumber = GenerateTrackingNumber();
+            CheckoutVM.TrackingNumber = GenerateTrackingNumber();
 
-            payPalConfirmationModel.EstimatedDeliveryDate = DateTime.Now.AddDays(14);
+            CheckoutVM.EstimatedDeliveryDate = DateTime.Now.AddDays(14);
 
             var transRepo = new TransactionRepo(_wpdb);
-            //var address = transRepo.AddAddress(payPalConfirmationModel);
-            //Console.WriteLine(address);
-            transRepo.Add(payPalConfirmationModel);
-            return RedirectToAction("PayPalConfirmation", payPalConfirmationModel);
+
+            transRepo.Add(CheckoutVM);
+
+            return RedirectToAction("PayPalConfirmation", CheckoutVM);
         }
 
-
-        public IActionResult PayPalConfirmation(PayPalConfirmationModel payPalConfirmationModel)
+        public IActionResult PayPalConfirmation(CheckoutVM CheckoutVM)
         {
-            return View("PayPalConfirmation", payPalConfirmationModel);
+            string cartSession = HttpContext.Session.GetString("Cart");
+
+            if (cartSession != null)
+            {
+                List<CartItem> sessionCartItems = Newtonsoft.Json.JsonConvert.DeserializeObject<List<CartItem>>(cartSession);
+                sessionCartItems.Clear();
+
+                // Serialize and update the session
+                HttpContext.Session.SetString("Cart", Newtonsoft.Json.JsonConvert.SerializeObject(sessionCartItems));
+            }
+
+            return View(CheckoutVM);
         }
+
         private string GenerateTrackingNumber()
         {
             Random random = new Random();
