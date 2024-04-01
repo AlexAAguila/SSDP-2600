@@ -105,6 +105,12 @@
         align-items:center;
         gap:1rem;
     }
+
+       @@media (min-width: 768px) { /* Adjust the max-width as needed for your target tablet size */
+       .cart-summary{
+           margin:8rem;
+       }
+    }
 </style>
 
 
@@ -271,6 +277,7 @@
         var amountElement = document.getElementById('amount_' + id);
         var addButton = document.getElementById('addButton_' + id);
         var quantityInput = document.getElementById('quantity_' + id); 
+        var quantity = parseInt(quantityInput.value);
 
         var pricePerItem = parseFloat(addButton.getAttribute('data-price'));
         var total = parseInt(totalElement.textContent);
@@ -282,7 +289,7 @@
         totalElement.textContent = total;
         quantityInput.value = total; 
         amountElement.textContent = (total * pricePerItem).toFixed(2);
-        fetch('/Transaction/AddToCart?id=' + id, {
+        fetch('/Transaction/AddToCart?id=' + id + '&quantity=' + quantity, {
 
             method: 'GET',
             headers: {
