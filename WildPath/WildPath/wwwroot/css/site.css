@@ -23,9 +23,6 @@ html {
     margin-top: 100px;
 }
 
-
-
-
 .product-grids {
     display: flex;
     flex-wrap: wrap;
@@ -57,32 +54,32 @@ html {
     padding: 15px;
 }
 
-    .product-info h3 {
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 2; /* Limit to two lines */
-        overflow: hidden;
-        text-overflow: ellipsis;
-        margin-top: 0;
-        margin-bottom: 0.5em; /* Adjust as needed */
+.product-info h3 {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2; /* Limit to two lines */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-top: 0;
+    margin-bottom: 0.5em; /* Adjust as needed */
         
-        line-height: 1.2em; /* Adjust line height as needed */
-        height: 2.4em; /* Double the line-height to accommodate two lines */
-        word-wrap: break-word;
-        color: #ACCAC3;
-    }
+    line-height: 1.2em; /* Adjust line height as needed */
+    height: 2.4em; /* Double the line-height to accommodate two lines */
+    word-wrap: break-word;
+    color: #ACCAC3;
+}
 
-    .product-info p {
-        margin-bottom: 5px;
-        line-height: 1.4;
-        height: 3em;
-        overflow: hidden;
-        display: -webkit-box;
-        -webkit-line-clamp: 3;
-        -webkit-box-orient: vertical;
-        text-overflow: ellipsis;
-        color: black;
-    }
+.product-info p {
+    margin-bottom: 5px;
+    line-height: 1.4;
+    height: 3em;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    text-overflow: ellipsis;
+    color: black;
+}
 
 
 .price {
@@ -100,15 +97,40 @@ html {
     color: white;
 }
 
-    .btn-primary:hover {
-        background-color: #0056b3;
-        border-color: #0056b3;
-    }
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
 
 
+.mobile-card {
+    display: none;
+}
 
+.transaction-table {
+    width: 100%;
+    border-collapse: collapse;
+}
 
+.transaction-table th {
+    background-color: #f2f2f2;
+    color: black;
+    font-weight: bold;
+    padding: 12px;
+}
 
+.transaction-table td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.transaction-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.transaction-table tr:hover {
+    background-color: #ddd;
+}
 
 @media (min-width: 768px) {
   html {
@@ -173,5 +195,37 @@ body {
         display: grid;
         grid-template-columns: repeat(2, 1fr); /* 2 items per row */
         gap: 20px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .transaction-table {
+        display: none;
+    }
+    .transaction-table th:nth-child(3), .transaction-table td:nth-child(3),
+    .transaction-table th:nth-child(5), .transaction-table td:nth-child(5),
+    .transaction-table th:nth-child(6), .transaction-table td:nth-child(6) {
+        display: none;
+    }
+
+    .mobile-card {
+        display: none;
+        margin-bottom: 10px;
+        border: 1px solid #ddd;
+        padding: 10px;
+    }
+
+        .mobile-card > div {
+            margin-bottom: 5px;
+        }
+}
+
+@media screen and (max-width: 768px) {
+    .table {
+        display: none;
+    }
+
+    .mobile-card {
+        display: block;
     }
 }
