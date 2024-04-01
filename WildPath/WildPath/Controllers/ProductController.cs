@@ -194,58 +194,23 @@ namespace WildPath.Controllers
             return View(viewModel);
         }
 
-
         [HttpPost]
-        public async Task<IActionResult> Edit(Item item, IFormFile imageFile)
+        public async Task<IActionResult> Edit(Item item, IFormFile? imageFile)
         {
-            if (ModelState.IsValid)
+            ProductRepo productRepo = new ProductRepo(_wpdb);
+            string resultMessage = await productRepo.UpdateAsync(item, imageFile);
+
+            if (resultMessage == $"{item.ItemName} updated successfully")
             {
-                try
-                {
-                    if (imageFile != null && imageFile.Length > 0)
-                    {
-                        string contentType = imageFile.ContentType;
-                        if (contentType == "image/png" || contentType == "image/jpeg" || contentType == "image/jpg")
-                        {
-                            byte[] imageData;
-                            using (var memoryStream = new MemoryStream())
-                            {
-                                await imageFile.CopyToAsync(memoryStream);
-                                imageData = memoryStream.ToArray();
-                            }
-
-                            var image = new ImageStore
-                            {
-                                FileName = Path.GetFileNameWithoutExtension(imageFile.FileName),
-                                Image = imageData
-                            };
-
-                            _wpdb.ImageStores.Add(image);
-                            await _wpdb.SaveChangesAsync();
-
-                            item.ItemImageId = image.ImageId.ToString();
-                        }
-                        else
-                        {
-                            ModelState.AddModelError("ItemImageId", "Please upload a PNG, JPG, or JPEG file.");
-                            return View(item);
-                        }
-                    }
-
-                    _wpdb.Items.Update(item);
-                    await _wpdb.SaveChangesAsync();
-
-                    return RedirectToAction("Index", new { message = "Product updated successfully" });
-                }
-                catch (Exception ex)
-                {
-                    ModelState.AddModelError("ItemImageId", "An error occurred while saving the image: " + ex.Message);
-                    return View(item);
-                }
+                return RedirectToAction(nameof(Index));
             }
-
-            return View(item);
+            else
+            {
+                ModelState.AddModelError(string.Empty, resultMessage);
+                return View(item);
+            }
         }
+
 
         public IActionResult Delete(int id)
         {
