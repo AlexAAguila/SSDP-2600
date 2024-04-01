@@ -81,6 +81,52 @@ namespace WildPath.Controllers
         }
 
 
+        public JsonResult RemoveOneFromCart(int id)
+        {
+            string cartSession = HttpContext.Session.GetString("Cart");
+            List<CartItem> cartItems;
+
+            if (cartSession != null)
+            {
+                cartItems = Newtonsoft.Json.JsonConvert.DeserializeObject<List<CartItem>>(cartSession);
+            }
+            else
+            {
+                // If there's no cart, then there's nothing to remove from, return an error or a default response
+                return Json("No items in cart.");
+            }
+
+            CartItem cartItem = cartItems.FirstOrDefault(c => c.Id == id);
+
+            if (cartItem != null)
+            {
+                cartItem.Quantity -= 1; // Decrement the quantity by one
+
+                // If quantity is zero or less, consider removing the item from the cart
+                if (cartItem.Quantity <= 0)
+                {
+                    cartItems.Remove(cartItem);
+                }
+
+                // Update the session with the modified cart
+                HttpContext.Session.SetString("Cart", JsonSerializer.Serialize(cartItems));
+                return Json("Item removed successfully.");
+            }
+            else
+            {
+                // If the item wasn't found in the cart, return an appropriate response
+                return Json("Item not found in cart.");
+            }
+        }
+
+
+
+
+
+
+
+
+
 
         public JsonResult RemoveToCart(int id)
         {

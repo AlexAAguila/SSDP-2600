@@ -101,32 +101,7 @@
                         placeholderImagePath = Url.Content("~/images/placeholder.jpeg");
                     }
 
-                 @*    <tr style="display:flex;flex-direction:column;">
-                        <td>
-                            @if (!String.IsNullOrEmpty(imageBase64))
-                            {
-                                <img src="data:image/jpeg;base64,@imageBase64" alt="@imageAltText" style="width:100px; height:auto;" />
-                            }
-                            else
-                            {
-                                <img src="@placeholderImagePath" alt="Placeholder Image" style="width:100px; height:auto;" />
-                            }
-                        </td>
-                        <td>@Html.ActionLink(item.ItemName, "Details", new { id = item.ItemId })</td>
-                     
-                        <td>@item.Price.ToString("C")</td>
-                        <td>@item.Category</td>
-                        <td>@item.Size</td>
-                        <td>@item.Colour</td>
-                        <td><span id="total_@item.ItemId">@item.Quantity</span></td>
-                        <td>$<span id="amount_@item.ItemId">@((item.Quantity * item.Price).ToString("N2"))</span></td>
-                        <td>
-                            <button class="btn btn-primary mb-1"
-                                    onclick="RemoveOne('@item.ItemId', '@item.ItemName')">
-                                Remove from Cart
-                            </button>
-                        </td>
-                    </tr> *@
+              
 
                     <tr>
                         <td colspan="2" style="width:100%; padding:10px;">
@@ -154,8 +129,26 @@
                                     <p><span id="total_@item.ItemId">@item.Quantity</span></p>
                                     </div>
                                     <p>$<span id="amount_@item.ItemId">@((item.Quantity * item.Price).ToString("N2"))</span></p>
-                                    <!-- Other details -->
-                                    <button class="btn btn-primary mb-1" onclick="RemoveOne('@item.ItemId', '@item.ItemName')">Remove from Cart</button>
+                                    <div class="col-md-12">
+                                          <div class="details-quantity">
+                                    <div class="quantity-label">
+                                        <label for="quantity-@item.ItemId">Quantity:</label>
+                                    </div>
+                                    <div class="controls-wrapper">
+                                        <div class="quantity-controls">
+                                                    <button id="removeButton_@item.ItemId" onclick="RemoveOne('@item.ItemId')">-</button>
+
+                                                    <input type="text" id="quantity_@item.ItemId" value="@item.Quantity" readonly>
+
+           
+                                                    <button id="addButton_@item.ItemId" data-price="@item.Price" onclick="AddOne('@item.ItemId')">+</button>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                    </div>
+                                 
+                                  @*   <button class="btn btn-primary mb-1" onclick="RemoveOne('@item.ItemId', '@item.ItemName')">Remove from Cart</button> *@
                                 </div>
                             </div>
                         </td>
@@ -193,6 +186,7 @@
 </div>
 
 <script>
+ 
 
 
     function updateCartSummary() {
@@ -216,6 +210,7 @@
         // Update the cart summary display
         document.getElementById('totalItems').textContent = totalItems;
         document.getElementById('grandTotal').textContent = grandTotal.toFixed(2);   
+      
     }
 
     function showCustomAlert(message, itemName) {
@@ -234,14 +229,17 @@
         var totalElement = document.getElementById('total_' + id);
         var amountElement = document.getElementById('amount_' + id);
         var addButton = document.getElementById('addButton_' + id);
+        var quantityInput = document.getElementById('quantity_' + id); 
 
         var pricePerItem = parseFloat(addButton.getAttribute('data-price'));
         var total = parseInt(totalElement.textContent);
         if (isNaN(total)) {
             total = 0; // Start from zero if it's not a number
+           
         }
         total += 1;
         totalElement.textContent = total;
+        quantityInput.value = total; 
         amountElement.textContent = (total * pricePerItem).toFixed(2);
         fetch('/Transaction/AddToCart?id=' + id, {
 
@@ -259,8 +257,7 @@
                 return response.json(); // Parse the response body as JSON
             })
             .then(data => {
-                // Handle the JSON data returned from the server
-                console.log(data); // Example output: { Name: "John Doe", Age: 30, Occupation: "Software Developer" }
+                console.log("hello");
 
 
             })
@@ -273,28 +270,51 @@
 
     }
 
-    // Function to remove an item from the cart
-    function RemoveOne(itemId, itemName) {
-        fetch('/Transaction/RemoveToCart?id=' + itemId, {
+
+   function RemoveOne(id) {
+        var totalElement = document.getElementById('total_' + id);
+        var amountElement = document.getElementById('amount_' + id);
+        var addButton = document.getElementById('addButton_' + id);
+         var quantityInput = document.getElementById('quantity_' + id); 
+
+        var pricePerItem = parseFloat(addButton.getAttribute('data-price'));
+        var total = parseInt(totalElement.textContent);
+        if (isNaN(total)) {
+            total = 0; // Start from zero if it's not a number
+         
+        }
+        total -= 1;
+        totalElement.textContent = total;
+        quantityInput.value = total; 
+        amountElement.textContent = (total * pricePerItem).toFixed(2);
+        fetch('/Transaction/RemoveOneFromCart?id=' + id, {
+
             method: 'GET',
             headers: {
+                // 'Content-Type': 'application/json',
                 'X-Requested-With': 'XMLHttpRequest'
             }
+         
         })
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
-                return response.json();
+                return response.json(); // Parse the response body as JSON
             })
-             .then(data => {
-                showCustomAlert('has been removed! ', itemName);
-            })            
+            .then(data => {
+                console.log(data);
+
+
+            })
             .catch(error => {
+                // Handle errors
                 console.error('Fetch error:', error);
             });
-    }
 
+        updateCartSummary();
+
+    }
 
 
     // Fetch the cart state and update the UI on page load
@@ -303,6 +323,7 @@
             .then(response => response.json())
             .then(cartItems => {
                 cartItems.forEach(item => {
+                    console.log("HIIIIIII!!!")
                     var totalElement = document.getElementById('total_' + item.ItemId);
                     var amountElement = document.getElementById('amount_' + item.ItemId);
                     if (totalElement && amountElement) {
