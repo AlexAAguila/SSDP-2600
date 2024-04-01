@@ -12,6 +12,7 @@ namespace WildPath.Repositories
     {
 
         private readonly WildPathDbContext _context;
+        private readonly ApplicationDbContext _applicationDbContext;
 
         public TransactionRepo(WildPathDbContext context)
         {
@@ -30,36 +31,37 @@ namespace WildPath.Repositories
         }
 
 
-        public string Add(PayPalConfirmationModel payPalConfirmationModel)
+        public string Add(CheckoutVM CheckoutVM)
         {
             var address = new Address()
             {
-                Address1 = payPalConfirmationModel.Address.Address1,
-                City = payPalConfirmationModel.Address.City,
-                Province = payPalConfirmationModel.Address.Province,
-                PostalCode = payPalConfirmationModel.Address.PostalCode,
-                Unit = payPalConfirmationModel.Address.Unit
+                Address1 = CheckoutVM.Address.Address1,
+                City = CheckoutVM.Address.City,
+                Province = CheckoutVM.Address.Province,
+                PostalCode = CheckoutVM.Address.PostalCode,
+                Unit = CheckoutVM.Address.Unit
             };
             _context.Addresses.Add(address);
             _context.SaveChanges();
-            //address = _context.Addresses.Find(address.PkAddressId);
+
             var transaction = new Transaction()
             {
-                PaymentId = payPalConfirmationModel.TransactionId,
+                PaymentId = CheckoutVM.TransactionId,
                 CreateTime = DateTime.Now.ToString("dd-MM-yyyy, HH:mm"),
-                PayerName = payPalConfirmationModel.PayerName,
-                PayerEmail = payPalConfirmationModel.PayerEmail,
-                Amount = payPalConfirmationModel.Amount,
-                Currency = "CAD",
-                PaymentMethod = payPalConfirmationModel.PaymentMethod,
-                ShippingMethod = payPalConfirmationModel.ShippingMethod,
+                PayerName = CheckoutVM.PayerFullName,
+                PayerEmail = CheckoutVM.PayerEmail,
+                Amount = CheckoutVM.GrandTotal.ToString(),
+                Currency = CheckoutVM.CurrencyCode,
+                PaymentMethod = "PayPal",
+                ShippingMethod = CheckoutVM.ShippingMethod,
                 FkAddressId = address.PkAddressId,
-                
+
             };
             _context.Transactions.Add(transaction);
             _context.SaveChanges();
             return "Transaction added successfully";
         }
+
 
         public IEnumerable<Transaction> GetAllTransactions()
         {
@@ -69,9 +71,18 @@ namespace WildPath.Repositories
         {
             var registeredUserId = _context.MyRegisteredUsers.FirstOrDefault(p => p.Email == id);
 
-            var address = _context.Addresses.Where(a => a.PkAddressId == registeredUserId.FkShippingAdressId);
+            List<Address> addresses = new List<Address>();
 
-            return address.ToList();
+            if (registeredUserId != null)
+            {
+                Address address = _context.Addresses.FirstOrDefault(a => a.PkAddressId == registeredUserId.FkShippingAdressId);
+                if (address != null)
+                {
+                    addresses.Add(address);
+                }
+            }
+
+            return addresses;
         }
     }
 }

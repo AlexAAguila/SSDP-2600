@@ -6,194 +6,183 @@
 }
 
 <h1>Checkout</h1>
-
-@if (!Model.IsLoggedIn)
-{
-    <h2>Contact Details</h2>
-    <form>
+<form id="paymentForm" method="post" action="/Home/ProcessTransaction">
+    <div id="mandatoryFields">
+        <h2>Contact Details</h2>
         <div class="form-group">
-            <label for="email">Email Address</label>
-            <input type="email" class="form-control" id="email" placeholder="Enter email">
+            <label asp-for="Phone">Phone Number</label>
+            <input type="tel" class="form-control" id="phone" placeholder="Enter phone number" asp-for="Phone">
+        </div>
+
+        <h2>Delivery Address</h2>
+        <div class="form-group">
+            <label asp-for="Address.Address1">Address Line 1</label>
+            <input type="text" class="form-control" id="address1" placeholder="Enter address" asp-for="Address.Address1">
         </div>
         <div class="form-group">
-            <label for="phone">Phone Number</label>
-            <input type="tel" class="form-control" id="phone" placeholder="Enter phone number">
+            <label asp-for="Address.City">City/Town</label>
+            <input type="text" class="form-control" id="city" placeholder="Enter city or town" asp-for="Address.City">
         </div>
-    </form>
-}
-
-<h2>Delivery Address</h2>
-<form>
-    <div class="form-group">
-        <label for="firstName">First Name</label>
-        <input type="text" class="form-control" id="firstName" placeholder="Enter first name">
+        <div class="form-group">
+            <label asp-for="Address.Province">Province</label>
+            <input type="text" class="form-control" id="province" placeholder="Enter province" asp-for="Address.Province">
+        </div>
+        <div class="form-group">
+            <label asp-for="Address.PostalCode">Postal Code</label>
+            <input type="text" class="form-control" id="postalCode" placeholder="Enter postal code" asp-for="Address.PostalCode">
+        </div>
     </div>
-    <div class="form-group">
-        <label for="lastName">Last Name</label>
-        <input type="text" class="form-control" id="lastName" placeholder="Enter last name">
-    </div>
-    <div class="form-group">
-        <label for="address1">Address Line 1</label>
-        <input type="text" class="form-control" id="address1" placeholder="Enter address">
-    </div>
-    <div class="form-group">
-        <label for="country">Country</label>
-        <select class="form-control" id="country">
-            <option value="Canada">Canada</option>
-        </select>
-    </div>
-
-    <div class="form-group">
-        <label for="province">Province</label>
-        <input type="text" class="form-control" id="province" placeholder="Enter province">
-    </div>
-    <div class="form-group">
-        <label for="city">City/Town</label>
-        <input type="text" class="form-control" id="city" placeholder="Enter city or town">
-    </div>
-    <div class="form-group">
-        <label for="postalCode">Postal Code</label>
-        <input type="text" class="form-control" id="postalCode" placeholder="Enter postal code">
-    </div>
-</form>
-
-<h2>Shipping Method</h2>
-<form>
+    <h2>Shipping Method</h2>
     <div class="form-group">
         <div class="form-check">
-            <input class="form-check-input" type="radio" name="shippingMethod" id="standardShipping" value="Standard Shipping" checked>
+            <input class="form-check-input" type="radio" asp-for="ShippingMethod"
+                   value="Standard Shipping" id="standardShipping">
             <label class="form-check-label" for="standardShipping">
                 Free Standard Shipping for order <br />
-                over $75.99 within Canada <br />
+                over $<span>@Model.FreeShippingThreshold</span> within Canada <br />
                 $0.00 - 3 to 7 Business Days
             </label>
-        </div> <br />
+        </div>
+        <br />
         <div class="form-check">
-            <input class="form-check-input" type="radio" name="shippingMethod" id="expressShipping" value="Express Shipping">
+            <input class="form-check-input" type="radio" asp-for="ShippingMethod"
+                   value="Express Shipping" id="expressShipping">
             <label class="form-check-label" for="expressShipping">
                 Flat Standard Shipping for order <br />
-                under $75.99 within Canada <br />
-                $7.99 - 3 to 7 Business Days
+                under $<span>@Model.FreeShippingThreshold</span> within Canada <br />
+                $<span>@Model.ShippingRate</span> - 3 to 7 Business Days
             </label>
         </div>
     </div>
+
+    <div class="cart-summary">
+        <h2>Order Summary</h2>
+        <table>
+            <tr>
+                <td>Total Items:</td>
+                <td>@Model.TotalItems</td>
+            </tr>
+            <tr>
+                <td>Subtotal:</td>
+                <td>@Model.CurrencySymbol@Model.TotalPrice.ToString("N2")</td>
+            </tr>
+            <tr>
+                <td>Shipping:</td>
+                <td>@Model.CurrencySymbol@Model.Shipping.ToString("N2")</td>
+            </tr>
+            <tr>
+                <td>Tax:</td>
+                <td>@Model.CurrencySymbol@Model.Tax.ToString("N2")</td>
+            </tr>
+            <tr>
+                <td><strong>Grand Total:</strong></td>
+                <td><strong>@Model.CurrencySymbol@Model.GrandTotal.ToString("N2") @Model.CurrencyCode</strong></td>
+            </tr>
+        </table>
+    </div>
+    <div id="hiddenFields">
+        <input class="hiddenField" type="hidden" asp-for="@Model.TransactionId" value="@Model.TransactionId">
+        <input class="hiddenField" type="hidden" asp-for="@Model.PayerId" value="@Model.PayerId">
+        <input class="hiddenField" type="hidden" asp-for="@Model.PayerEmail" value="@Model.PayerEmail">
+        <input class="hiddenField" type="hidden" asp-for="@Model.CaptureId" value="@Model.CaptureId">
+        <input class="hiddenField" type="hidden" asp-for="@Model.PayerFullName" value="@Model.PayerFullName">
+        <input class="hiddenField" type="hidden" asp-for="@Model.GrandTotal" value="@Model.GrandTotal" />
+        <input class="hiddenField" type="hidden" asp-for="@Model.CurrencyCode" value="@Model.CurrencyCode" />
+        <input class="hiddenField" type="hidden" asp-for="@Model.CurrencySymbol" value="@Model.CurrencySymbol" />
+    </div><br />
+    <div class="alert alert-warning" role="alert" id="formWarning" style="display: none;">
+        Please fill in Phone and all address fields before proceeding.
+    </div>
 </form>
 
+<!-- Place to render the PayPal button -->
+<div id="paypal-button-container"></div>
 
-<div class="cart-summary">
-    <h2>Order Summary</h2>
-    <p>Total Items: <span id="totalItems">@Model.totalItems</span></p>
-    <p>Subtotal: $<span id="subtotal">@Model.totalPrice</span></p>
-    <p>Shipping: $<span id="shipping">0.00</span></p>
-    <p>Tax: $<span id="tax">0.00</span></p>
-    <p>Grand Total: $<span id="grandTotal">@Model.totalPrice</span></p>
+<script src="https://www.paypal.com/sdk/js?client-id=AcYzUTriY360UFrFnBT_Tns0NkqucbwhYUVTnIFEa6zp1QpPScRPxWqiFot7SYxKTX5JL2wl0d16pFn7"></script>
 
-</div>
-
-    <!-- Place to render the PayPal button -->
-        <div id="paypal-button-container"></div>
-        <script src="https://www.paypal.com/sdk/js?client-id=AcYzUTriY360UFrFnBT_Tns0NkqucbwhYUVTnIFEa6zp1QpPScRPxWqiFot7SYxKTX5JL2wl0d16pFn7"></script>
-@* <button type="submit" class="btn btn-primary">Go to Payment</button>
- *@
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        var orderPrice = @Model.totalPrice; // Replace this with the actual order price obtained from your system
-        document.getElementById("standardShipping").disabled = true;
-        document.getElementById("expressShipping").disabled = true;
 
-
-
-        if (orderPrice > 75.99) {
-            document.getElementById("standardShipping").checked = true;
-            document.getElementById("standardShipping").disabled = false;
+        if (@Html.Raw(Json.Serialize(Model.IsFreeShipping))) {
+            document.getElementById("expressShipping").disabled = true;
         } else {
-            document.getElementById("expressShipping").checked = true;
-            document.getElementById("expressShipping").disabled = false;
-            document.getAnimations("shipping").innerText = "7.99";
+            document.getElementById("standardShipping").disabled = true;
         }
 
-// Calculate the grand total
-        var grandTotal = parseFloat(document.getElementById("subtotal").innerText);
-        var shipping = 7.99;
-        if(document.getElementById("standardShipping").checked) {
-            shipping = 0.00;
-        }
-        grandTotal += shipping;
-        var tax = grandTotal * 0.12;
-
-        grandTotal += (grandTotal * 0.12);
-        document.getElementById("shipping").innerText = shipping.toFixed(2);
-        document.getElementById("tax").innerText = tax.toFixed(2);
-        document.getElementById("grandTotal").innerText = grandTotal.toFixed(2);
-    });
-
-   
-
-    paypal.Buttons({
-        // Set up the transaction
-        createOrder: function (data, actions) {
-            return actions.order.create({
-                purchase_units: [{
-                    amount: {
-                        value: parseFloat(document.getElementById('grandTotal').innerText),
-                        currency: "CAD"
-                    }
-                }]
-            });
-        },
-
-        // Finalize the transaction
-        onApprove: function (data, actions) {
-            return actions.order.capture().then(function (details) {
-                var selectedShippingMethod = document.querySelector('input[name="shippingMethod"]:checked').value;
-                var address = {
-                    Address1: document.getElementById('address1').value,
-                    City: document.getElementById('city').value,
-                    Province: document.getElementById('province').value,
-                    Country: document.getElementById('country').value,
-                    PostalCode: document.getElementById('postalCode').value
-                };
-
-                var payPalConfirmationModel = {
-                    TransactionId: encodeURIComponent(details.id),
-                    Amount: encodeURIComponent(details.purchase_units[0].amount.value),
-                    PayerName: encodeURIComponent(details.payer.name.given_name),
-                    PayerEmail: encodeURIComponent(details.payer.email_address),
-                    PaymentMethod: 'PayPal',
-                    ShippingMethod: encodeURIComponent(selectedShippingMethod),
-                    Address: address,
-                    EstimatedDeliveryDate: "2024-03-27T00:00:00"
-                };
-
-                $.ajax({
-                    url: '/Home/PayPalConfirmation',
-                    type: 'POST',
-                    contentType: 'application/json',
-                    data: JSON.stringify(payPalConfirmationModel),
-                    success: function (response) {
-                        window.location.href = '/Home/PayPalConfirmation';
-
-
-                        console.log("Success: ", response);
-                    },
-                    error: function (xhr, status, error) {
-                        console.error("Error: ", error);
-                    }
+        // PayPal button initialization
+        var paypalButton = paypal.Buttons({
+            createOrder: function (data, actions) {
+                return actions.order.create({
+                    purchase_units: [{
+                        amount: {
+                            value: parseFloat(document.getElementById('GrandTotal').value).toFixed(2),
+                            currency: document.getElementById('CurrencyCode').value
+                        }
+                    }]
                 });
-            });
-        },
+            },
+            onApprove: function (data, actions) {
+                actions.order.capture().then(function (details) {
+                    console.log();
+                    console.log('details ==> ' + JSON.stringify(details));
 
-        onCancel: function (data) {
-            alert('Transaction was cancelled.');
-        },
-        onError: function (err) {
-            alert('An error occurred during the transaction.');
-        },
-        style: {
-            layout: 'horizontal',
-            color: 'silver',
-            shape: 'rect',
-            label: 'checkout'
+                    document.getElementById('TransactionId').value = details.id;
+                    document.getElementById('PayerFullName').value = details.payer.name.given_name + ' ' + details.payer.name.surname;
+                    document.getElementById('PayerId').value = details.payer.payer_id;
+                    document.getElementById('CaptureId').value = details.purchase_units[0].payments.captures[0].id;
+                    document.getElementById('PayerEmail').value = details.payer.email_address;
+
+                    document.getElementById('paymentForm').submit();
+                });
+            },
+            onCancel: function (data) {
+                alert('Transaction was cancelled.');
+            },
+            onError: function (err) {
+                alert('An error occurred during the transaction. Error ==> ' + JSON.stringify(err));
+            },
+            style: {
+                layout: 'horizontal',
+                color: 'silver',
+                shape: 'rect',
+                label: 'checkout'
+            }
+        });
+
+        // Render PayPal button
+        paypalButton.render('#paypal-button-container');
+
+        // Select all input elements inside the mandatoryFields div
+        var inputElements = document.querySelectorAll('#mandatoryFields input');
+
+        // Loop through each input element and add an event listener for value change
+        inputElements.forEach(function (input) {
+            input.addEventListener('input', handleValueChange);
+        });
+
+        function handleValueChange(event) {
+            toggleWarningMessage();
         }
-    }).render('#paypal-button-container');
+
+        // Function to toggle the visibility of the warning message and PayPal button
+        function toggleWarningMessage() {
+            var formWarning = document.getElementById('formWarning');
+            var payPalButton = document.getElementById('paypal-button-container');
+            formWarning.style.display = areFieldsFilled() ? 'none' : 'block';
+            payPalButton.style.display = areFieldsFilled() ? 'block' : 'none';
+        }
+
+        // Function to check if all required fields are filled
+        function areFieldsFilled() {
+            var phone = document.getElementById('phone').value;
+            var address1 = document.getElementById('address1').value;
+            var city = document.getElementById('city').value;
+            var province = document.getElementById('province').value;
+            var postalCode = document.getElementById('postalCode').value;
+
+            return phone !== "" && address1 !== "" && city !== "" && province !== "" && postalCode !== "";
+        }
+
+        toggleWarningMessage();
+    });
 </script>
