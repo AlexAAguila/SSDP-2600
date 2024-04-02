@@ -107,14 +107,16 @@ body {
 }
 
 .btn-primary {
-    background-color: #007bff;
-    border-color: #007bff;
+    background-color: #ACCAC3;
+    border-color: #ACCAC3;
     color: white;
+    padding-top: 3px;
+    padding-bottom: 3px;
 }
 
     .btn-primary:hover {
-        background-color: #0056b3;
-        border-color: #0056b3;
+        background-color: #99b3a9;
+        border-color: #99b3a9;
     }
 
 

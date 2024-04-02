@@ -5,6 +5,34 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <style>
+
+    html, body, .container, div {
+        margin: 0;
+        padding: 0;
+    }
+
+    .grey-header {
+        background-color: rgba(217, 217, 217, 0.5);
+        color: black;
+        text-align: center;
+        padding: 10px 0;
+        font-size: 15px;
+        margin-top: -15px;
+    }
+
+    .bold-text {
+        font-weight: bold;
+    }
+
+    .container {
+        max-width: 100%;
+        margin: 0 auto;
+    }
+
+    .component {
+        margin: 30px;
+    }
+
     .cart-summary{
         display:flex;
         flex-direction:column;
@@ -119,126 +147,140 @@
 </style>
 
 
-
-<hr/>
-
 <div>
-    <h1 style="margin-left:5rem;">Your Shopping Cart</h1>
-    <hr/>
-    @if (Model.Any())
-    {
-        <table class="table">
-        
-            <tbody>
-                @foreach (var item in Model)
-                {
-                    var imageBase64 = "";
-                    var imageAltText = "Product Image";
-                    var image = item.ImageStore; 
-                    var productUrl = Url.Action("Details", new { id = item.ItemId }); 
-                    var placeholderImagePath = Url.Content("~/images/placeholder.jpeg");
+    <div class="grey-header">
+        <span class="bold-text">Your Shopping Cart</span>
+    </div>
+    <div class="component">
+        <br />
+        <hr />
+        @if (Model.Any())
+        {
+            <table class="table">
 
-                    if (image != null && image.ImageId.ToString() == item.ImageStore.ImageId.ToString())
+                <tbody>
+                    @foreach (var item in Model)
                     {
-                        imageBase64 = Convert.ToBase64String(image.Image);
-                        imageAltText = image.FileName;
-                    }
-                    else
-                    {
-                        placeholderImagePath = Url.Content("~/images/placeholder.jpeg");
-                    }
+                        var imageBase64 = "";
+                        var imageAltText = "Product Image";
+                        var image = item.ImageStore;
+                        var productUrl = Url.Action("Details", new { id = item.ItemId });
+                        var placeholderImagePath = Url.Content("~/images/placeholder.jpeg");
 
-              
+                        if (image != null && image.ImageId.ToString() == item.ImageStore.ImageId.ToString())
+                        {
+                            imageBase64 = Convert.ToBase64String(image.Image);
+                            imageAltText = image.FileName;
+                        }
+                        else
+                        {
+                            placeholderImagePath = Url.Content("~/images/placeholder.jpeg");
+                        }
 
-                    <tr>
-                        <td colspan="2" style="width:100%; padding:10px;">
-                            <div class="row">
-                                <!-- Image column -->
-                                <div class="col-5 d-flex justify-content-center align-items-center" style="padding-right:10px;">
-                                    @if (!String.IsNullOrEmpty(imageBase64))
-                                    {
-                                        <img src="data:image/jpeg;base64,@imageBase64" alt="@imageAltText" style="width:50%; height:auto;" />
-                                    }
-                                    else
-                                    {
-                                        <img src="@Url.Content("~/images/placeholder.jpeg")" alt="Placeholder Image" style="width:50%; height:auto;" />
-                                    }
-                                </div>
 
-                                <!-- Details column -->
-                                <div class="col-7" style="display:flex; flex-direction:column; justify-content:center;">
-                                    <h4>@item.ItemName</h4>
-                                  
-                                
-                                    <div class="cart-box">
-                                    <p>@item.Size</p>
-                                    <p>@item.Colour</p>
-                                    <p><span id="total_@item.ItemId">@item.Quantity</span></p>
+
+                        <tr>
+                            <td colspan="2" style="width:100%; padding:10px;">
+                                <div class="row">
+                                    <!-- Image column -->
+                                    <div class="col-5" style="padding-right:10px;">
+                                        @if (!String.IsNullOrEmpty(imageBase64))
+                                        {
+                                            <img src="data:image/jpeg;base64,@imageBase64" alt="@imageAltText" style="width:100%; height:auto;" />
+                                        }
+                                        else
+                                        {
+                                            <img src="@Url.Content("~/images/placeholder.jpeg")" alt="Placeholder Image" style="width:100%; height:auto;" />
+                                        }
                                     </div>
-                                    <p>$<span id="amount_@item.ItemId">@((item.Quantity * item.Price).ToString("N2"))</span></p>
-                                    <div class="col-md-12">
-                                          <div class="details-quantity">
-                                    <div class="quantity-label">
-                                        <label for="quantity-@item.ItemId">Quantity:</label>
-                                    </div>
-                                    <div class="controls-wrapper">
-                                        <div class="quantity-controls">
-                                                    <button id="removeButton_@item.ItemId" onclick="RemoveOne('@item.ItemId')">-</button>
 
-                                                    <input type="text" id="quantity_@item.ItemId" value="@item.Quantity" readonly>
+                                    <!-- Details column -->
+                                    <div class="col-7" style="display:flex; flex-direction:column; justify-content:center;">
+                                        <h4>@item.ItemName</h4>
 
-           
-                                                    <button id="addButton_@item.ItemId" data-price="@item.Price" onclick="AddOne('@item.ItemId')">+</button>
 
+                                        <div class="cart-box">
+                                            <p>@item.Size</p>
+                                            <p>@item.Colour</p>
+                                            <p><span id="total_@item.ItemId">@item.Quantity</span></p>
                                         </div>
-                                         <button class="btn btn-primary mb-1" onclick="removeFromCart('@item.ItemId', '@item.ItemName')">Remove</button>
+                                        <p>$<span id="amount_@item.ItemId">@((item.Quantity * item.Price).ToString("N2"))</span></p>
+                                        <div class="col-md-12">
+                                            <div class="details-quantity">
+                                                <div class="quantity-label">
+                                                    <label for="quantity-@item.ItemId">Quantity:</label>
+                                                </div>
+                                                <div class="controls-wrapper">
+                                                    <div class="quantity-controls">
+                                                        <button id="removeButton_@item.ItemId" onclick="RemoveOne('@item.ItemId')">-</button>
+
+                                                        <input type="text" id="quantity_@item.ItemId" value="@item.Quantity" readonly>
+
+
+                                                        <button id="addButton_@item.ItemId" data-price="@item.Price" onclick="AddOne('@item.ItemId')">+</button>
+
+                                                    </div>
+                                                    <button class="btn btn-primary mb-1" onclick="removeFromCart('@item.ItemId', '@item.ItemName')">Remove</button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+
+
                                     </div>
                                 </div>
-                                    </div>
-                                 
-                                    
-                                   
+                            </td>
+                        </tr>
 
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-
-                }
-            </tbody>
-        </table>
-        <div id="customAlert" class="custom-alert">
-            <div class="custom-alert-content">
-                <span class="custom-alert-close" onclick="closeCustomAlert()">&times;</span>
-                <p id="customAlertMessage"></p>
+                    }
+                </tbody>
+            </table>
+            <div id="customAlert" class="custom-alert">
+                <div class="custom-alert-content">
+                    <span class="custom-alert-close" onclick="closeCustomAlert()">&times;</span>
+                    <p id="customAlertMessage"></p>
+                </div>
             </div>
-        </div>
-        <div class="cart-summary">
-            <h3>Order Summary</h3>
-            <hr />
-            <p>Total Items: <span id="totalItems"></span></p> 
-              <hr />
-             <p>Subtotal: $<span id="grandTotal">0.00</span></p>
-               <hr />
-             <p>Tax will be calculated once the shipping address has been confirmed.</p>
+            <br/><br/>
+            <div class="cart-summary">
+                <h3>Order Summary</h3>
+                <hr />
+                <p>Total Items: <span id="totalItems"></span></p>
+                <hr />
+                <p>Subtotal: $<span id="grandTotal">0.00</span></p>
+                <hr />
+                <p>Tax will be calculated once the shipping address has been confirmed.</p>
                 <div style="display:flex;justify-content:center;">
                     <div style="display:flex;justify-content:center;width:100%">
                         <a href="@Url.Action("Checkout", "Transaction")" class="btn btn-success" style="width:100%">Proceed to checkout</a>
                     </div>
                 </div>
 
-        </div>
+            </div>
+
+
+        }
+        else
+        {
+            <br />
+
+            <br />
+            <p style="text-align: center">No cool camping items found :( </p>
+
+        }
+
+    </div>
+
+    </div>
+
+<br />
+<br />
+<br />
+<br />
+
+<br />
     
-
-    }
-    else
-    {
-        <p>No items found.</p>
-    }
-
-
-</div>
-
 <script>
  
 
