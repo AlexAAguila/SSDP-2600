@@ -7,6 +7,35 @@
 
 <style>
 
+    html, body, .container, div {
+        margin: 0;
+        padding: 0;
+    }
+
+    .grey-header {
+        background-color: rgba(217, 217, 217, 0.5);
+        color: black;
+        text-align: center;
+        padding: 10px 0;
+        font-size: 15px;
+        margin-top: -15px;
+    }
+
+    .bold-text {
+        font-weight: bold;
+    }
+
+    .container {
+        max-width: 100%;
+        margin: 0 auto;
+    }
+
+    .component {
+        margin-top: 30px;
+        margin-left: 100px;
+        margin-right: 100px;
+    }
+
     .return-button {
         margin-top: 20px;
         margin-bottom: 20px;
@@ -24,128 +53,132 @@
 
 </style>
 
-<h1>Order History</h1>
-
-<div class="return-button">
-    <a class="btn-custom" asp-area="Identity" asp-page="/Account/Manage/Index">Back to My Account</a>
+<div class="grey-header">
+    <span class="bold-text">Your Order History</span>
 </div>
 
+<div class="component">
+    <div class="return-button">
+        <a class="btn-custom" asp-area="Identity" asp-page="/Account/Manage/Index"><strong>Back to My Account</strong></a>
+    </div>
 
 
-<div class="mobile-cards">
-    @foreach (var item in Model)
-    {
-        <div class="mobile-card">
-            <div><strong>Date:</strong> @Html.DisplayFor(modelItem => item.CreateTime)</div>
-            <div><strong>Payer:</strong> @Html.DisplayFor(modelItem => item.PayerName)</div>
-            <div><strong>Email:</strong> @Html.DisplayFor(modelItem => item.PayerEmail)</div>
-            <div>
-                <strong>Amount:</strong>
-                @{
-                    if (decimal.TryParse(item.Amount, out var amountDecimal))
-                    {
-                        var roundedAmount = Math.Ceiling(amountDecimal * 100) / 100;
-                        @Html.Raw($"{roundedAmount:F2} {item.Currency}")
-                    }
-                    else
-                    {
-                        <span>Invalid amount</span>
-                    }
-                }
-            </div>            <div><strong>Method:</strong> @Html.DisplayFor(modelItem => item.PaymentMethod)</div>
-            <div>
-                <strong>Address:</strong> @if (item.FkAddress != null)
-                {
-                    <span>@item.FkAddress.Address1, @item.FkAddress.City, @item.FkAddress.Province @item.FkAddress.PostalCode</span>
-                }
-                else
-                {
-                    <span>No address available</span>
-                }
-            </div>
-        </div>
-    }
-</div>
-<table class="transaction-table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.CreateTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PayerName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PayerEmail)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Amount)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Currency)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PaymentMethod)
-            </th>
-            <th>
-                Address
-            </th>
-        </tr>
-    </thead>
-    <tbody>
+
+    <div class="mobile-cards">
         @foreach (var item in Model)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CreateTime)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PayerName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PayerEmail)
-                </td>
-                <td>
+            <div class="mobile-card">
+                <div><strong>Date:</strong> @Html.DisplayFor(modelItem => item.CreateTime)</div>
+                <div><strong>Payer:</strong> @Html.DisplayFor(modelItem => item.PayerName)</div>
+                <div><strong>Email:</strong> @Html.DisplayFor(modelItem => item.PayerEmail)</div>
+                <div>
+                    <strong>Amount:</strong>
                     @{
                         if (decimal.TryParse(item.Amount, out var amountDecimal))
                         {
                             var roundedAmount = Math.Ceiling(amountDecimal * 100) / 100;
-                            @roundedAmount.ToString("F2")
+                            @Html.Raw($"{roundedAmount:F2} {item.Currency}")
                         }
                         else
                         {
                             <span>Invalid amount</span>
                         }
                     }
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Currency)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PaymentMethod)
-                </td>
-                <td>
-                    @if (item.FkAddress != null)
+                </div>            <div><strong>Method:</strong> @Html.DisplayFor(modelItem => item.PaymentMethod)</div>
+                <div>
+                    <strong>Address:</strong> @if (item.FkAddress != null)
                     {
-                        <div>@item.FkAddress.Address1</div>
-                        <div>@item.FkAddress.City, @item.FkAddress.Province</div>
-                        <div>@item.FkAddress.PostalCode</div>
+                        <span>@item.FkAddress.Address1, @item.FkAddress.City, @item.FkAddress.Province @item.FkAddress.PostalCode</span>
                     }
                     else
                     {
                         <span>No address available</span>
                     }
-                </td>
-
-            </tr>
+                </div>
+            </div>
         }
-    </tbody>
-</table>
+    </div>
+    <table class="transaction-table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.CreateTime)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.PayerName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.PayerEmail)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Amount)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Currency)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.PaymentMethod)
+                </th>
+                <th>
+                    Address
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CreateTime)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PayerName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PayerEmail)
+                    </td>
+                    <td>
+                        @{
+                            if (decimal.TryParse(item.Amount, out var amountDecimal))
+                            {
+                                var roundedAmount = Math.Ceiling(amountDecimal * 100) / 100;
+                                @roundedAmount.ToString("F2")
+                            }
+                            else
+                            {
+                                <span>Invalid amount</span>
+                            }
+                        }
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Currency)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PaymentMethod)
+                    </td>
+                    <td>
+                        @if (item.FkAddress != null)
+                        {
+                            <div>@item.FkAddress.Address1</div>
+                            <div>@item.FkAddress.City, @item.FkAddress.Province</div>
+                            <div>@item.FkAddress.PostalCode</div>
+                        }
+                        else
+                        {
+                            <span>No address available</span>
+                        }
+                    </td>
 
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br/>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+</div>
