@@ -60,6 +60,10 @@ namespace WildPath.Controllers
                                     .Select(u => u.Id)
                                     .FirstOrDefault();
                 CheckoutVM.PayerFullName = registeredUserRepo.GetFirstAndLastNameByEmail(User.Identity.Name);
+                if(!CheckoutVM.hasAddress)
+                {
+                    registeredUserRepo.AddFkAddress(CheckoutVM, userName);
+                }
             }
             transRepo.Add(CheckoutVM, userId);
 
