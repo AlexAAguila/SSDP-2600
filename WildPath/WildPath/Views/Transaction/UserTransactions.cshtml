@@ -6,14 +6,20 @@
 }
 
 <style>
+
+    .return-button {
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
     .btn-custom {
-        background-color: #ACCAC3;
-        color: #fff;
+        color: black;
+        text-decoration: none;
     }
 
         .btn-custom:hover {
-            color: white;
-            background-color: #99b3a9;
+            color: #6c757d;
+            text-decoration: underline;
         }
 
 </style>
@@ -21,7 +27,7 @@
 <h1>Order History</h1>
 
 <div class="return-button">
-    <a class="btn btn-custom" asp-area="Identity" asp-page="/Account/Manage/Index">Back to Manage Account</a>
+    <a class="btn-custom" asp-area="Identity" asp-page="/Account/Manage/Index">Back to My Account</a>
 </div>
 
 
