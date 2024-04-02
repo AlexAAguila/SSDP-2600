@@ -84,5 +84,12 @@ namespace WildPath.Repositories
 
             return addresses;
         }
+
+        public ShippingInfo GetShippingInfo()
+        {
+            var shippingInfo = _context.ShippingInfos.FirstOrDefault();
+            return shippingInfo;
+        }
+
     }
 }
