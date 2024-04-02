@@ -197,7 +197,7 @@ namespace WildPath.Controllers
              string CURRENCY_SYMBOL = shippingInfo.CurrencySymbol ?? "$";         
              double CA_TAX = shippingInfo.CaTax ?? .12;                   
             double SHIPPING_RATE = shippingInfo.ShippingRate ?? 7.99;            
-             double FREE_SHIPPING_THRESHOLD = shippingInfo.ShippingRate ?? 74.99; 
+             double FREE_SHIPPING_THRESHOLD = shippingInfo.FreeShippingThreshold ?? 74.99; 
 
             List<CartItemVM> cartItems = new List<CartItemVM>();
 
