@@ -139,10 +139,23 @@
            margin:3rem 10rem;
        }
 
+        .component {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+       }
+
         @@media (min-width: 980px) {
-            .cart-summary {
-                margin: 3rem 14rem;
-            }
+        .cart-summary {
+            width:30%;
+        }
+
+        .component{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        }
     }
 </style>
 
@@ -183,14 +196,14 @@
                             <td colspan="2" style="width:100%; padding:10px;">
                                 <div class="row">
                                     <!-- Image column -->
-                                    <div class="col-5" style="padding-right:10px;">
+                                    <div class="col-5 d-flex justify-content-center align-items-center" style="padding-right:10px;">
                                         @if (!String.IsNullOrEmpty(imageBase64))
                                         {
-                                            <img src="data:image/jpeg;base64,@imageBase64" alt="@imageAltText" style="width:100%; height:auto;" />
+                                            <img src="data:image/jpeg;base64,@imageBase64" alt="@imageAltText" style="width:15rem; height:auto;" />
                                         }
                                         else
                                         {
-                                            <img src="@Url.Content("~/images/placeholder.jpeg")" alt="Placeholder Image" style="width:100%; height:auto;" />
+                                            <img src="@Url.Content("~/images/placeholder.jpeg")" alt="Placeholder Image" style="width:15rem; height:auto;" />
                                         }
                                     </div>
 
