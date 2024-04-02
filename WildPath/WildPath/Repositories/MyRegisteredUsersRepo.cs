@@ -1,5 +1,6 @@
 ﻿using WildPath.Data;
 using WildPath.EfModels;
+using WildPath.ViewModels;
 
 namespace WildPath.Repositories
 {
@@ -25,6 +26,16 @@ namespace WildPath.Repositories
                     .Select(u => u.FirstName + " " + u.LastName).FirstOrDefault(); ;
         }
         
+        public string AddFkAddress(CheckoutVM vm, string accountEmail)
+        {
+            var user = GetUserByName(accountEmail);
+            user.FkShippingAdress = vm.Address;
+
+            _db.MyRegisteredUsers.Update(user);
+            _db.SaveChanges();
+                    
+            return "Address added";
+        }   
         //public string GetUserIdByEmail(string email)
         //{
         //    return _applicationDbContext.Users
