@@ -106,10 +106,15 @@
         gap:1rem;
     }
 
-       @@media (min-width: 768px) { /* Adjust the max-width as needed for your target tablet size */
+       @@media (min-width: 768px) { 
        .cart-summary{
-           margin:3rem 8rem;
+           margin:3rem 10rem;
        }
+
+        @@media (min-width: 980px) {
+            .cart-summary {
+                margin: 3rem 14rem;
+            }
     }
 </style>
 
@@ -118,7 +123,7 @@
 <hr/>
 
 <div>
-    <h1>Your Shopping Cart</h1>
+    <h1 style="margin-left:5rem;">Your Shopping Cart</h1>
     <hr/>
     @if (Model.Any())
     {
@@ -149,14 +154,14 @@
                         <td colspan="2" style="width:100%; padding:10px;">
                             <div class="row">
                                 <!-- Image column -->
-                                <div class="col-5" style="padding-right:10px;">
+                                <div class="col-5 d-flex justify-content-center align-items-center" style="padding-right:10px;">
                                     @if (!String.IsNullOrEmpty(imageBase64))
                                     {
-                                        <img src="data:image/jpeg;base64,@imageBase64" alt="@imageAltText" style="width:100%; height:auto;" />
+                                        <img src="data:image/jpeg;base64,@imageBase64" alt="@imageAltText" style="width:50%; height:auto;" />
                                     }
                                     else
                                     {
-                                        <img src="@Url.Content("~/images/placeholder.jpeg")" alt="Placeholder Image" style="width:100%; height:auto;" />
+                                        <img src="@Url.Content("~/images/placeholder.jpeg")" alt="Placeholder Image" style="width:50%; height:auto;" />
                                     }
                                 </div>
 
