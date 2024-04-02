@@ -4,7 +4,13 @@
     ViewData["Title"] = "Delete";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<style>
+    .container {
+        max-width: 100%;
+        margin: 0 auto;
+    }
 
+</style>
 @* <h1>Delete</h1>
  *@
 <h3>Are you sure you want to delete this role?</h3>
@@ -34,3 +40,4 @@
             <a asp-controller="UserRole" asp-action="Detail" asp-route-userName="@Model.Email" class="btn btn-dark">Cancel</a>
         </div>
     </form>
+    <br />    <br />    <br />    <br /> <br/> <br/>
