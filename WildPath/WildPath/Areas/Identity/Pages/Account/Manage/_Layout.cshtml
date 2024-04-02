@@ -10,13 +10,43 @@
 }
 
 <style>
+    html, body, .container, div {
+        margin: 0;
+        padding: 0;
+    }
+
+    .grey-header {
+        background-color: rgba(217, 217, 217, 0.5);
+        color: black;
+        text-align: center;
+        padding: 10px 0;
+        font-size: 15px;
+        margin-top: -15px;
+    }
+
+    .bold-text {
+        font-weight: bold;
+    }
+
+    .container {
+        max-width: 100%;
+        margin: 0 auto;
+    }
+
+    .component {
+        margin: 30px;
+        margin-left: 100px;
+        margin-right: 100px;
+    }
 
 </style>
 
-<h1>My Account Settings</h1>
+<div class="grey-header">
+    <span class="bold-text">My Account Settings</span>
+</div>
 
-<div>
-    <hr />
+<div class="component">
+    <div>
     <div class="row">
         <div class="col-md-3">
             <partial name="_ManageNav" />
@@ -30,3 +60,5 @@
 @section Scripts {
     @RenderSection("Scripts", required: false)
 }
+
+</div>
