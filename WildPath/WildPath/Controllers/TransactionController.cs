@@ -184,6 +184,8 @@ namespace WildPath.Controllers
         }
         public IActionResult Checkout()
         {
+            var PayPalClientId = _configuration["PayPal:ClientId"];
+            ViewData["PayPalClientId"] = PayPalClientId;
             if (User.Identity.IsAuthenticated)
             {
                 MyRegisteredUserRepo registeredUserRepo = new MyRegisteredUserRepo(_wpdb);
