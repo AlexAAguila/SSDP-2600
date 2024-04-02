@@ -1,12 +1,12 @@
 ﻿@model IEnumerable<WildPath.ViewModels.RoleVM>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Roles";
     Layout = "~/Views/Shared/_Layout.cshtml";
     string message = ViewBag.Message;
 }
 
-<h1>Index</h1>
+<h1>Types of Roles</h1>
 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 @if (message.Length > 0)
 {
@@ -16,7 +16,7 @@
 }
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-dark">Create a New Role</a>
 </p>
 <table class="table">
     <thead>
@@ -35,8 +35,8 @@
                     @Html.DisplayFor(modelItem => item.RoleName)
                 </td>
                 <td>
-                    @Html.ActionLink("Delete", "Delete", new { Rolename = item.RoleName })
-                </td>             
+                    @Html.ActionLink("Delete", "Delete", new { Rolename = item.RoleName }, new { @class = "btn btn-dark" })
+                </td>
             </tr>
         }
     </tbody>

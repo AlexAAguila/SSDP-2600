@@ -8,7 +8,7 @@
 <h1>Products</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-dark">Create a New Product</a>
 </p>
 <table class="table">
     <thead>
@@ -75,10 +75,11 @@
                     @Html.DisplayFor(modelItem => item.Colour)
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.PkItemId">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.PkItemId">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.PkItemId">Delete</a>
+                    <a asp-action="Edit" asp-route-id="@item.PkItemId" class="btn btn-dark">Edit</a> 
+                    <a asp-action="Details" asp-route-id="@item.PkItemId" class="btn btn-dark">Details</a> 
+                    <a asp-action="Delete" asp-route-id="@item.PkItemId" class="btn btn-dark">Delete</a>
                 </td>
+
             </tr>
         }
     </tbody>
