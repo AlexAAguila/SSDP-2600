@@ -279,6 +279,13 @@ body {
     }
 }
 
+.fix {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap:1rem;
+}
+
 @media screen and (max-width: 768px) {
     .transaction-table {
         display: none;

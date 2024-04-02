@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/WildPath.styles.css" asp-append-version="true" />
 </head>
@@ -16,13 +15,28 @@
     <header>
         <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
+                <div class="fix">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
                     <img src="~/images/logo.png" alt="WildPath Logo" height="90px">
                 </a>
+                </div>
+
+                <div class="fix">
+                <div class="d-lg-none">
+                    <partial name="_LoginPartial" />
+                </div>
+                
+
+                <a class="nav-item d-lg-none" asp-area="" asp-controller="Product" asp-action="ShoppingCart">
+                        <i class="bi bi-cart d-lg-none text-dark"></i>
+                </a>
+
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
+
+                </div>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
@@ -51,6 +65,20 @@
                         <li class="nav-item d-lg-none">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="ShopAll" asp-route-searchString="Accessories">Accessories</a>
                         </li>
+
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item d-lg-none">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="Images">Image</a>
+                            </li>
+                            <li class="nav-item d-lg-none">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="SaveImage">Save Image</a>
+                            </li>
+
+                            <li><a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="Images">Image</a></li>
+                            <li><a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="SaveImage">Save Image</a></li>
+                            <li> <a class="nav-link text-dark" asp-area="" asp-controller="Transaction" asp-action="Index">Transactions</a></li>
+                        }
 
                         <li class="nav-item dropdown d-none d-lg-block">
                             <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -91,10 +119,13 @@
                             }
 
                     </ul>
-                    <partial name="_LoginPartial" />
-                    <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="ShoppingCart">
-                        <i class="bi bi-cart"></i> Shopping Cart
+                    <span class="d-none d-sm-block">   <partial name="_LoginPartial" /></span>
+
+                  
+                    <a class="nav-link text-dark d-none d-sm-block d-lg-flex align-items-center" asp-area="" asp-controller="Product" asp-action="ShoppingCart">
+                        <i class="bi bi-cart d-none d-sm-block me-2 text-dark"></i> Shopping Cart
                     </a>
+                   
 
                 </div>
             </div>
