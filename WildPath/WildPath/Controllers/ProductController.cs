@@ -152,7 +152,7 @@ namespace WildPath.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(Item item, IFormFile imageFile)
+        public async Task<IActionResult> Create(Item item, IFormFile? imageFile)
         {
             if (User.Identity.IsAuthenticated)
             {

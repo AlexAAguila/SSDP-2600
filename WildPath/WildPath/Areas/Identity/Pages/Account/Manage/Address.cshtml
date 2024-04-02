@@ -1,0 +1,56 @@
+﻿@page
+@model AddressModel
+
+<h3>Manage Addresses</h3>
+
+<form method="post" asp-page-handler="Mailing">
+    <h4>Mailing Address</h4>
+    <input type="hidden" asp-for="MailingAddressInput.PkAddressId" />
+    <div>
+        <label>Unit</label>
+        <input asp-for="MailingAddressInput.Unit" />
+    </div>
+    <div>
+        <label>Address</label>
+        <input asp-for="MailingAddressInput.Address1" />
+    </div>
+    <div>
+        <label>City</label>
+        <input asp-for="MailingAddressInput.City" />
+    </div>
+    <div>
+        <label>Province</label>
+        <input asp-for="MailingAddressInput.Province" />
+    </div>
+    <div>
+        <label>Postal Code</label>
+        <input asp-for="MailingAddressInput.PostalCode" />
+    </div>
+    <button type="submit">Save Mailing Address</button>
+</form>
+
+<form method="post" asp-page-handler="Shipping">
+    <h4>Shipping Address</h4>
+    <input type="hidden" asp-for="ShippingAddressInput.PkAddressId" />
+    <div>
+        <label>Unit</label>
+        <input asp-for="ShippingAddressInput.Unit" />
+    </div>
+    <div>
+        <label>Address</label>
+        <input asp-for="ShippingAddressInput.Address1" />
+    </div>
+    <div>
+        <label>City</label>
+        <input asp-for="ShippingAddressInput.City" />
+    </div>
+    <div>
+        <label>Province</label>
+        <input asp-for="ShippingAddressInput.Province" />
+    </div>
+    <div>
+        <label>Postal Code</label>
+        <input asp-for="ShippingAddressInput.PostalCode" />
+    </div>
+    <button type="submit">Save Shipping Address</button>
+</form>
