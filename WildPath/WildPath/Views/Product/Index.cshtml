@@ -75,9 +75,11 @@
                     @Html.DisplayFor(modelItem => item.Colour)
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.PkItemId" class="btn btn-dark">Edit</a> 
-                    <a asp-action="Details" asp-route-id="@item.PkItemId" class="btn btn-dark">Details</a> 
-                    <a asp-action="Delete" asp-route-id="@item.PkItemId" class="btn btn-dark">Delete</a>
+                    <div class="button-container">
+                        <a asp-action="Edit" asp-route-id="@item.PkItemId" class="btn btn-dark">Edit</a>
+                        <a asp-action="Details" asp-route-id="@item.PkItemId" class="btn btn-dark">Details</a>
+                        <a asp-action="Delete" asp-route-id="@item.PkItemId" class="btn btn-dark">Delete</a>
+                    </div>
                 </td>
 
             </tr>
