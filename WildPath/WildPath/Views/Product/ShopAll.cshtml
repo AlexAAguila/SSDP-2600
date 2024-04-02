@@ -1,19 +1,124 @@
 ﻿@model PaginatedList<WildPath.ViewModels.ProductVM>
 @{
-    ViewData["Title"] = "ShopAll";
+    ViewData["Title"] = "Shop All";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<h1>Shop All</h1>
+
+<style>
+    html, body, .container, div {
+        margin: 0;
+        padding: 0;
+    }
+
+    .grey-header {
+        background-color: rgba(217, 217, 217, 0.5);
+        color: black;
+        text-align: center;
+        padding: 10px 0;
+        font-size: 15px;
+        margin-top: -15px;
+    }
+
+    .bold-text {
+        font-weight: bold;
+    }
+
+    .container {
+        max-width: 100%;
+        margin: 0 auto;
+    }
+
+    .search-bar {
+        display: flex;
+        align-items: center;
+        margin-top: 10px;
+        justify-content: flex-end; 
+        position: relative; 
+    }
+
+    .search-input {
+        border: none;
+        outline: none;
+        padding: 10px;
+        width: 200px; 
+        background-color: transparent;
+    }
+
+    .search-bar::after {
+        content: ''; 
+        position: absolute;
+        bottom: 0; 
+        right: 0; 
+        width: 230px; 
+        height: 1px; 
+        background-color: #888; 
+        margin-right: 15px;
+    }
+
+    .search-button {
+        border: none;
+        background-color: transparent;
+        cursor: pointer;
+        padding: 10px;
+    }
+
+        .search-button i {
+            color: #888; 
+            font-size: 18px;
+            margin-right: 15px;
+        }
+
+    .pagination {
+        justify-content: flex-end;
+    }
+
+        .pagination li.page-item + li.page-item a.page-link {
+            margin-right: 15px;
+        }
+
+    .page-link {
+        background-color: #ACCAC3; 
+        color: white; 
+        border: 1px solid #ACCAC3; 
+        outline: none;
+    }
+
+        .page-link:hover {
+            background-color: #99B3A9;
+            color: white;
+            border-color: #99B3A9; 
+        }
+
+        .page-link:focus{
+            outline: none;
+        }
+
+
+    .page-item.disabled .page-link {
+        background-color: #f1f1f1;
+        color: #888; 
+        border-color: #f1f1f1;
+    }
+
+</style>
+
+@* <h1>Shop All Camping Gears</h1>
+ *@
+<div class="grey-header">
+    <span class="bold-text">Camping Gears</span>
+</div>
+
 <div>
     <form asp-action="ShopAll" method="get">
-        <div class="form-group" style="display: inline-block">
-            <span>Search:</span>
-            <input type="text" name="SearchString" value="@ViewData["currentFilter"]" />
-            <input type="submit" value="Search" class="btn btn-primary" />
+        <div class="search-bar">
+            <input type="text" name="SearchString" value="@ViewData["currentFilter"]" class="search-input" placeholder="Search Products" />
+            <button type="submit" class="search-button">
+                <i class="fas fa-search"></i>
+            </button>
         </div>
     </form>
 
-  @if (Model.Any())
+    @if (Model.Any())
     {
         <div class="product-grids">
             @foreach (var ProVM in Model)
@@ -34,26 +139,27 @@
                 }
 
                 <a asp-action="Details" asp-route-id="@ProVM.Item.PkItemId" class="product-cards">
-                @if (!String.IsNullOrEmpty(imageBase64))
+                    @if (!String.IsNullOrEmpty(imageBase64))
                     {
                         <img src="data:image/jpeg;base64,@imageBase64" alt="@imageAltText" class="product-images" />
                     }
                     else
                     {
-                    <img src="@Url.Content("~/images/placeholder.jpeg")" alt="Placeholder Image" class="product-images" />
+                        <img src="@Url.Content("~/images/placeholder.jpeg")" alt="Placeholder Image" class="product-images" />
                     }
                     <div class="product-info">
                         <h3>
-                     @ProVM.Item.ItemName
+                            @ProVM.Item.ItemName
                         </h3>
                         <p>@Html.Raw(ProVM.Item.ItemDetails.Replace("\n", "<br/>"))</p>
                         <p class="price">$@ProVM.Item.Price</p>
                     </div>
                 </a>
             }
-        
-          
+
+
         </div>
+        <br/>
         <nav>
             <ul class="pagination">
                 <li class="page-item @(Model.HasPreviousPage ? "" : "disabled")">
@@ -70,20 +176,13 @@
                 </li>
             </ul>
         </nav>
-        <button id="shoppingCartButton" class="btn btn-primary mb-1">
-            <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="ShoppingCart">Go To Cart</a>
-
-        </button>
     }
     else
     {
+        <br />         <br />
+
         <p>No items found.</p>
     }
 
-</div>  
 
-<style>
-
-
-
-</style>
+</div>

@@ -1,15 +1,16 @@
 ﻿@model IEnumerable<WildPath.ViewModels.UserVM>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "User Roles";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
+<h1>Roles for Users</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-dark">Assign a New User Role</a>
 </p>
+
 <table class="table">
     <thead>
         <tr>
@@ -26,7 +27,8 @@
                     @Html.ActionLink(
                              "View Roles"
                              , "Detail"
-                             , new { userName = item.Email })
+                             , new { userName = item.Email },
+                             new { @class = "btn btn-dark" })
                 </td>
             </tr>
 }

@@ -14,7 +14,20 @@
             <div><strong>Date:</strong> @Html.DisplayFor(modelItem => item.CreateTime)</div>
             <div><strong>Payer:</strong> @Html.DisplayFor(modelItem => item.PayerName)</div>
             <div><strong>Email:</strong> @Html.DisplayFor(modelItem => item.PayerEmail)</div>
-            <div><strong>Amount:</strong> @Html.DisplayFor(modelItem => item.Amount) @Html.DisplayFor(modelItem => item.Currency)</div>
+            <div>
+                <strong>Amount:</strong>
+                @{
+                    if (decimal.TryParse(item.Amount, out var amountDecimal))
+                    {
+                        var roundedAmount = Math.Ceiling(amountDecimal * 100) / 100;
+                        @Html.Raw($"{roundedAmount:F2} {item.Currency}")
+                    }
+                    else
+                    {
+                        <span>Invalid amount</span>
+                    }
+                }
+            </div>
             <div><strong>Method:</strong> @Html.DisplayFor(modelItem => item.PaymentMethod)</div>
             <div>
                 <strong>Address:</strong> @if (item.FkAddress != null)
@@ -69,7 +82,17 @@
                     @Html.DisplayFor(modelItem => item.PayerEmail)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Amount)
+                    @{
+                        if (decimal.TryParse(item.Amount, out var amountDecimal))
+                        {
+                            var roundedAmount = Math.Ceiling(amountDecimal * 100) / 100;
+                            @roundedAmount.ToString("F2")
+                        }
+                        else
+                        {
+                            <span>Invalid amount</span>
+                        }
+                    }
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Currency)

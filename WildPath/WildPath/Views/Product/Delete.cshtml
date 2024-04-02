@@ -5,12 +5,12 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Delete</h1>
+@* <h1>Delete</h1> *@
 
-<h3>Are you sure you want to delete this?</h3>
+<h3>Are you sure you want to delete this product?</h3>
 <div>
-    <h4>Item</h4>
-    <hr />
+@*     <h4>Item</h4>
+ *@    <hr />
     <dl class="row">
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Supplier)
@@ -70,7 +70,7 @@
     
     <form asp-action="Delete">
         <input type="hidden" asp-for="PkItemId" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
+        <input type="submit" value="Delete" class="btn btn-danger" /> 
+        <a asp-action="Index" class="btn btn-dark">Back to List</a>
     </form>
 </div>

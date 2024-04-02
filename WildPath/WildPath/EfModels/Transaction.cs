@@ -7,6 +7,7 @@ namespace WildPath.EfModels;
 public partial class Transaction
 {
     public string PaymentId { get; set; } = null!;
+
     [Display(Name = "Create Time")]
     public string CreateTime { get; set; } = null!;
     [Display(Name = "Payer Name")]

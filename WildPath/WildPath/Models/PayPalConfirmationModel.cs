@@ -12,6 +12,7 @@ namespace WildPath.Models
         public string TrackingNumber { get; set; }
         public string ShippingMethod { get; set; }
         //public int FkAddressId { get; set; }
+        public bool hasAddress { get; set; }
         public Address Address { get; set; }
         public DateTime EstimatedDeliveryDate { get; set; }
 

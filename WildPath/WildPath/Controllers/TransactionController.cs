@@ -27,6 +27,13 @@ namespace WildPath.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult Index()
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                MyRegisteredUserRepo registeredUserRepo = new MyRegisteredUserRepo(_wpdb);
+                string userName = User.Identity.Name;
+                string name = registeredUserRepo.GetUserByName(userName).FirstName;
+                ViewBag.UserName = name;
+            }
             TransactionRepo transactionRepo = new TransactionRepo(_wpdb);
 
             return View(transactionRepo.GetAll());
@@ -35,6 +42,13 @@ namespace WildPath.Controllers
         [Authorize]
         public IActionResult UserTransactions()
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                MyRegisteredUserRepo registeredUserRepo = new MyRegisteredUserRepo(_wpdb);
+                string userName = User.Identity.Name;
+                string name = registeredUserRepo.GetUserByName(userName).FirstName;
+                ViewBag.UserName = name;
+            }
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             var userTransactions = _wpdb.Transactions
@@ -155,6 +169,7 @@ namespace WildPath.Controllers
 
         public IActionResult GetCartState()
         {
+
             // Retrieve cart items from session
             string cartSession = HttpContext.Session.GetString("Cart");
             List<CartItem> cartItems = new List<CartItem>();
@@ -169,6 +184,21 @@ namespace WildPath.Controllers
         }
         public IActionResult Checkout()
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                MyRegisteredUserRepo registeredUserRepo = new MyRegisteredUserRepo(_wpdb);
+                string userName = User.Identity.Name;
+                string name = registeredUserRepo.GetUserByName(userName).FirstName;
+                ViewBag.UserName = name;
+            }
+            TransactionRepo transactionRepo = new TransactionRepo(_wpdb);
+            var shippingInfo = transactionRepo.GetShippingInfo();
+            string CURRENCY_CODE = shippingInfo.CurrencyCode ?? "CAD";           
+             string CURRENCY_SYMBOL = shippingInfo.CurrencySymbol ?? "$";         
+             double CA_TAX = shippingInfo.CaTax ?? .12;                   
+            double SHIPPING_RATE = shippingInfo.ShippingRate ?? 7.99;            
+             double FREE_SHIPPING_THRESHOLD = shippingInfo.ShippingRate ?? 74.99; 
+
             List<CartItemVM> cartItems = new List<CartItemVM>();
 
             var isLoggedIn = User.Identity.IsAuthenticated;
@@ -179,7 +209,7 @@ namespace WildPath.Controllers
             {
                 List<CartItem> sessionCartItems = Newtonsoft.Json.JsonConvert.DeserializeObject<List<CartItem>>(cartSession);
                 ProductRepo productRepo = new ProductRepo(_wpdb);
-                TransactionRepo transactionRepo = new TransactionRepo(_wpdb);
+                //TransactionRepo transactionRepo = new TransactionRepo(_wpdb);
                 cartItems = productRepo.GetCartVM(sessionCartItems);
 
                 double totalPrice = 0;
@@ -191,44 +221,42 @@ namespace WildPath.Controllers
                     totalPrice += item.Price * item.Quantity;
                     totalItems += item.Quantity;
                 }
+
+                double shipping = totalPrice > FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_RATE;
+                double tax = totalPrice * CA_TAX;
+                double grandTotal = totalPrice + shipping + tax;
+
+                model = new CheckoutVM
+                {
+                    IsLoggedIn = isLoggedIn,
+                    hasAddress = false,
+                    Address = new Address(),
+                    TotalItems = totalItems,
+                    TotalPrice = totalPrice,
+                    Shipping = shipping,
+                    ShippingRate = SHIPPING_RATE,
+                    ShippingMethod = shipping == 0 ? "Standard Shipping" : "Express Shipping",
+                    FreeShippingThreshold = FREE_SHIPPING_THRESHOLD,
+                    IsFreeShipping = shipping == 0 ? true : false,
+                    Tax = tax,
+                    GrandTotal = grandTotal,
+                    CurrencyCode = CURRENCY_CODE,
+                    CurrencySymbol = CURRENCY_SYMBOL,
+                };
+
                 if (isLoggedIn)
                 {
+                    //model.Email = User.Identity.Name;
                     var addresses = transactionRepo.GetAddress(User.Identity.Name);
-                    var address = addresses.FirstOrDefault();
-                    if (address != null)
-                    {
-                        model = new CheckoutVM
-                        {
-                            IsLoggedIn = isLoggedIn,
-                            hasAddress = true,
-                            totalPrice = totalPrice,
-                            totalItems = totalItems,
-               
-                            Address = address
-                            
-                        };
-                    }
-                    else
-                    {
-                        model = new CheckoutVM
-                        {
-                            IsLoggedIn = isLoggedIn,
-                            hasAddress = false,
-                            totalPrice = totalPrice,
-                            totalItems = totalItems
-                        };
-                    }
-                }
+                    Address address = new Address();
 
-                else
-                {
-                     model = new CheckoutVM
+                    if (addresses.Count() > 0)
                     {
-                        IsLoggedIn = isLoggedIn,
-                        hasAddress = false,
-                        totalPrice = totalPrice,
-                        totalItems = totalItems
-                    };
+                        model.hasAddress = true;
+
+                        address = addresses.FirstOrDefault();
+                        model.Address = address;
+                    }
                 }
 
                 return View(model);
@@ -238,5 +266,6 @@ namespace WildPath.Controllers
                 return View();
             }
         }
+
     }
 }

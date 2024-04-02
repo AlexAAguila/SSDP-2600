@@ -22,10 +22,18 @@ namespace WildPath.Controllers
             _wpdb = wpdb;
         }
 
+
         [Authorize(Roles = "Admin")]
         public IActionResult Index()
         {
             ViewBag.message = HttpContext.Session.GetString("Cart");
+            if (User.Identity.IsAuthenticated)
+            {
+                MyRegisteredUserRepo registeredUserRepo = new MyRegisteredUserRepo(_wpdb);
+                string userName = User.Identity.Name;
+                string name = registeredUserRepo.GetUserByName(userName).FirstName;
+                ViewBag.UserName = name;
+            }
 
             ProductRepo productRepo = new ProductRepo(_wpdb);
 
@@ -36,6 +44,13 @@ namespace WildPath.Controllers
         public IActionResult ShopAll(string searchString, int? pageNumber)
         {
             ViewData["currentFilter"] = searchString;
+            if (User.Identity.IsAuthenticated)
+            {
+                MyRegisteredUserRepo registeredUserRepo = new MyRegisteredUserRepo(_wpdb);
+                string userName = User.Identity.Name;
+                string name = registeredUserRepo.GetUserByName(userName).FirstName;
+                ViewBag.UserName = name;
+            }
 
             IQueryable<Item> itemsQuery = _wpdb.Items;
 
@@ -70,6 +85,13 @@ namespace WildPath.Controllers
         public IActionResult ShoppingCart()
         {
             List<CartItemVM> cartItems = new List<CartItemVM>();
+            if (User.Identity.IsAuthenticated)
+            {
+                MyRegisteredUserRepo registeredUserRepo = new MyRegisteredUserRepo(_wpdb);
+                string userName = User.Identity.Name;
+                string name = registeredUserRepo.GetUserByName(userName).FirstName;
+                ViewBag.UserName = name;
+            }
 
             string cartSession = HttpContext.Session.GetString("Cart");
 
@@ -97,6 +119,13 @@ namespace WildPath.Controllers
 
         public ActionResult Details(int id)
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                MyRegisteredUserRepo registeredUserRepo = new MyRegisteredUserRepo(_wpdb);
+                string userName = User.Identity.Name;
+                string name = registeredUserRepo.GetUserByName(userName).FirstName;
+                ViewBag.UserName = name;
+            }
             var item = _wpdb.Items.Find(id);
             var viewModel = new ProductVM
             {
@@ -110,14 +139,28 @@ namespace WildPath.Controllers
 
         public IActionResult Create()
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                MyRegisteredUserRepo registeredUserRepo = new MyRegisteredUserRepo(_wpdb);
+                string userName = User.Identity.Name;
+                string name = registeredUserRepo.GetUserByName(userName).FirstName;
+                ViewBag.UserName = name;
+            }
             Item item = new Item();
 
             return View(item);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(Item item, IFormFile imageFile)
+        public async Task<IActionResult> Create(Item item, IFormFile? imageFile)
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                MyRegisteredUserRepo registeredUserRepo = new MyRegisteredUserRepo(_wpdb);
+                string userName = User.Identity.Name;
+                string name = registeredUserRepo.GetUserByName(userName).FirstName;
+                ViewBag.UserName = name;
+            }
             if (ModelState.IsValid)
             {
                 try
@@ -177,6 +220,13 @@ namespace WildPath.Controllers
 
         public IActionResult Edit(int id)
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                MyRegisteredUserRepo registeredUserRepo = new MyRegisteredUserRepo(_wpdb);
+                string userName = User.Identity.Name;
+                string name = registeredUserRepo.GetUserByName(userName).FirstName;
+                ViewBag.UserName = name;
+            }
             ProductRepo productRepo = new ProductRepo(_wpdb);
             var item = productRepo.GetById(id);
 
@@ -197,7 +247,17 @@ namespace WildPath.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(Item item, IFormFile? imageFile)
         {
-            ProductRepo productRepo = new ProductRepo(_wpdb);
+            if (!ModelState.IsValid)
+            {
+                var viewModel = new ProductVM
+                {
+                    Item = item,
+                    ImageStore = _wpdb.ImageStores.FirstOrDefault(i => i.ImageId.ToString() == item.ItemImageId)
+                };
+                return View(viewModel);
+            }
+        
+                    ProductRepo productRepo = new ProductRepo(_wpdb);
             string resultMessage = await productRepo.UpdateAsync(item, imageFile);
 
             if (resultMessage == $"{item.ItemName} updated successfully")
@@ -214,6 +274,13 @@ namespace WildPath.Controllers
 
         public IActionResult Delete(int id)
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                MyRegisteredUserRepo registeredUserRepo = new MyRegisteredUserRepo(_wpdb);
+                string userName = User.Identity.Name;
+                string name = registeredUserRepo.GetUserByName(userName).FirstName;
+                ViewBag.UserName = name;
+            }
             ProductRepo productRepo = new ProductRepo(_wpdb);
 
             return View(productRepo.GetById(id));
@@ -231,6 +298,13 @@ namespace WildPath.Controllers
 
         public IActionResult Images()
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                MyRegisteredUserRepo registeredUserRepo = new MyRegisteredUserRepo(_wpdb);
+                string userName = User.Identity.Name;
+                string name = registeredUserRepo.GetUserByName(userName).FirstName;
+                ViewBag.UserName = name;
+            }
             IEnumerable<ImageStore> images = _wpdb.ImageStores;
             return View(images);
         }

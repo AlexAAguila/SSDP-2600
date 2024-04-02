@@ -5,7 +5,7 @@
     string message = ViewBag.Message;
 }
 
-<h3>@ViewBag.UserName</h3>
+<h3><strong>User: </strong>@ViewBag.UserName</h3>
 
 @if (message.Length > 0)
 {
@@ -14,9 +14,7 @@
     </div>
 }
 <p>
-    @Html.ActionLink("Assign Roles"
-            , "Create"
-            , new { userName = @ViewBag.UserName })
+    @Html.ActionLink("Assign Roles", "Create", new { userName = @ViewBag.UserName }, new { @class = "btn btn-dark" })
 </p>
 
 <table class="table">
@@ -33,8 +31,7 @@
                     @Html.DisplayFor(modelItem => item.RoleName)
 
                 <span style="padding-left:50px">
-                        @Html.ActionLink("Delete", "Delete", new
-                            { role = item.RoleName, email = item.Id })
+                        @Html.ActionLink("Delete", "Delete", new { role = item.RoleName, email = item.Id }, new { @class = "btn btn-dark" })
 
                     </span>
                 </td>
@@ -45,5 +42,10 @@
 </table>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index" style="color:black">Back to List</a>
 </div>
+
+<br />
+<br />
+<br />
+<br />

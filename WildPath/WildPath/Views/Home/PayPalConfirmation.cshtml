@@ -1,4 +1,4 @@
-﻿@model WildPath.Models.PayPalConfirmationModel
+﻿@model WildPath.ViewModels.CheckoutVM
 @{
     ViewData["Title"] = "Payment Confirmation";
 }
@@ -17,43 +17,85 @@
         font-size: 15px;
         margin-top: -15px;
     }
+
+    .bold-text {
+        font-weight: bold;
+    }
+
+    .container {
+        max-width: 100%;
+        margin: 0 auto;
+    }
+
+    .confirmation-message {
+        margin-top: 50px;
+        margin-left: 100px;
+        text-align: left; 
+    }
+
+    .estimated-date, .delivery-address {
+        text-align: left;
+        background-color: #f5f5f5; 
+        width: 50%;
+        margin-top: 30px; 
+        margin-left: 50px; 
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    }
+
+
+    .delivery-address {
+        text-align: left;
+    }
+
+    .styling-link-pp{
+        text-decoration: none;
+        color: #888;
+    }
+
+    .styling-link-pp:hover{
+        color: black;
+        font-weight: 600;
+    }
+
 </style>
 
-<br />
-<br />
 <div class="grey-header">
     <span class="bold-text">Your order has shipped</span>
 </div>
 
 <div class="confirmation-message">
-    <span class="text-left">
-        <span style="font-size: 2em;">Hi @Model.PayerName,</span><br />
-        <span style="font-size: 1.4em;">
-            <span>
-                Your shipment with tracking number: <br />
-                @Model.TrackingNumber is ready. </span><br />
-            <span>Estimated delivery date:<br />
-                @Model.EstimatedDeliveryDate.ToString("MMMM dd, yyyy")</span><br />
+    <span style="font-size: 2em;">Hi @Model.PayerFullName,</span><br />
 
-            <span>Your $</span><span>@Model.Amount</span>
-            <span>CAD</span>
-            <span> </span>
-            <span>@Model.PaymentMethod transaction was Successful</span>
+    <p style="font-size: 1.4em;margin-top: 30px;">
+        Thank you! Your payment of 
+        @Model.CurrencySymbol@Model.GrandTotal.ToString("N2") @Model.CurrencyCode has been processed successfully.<br />
+        Your shipment with tracking number: #@Model.TrackingNumber is ready. <br />
+    </p>
+
+    <div class="estimated-date">
+        <span style="font-size: 1.4em; margin-bottom: 20px;">
+            <strong>Estimated Delivery Date:</strong> <br />
+            @Model.EstimatedDeliveryDate?.ToString("MMMM dd, yyyy") <br />
         </span>
-    </span><br /><br />
-</div>
+    </div>
 
 
-<div class="text-center" style="color:darkred;">
-    <span class="text-center">
-        <span style="font-size: 2em;">Congratulations @Model.PayerName!</span><br /><br /><br /><br />
-        <span style="font-size: 1.4em;">
-            <span>Your $</span><span>@Model.Amount</span>
-            <span>CAD</span>
-            <span>@Model.PaymentMethod transaction was Successful</span>
-        </span>
-    </span><br /><br />
-    <span class="text-center" style="font-size: 1.2em;">Keep this transaction Id for future reference.</span>
 
-    <span style="color: black; font-size: 1.2em;">PAYID-MXDKHDQ1HA84807CL970332B</span>
+        <div class="delivery-address">
+            <span style="font-size: 1.4em;">
+            <strong>Delivered to:</strong> <br />
+                @Model.PayerFullName <br />
+                @Model.Address.Address1 <br />
+                @Model.Address.City, @Model.Address.Province <br />
+                @Model.Address.PostalCode  
+            </span>
+        </div>
+    <br /><br /><br/>
+
+    <p>If you have any questions or need further assistance, please visit our <a href="/Home/CustomerCare" class="styling-link-pp">Help Center</a> for more information.</p>
+
+ 
+ <br /><br />
 </div>

@@ -171,8 +171,8 @@ namespace WildPath.Areas.Identity.Pages.Account
                         LastName = Input.LastName
                     };
 
-                    _myRegisteredUserRepo.Add(registerUser);
-                    _db.SaveChanges();
+                    _wpdb.MyRegisteredUsers.Add(registerUser);
+                    _wpdb.SaveChanges();
                     _logger.LogInformation("User created a new account with password.");
 
                     await _userManager.AddToRoleAsync(user, "Customer");
