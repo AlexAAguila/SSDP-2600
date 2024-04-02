@@ -62,7 +62,7 @@ namespace WildPath.Controllers
             string cartSession = HttpContext.Session.GetString("Cart");
             TransactionRepo transactionRepo = new TransactionRepo(_wpdb);
             var transId = transactionRepo.GetTransactionsByTransactionId(CheckoutVM.TransactionId);
-            CheckoutVM.Address = _wpdb.Addresses.Where(u => transId.FirstOrDefault().PaymentId == CheckoutVM.TransactionId)
+            CheckoutVM.Address = _wpdb.Addresses.Where(u => u.PkAddressId == transId.FirstOrDefault().FkAddressId)
                                     .FirstOrDefault();
 
             if (cartSession != null)
