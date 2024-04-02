@@ -17,7 +17,7 @@
         <h2>Delivery Address</h2>
         <div class="form-group">
             <label asp-for="Address.Address1">Address Line 1</label>
-            <input type="text" class="form-control" id="address1" placeholder="Enter address" asp-for="Address.Address1">
+            <input type="text" class="form-control" id="address1" placeholder="Enter address" asp-for="Address.Address1" value="@Model.Address.Address1">
         </div>
         <div class="form-group">
             <label asp-for="Address.City">City/Town</label>
