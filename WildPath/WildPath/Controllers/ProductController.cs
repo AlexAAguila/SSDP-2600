@@ -197,7 +197,17 @@ namespace WildPath.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(Item item, IFormFile? imageFile)
         {
-            ProductRepo productRepo = new ProductRepo(_wpdb);
+            if (!ModelState.IsValid)
+            {
+                var viewModel = new ProductVM
+                {
+                    Item = item,
+                    ImageStore = _wpdb.ImageStores.FirstOrDefault(i => i.ImageId.ToString() == item.ItemImageId)
+                };
+                return View(viewModel);
+            }
+        
+                    ProductRepo productRepo = new ProductRepo(_wpdb);
             string resultMessage = await productRepo.UpdateAsync(item, imageFile);
 
             if (resultMessage == $"{item.ItemName} updated successfully")
