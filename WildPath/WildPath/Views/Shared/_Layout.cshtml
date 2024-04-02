@@ -18,6 +18,11 @@
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
                     <img src="~/images/logo.png" alt="WildPath Logo" height="90px">
                 </a>
+                     <partial name="_LoginPartial" />
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="ShoppingCart">
+                        <i class="bi bi-cart"></i> Shopping Cart
+                    </a>
+
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>

@@ -20,6 +20,13 @@ namespace WildPath.Controllers
 
         public IActionResult Index()
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                MyRegisteredUserRepo registeredUserRepo = new MyRegisteredUserRepo(_wpdb);
+                string userName = User.Identity.Name;
+                string name = registeredUserRepo.GetUserByName(userName).FirstName;
+                ViewBag.UserName = name;
+            }
 
             return View();
         }
