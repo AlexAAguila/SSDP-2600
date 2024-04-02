@@ -5,95 +5,134 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Checkout</h1>
-<form id="paymentForm" method="post" action="/Home/ProcessTransaction">
-    <div id="mandatoryFields">
-        <h2>Contact Details</h2>
+@* <h1>Checkout</h1>
+ *@
+
+ <style>
+    html, body, .container, div {
+        margin: 0;
+        padding: 0;
+    }
+
+    .grey-header {
+        background-color: rgba(217, 217, 217, 0.5);
+        color: black;
+        text-align: center;
+        padding: 10px 0;
+        font-size: 15px;
+        margin-top: -15px;
+    }
+
+    .bold-text {
+        font-weight: bold;
+    }
+
+    .container {
+        max-width: 100%;
+        margin: 0 auto;
+    }
+
+    .component{
+        margin: 30px;
+    }
+ </style>
+
+<div class="grey-header">
+    <span class="bold-text">Checkout</span>
+</div>
+<br/>
+
+<div class="component">
+    <form id="paymentForm" method="post" action="/Home/ProcessTransaction">
+        <div id="mandatoryFields">
+            <h2>Contact Details</h2>
+            <div class="form-group">
+                <label asp-for="Phone">Phone Number</label>
+                <input type="tel" class="form-control" id="phone" placeholder="Enter phone number" asp-for="Phone">
+            </div>
+
+            <h2>Delivery Address</h2>
+            <div class="form-group">
+                <label asp-for="Address.Address1">Address Line 1</label>
+                <input type="text" class="form-control" id="address1" placeholder="Enter address" asp-for="Address.Address1" value="@Model.Address.Address1">
+            </div>
+            <div class="form-group">
+                <label asp-for="Address.City">City/Town</label>
+                <input type="text" class="form-control" id="city" placeholder="Enter city or town" asp-for="Address.City">
+            </div>
+            <div class="form-group">
+                <label asp-for="Address.Province">Province</label>
+                <input type="text" class="form-control" id="province" placeholder="Enter province" asp-for="Address.Province">
+            </div>
+            <div class="form-group">
+                <label asp-for="Address.PostalCode">Postal Code</label>
+                <input type="text" class="form-control" id="postalCode" placeholder="Enter postal code" asp-for="Address.PostalCode">
+            </div>
+        </div>
+        <h2>Shipping Method</h2>
         <div class="form-group">
-            <label asp-for="Phone">Phone Number</label>
-            <input type="tel" class="form-control" id="phone" placeholder="Enter phone number" asp-for="Phone">
+            <div class="form-check">
+                <input class="form-check-input" type="radio" asp-for="ShippingMethod"
+                       value="Standard Shipping" id="standardShipping">
+                <label class="form-check-label" for="standardShipping">
+                    Free Standard Shipping for order <br />
+                    over $<span>@Model.FreeShippingThreshold</span> within Canada <br />
+                    $0.00 - 3 to 7 Business Days
+                </label>
+            </div>
+            <br />
+            <div class="form-check">
+                <input class="form-check-input" type="radio" asp-for="ShippingMethod"
+                       value="Express Shipping" id="expressShipping">
+                <label class="form-check-label" for="expressShipping">
+                    Flat Standard Shipping for order <br />
+                    under $<span>@Model.FreeShippingThreshold</span> within Canada <br />
+                    $<span>@Model.ShippingRate</span> - 3 to 7 Business Days
+                </label>
+            </div>
         </div>
 
-        <h2>Delivery Address</h2>
-        <div class="form-group">
-            <label asp-for="Address.Address1">Address Line 1</label>
-            <input type="text" class="form-control" id="address1" placeholder="Enter address" asp-for="Address.Address1" value="@Model.Address.Address1">
+        <div class="cart-summary">
+            <h2>Order Summary</h2>
+            <table>
+                <tr>
+                    <td>Total Items:</td>
+                    <td>@Model.TotalItems</td>
+                </tr>
+                <tr>
+                    <td>Subtotal:</td>
+                    <td>@Model.CurrencySymbol@Model.TotalPrice.ToString("N2")</td>
+                </tr>
+                <tr>
+                    <td>Shipping:</td>
+                    <td>@Model.CurrencySymbol@Model.Shipping.ToString("N2")</td>
+                </tr>
+                <tr>
+                    <td>Tax:</td>
+                    <td>@Model.CurrencySymbol@Model.Tax.ToString("N2")</td>
+                </tr>
+                <tr>
+                    <td><strong>Grand Total:</strong></td>
+                    <td><strong>@Model.CurrencySymbol@Model.GrandTotal.ToString("N2") @Model.CurrencyCode</strong></td>
+                </tr>
+            </table>
         </div>
-        <div class="form-group">
-            <label asp-for="Address.City">City/Town</label>
-            <input type="text" class="form-control" id="city" placeholder="Enter city or town" asp-for="Address.City">
+        <div id="hiddenFields">
+            <input class="hiddenField" type="hidden" asp-for="@Model.TransactionId" value="@Model.TransactionId">
+            <input class="hiddenField" type="hidden" asp-for="@Model.PayerId" value="@Model.PayerId">
+            <input class="hiddenField" type="hidden" asp-for="@Model.PayerEmail" value="@Model.PayerEmail">
+            <input class="hiddenField" type="hidden" asp-for="@Model.CaptureId" value="@Model.CaptureId">
+            <input class="hiddenField" type="hidden" asp-for="@Model.PayerFullName" value="@Model.PayerFullName">
+            <input class="hiddenField" type="hidden" asp-for="@Model.GrandTotal" value="@Model.GrandTotal" />
+            <input class="hiddenField" type="hidden" asp-for="@Model.CurrencyCode" value="@Model.CurrencyCode" />
+            <input class="hiddenField" type="hidden" asp-for="@Model.CurrencySymbol" value="@Model.CurrencySymbol" />
+        </div><br />
+        <div class="alert alert-warning" role="alert" id="formWarning" style="display: none;">
+            Please fill in Phone and all address fields before proceeding.
         </div>
-        <div class="form-group">
-            <label asp-for="Address.Province">Province</label>
-            <input type="text" class="form-control" id="province" placeholder="Enter province" asp-for="Address.Province">
-        </div>
-        <div class="form-group">
-            <label asp-for="Address.PostalCode">Postal Code</label>
-            <input type="text" class="form-control" id="postalCode" placeholder="Enter postal code" asp-for="Address.PostalCode">
-        </div>
-    </div>
-    <h2>Shipping Method</h2>
-    <div class="form-group">
-        <div class="form-check">
-            <input class="form-check-input" type="radio" asp-for="ShippingMethod"
-                   value="Standard Shipping" id="standardShipping">
-            <label class="form-check-label" for="standardShipping">
-                Free Standard Shipping for order <br />
-                over $<span>@Model.FreeShippingThreshold</span> within Canada <br />
-                $0.00 - 3 to 7 Business Days
-            </label>
-        </div>
-        <br />
-        <div class="form-check">
-            <input class="form-check-input" type="radio" asp-for="ShippingMethod"
-                   value="Express Shipping" id="expressShipping">
-            <label class="form-check-label" for="expressShipping">
-                Flat Standard Shipping for order <br />
-                under $<span>@Model.FreeShippingThreshold</span> within Canada <br />
-                $<span>@Model.ShippingRate</span> - 3 to 7 Business Days
-            </label>
-        </div>
-    </div>
+    </form>
+</div>
 
-    <div class="cart-summary">
-        <h2>Order Summary</h2>
-        <table>
-            <tr>
-                <td>Total Items:</td>
-                <td>@Model.TotalItems</td>
-            </tr>
-            <tr>
-                <td>Subtotal:</td>
-                <td>@Model.CurrencySymbol@Model.TotalPrice.ToString("N2")</td>
-            </tr>
-            <tr>
-                <td>Shipping:</td>
-                <td>@Model.CurrencySymbol@Model.Shipping.ToString("N2")</td>
-            </tr>
-            <tr>
-                <td>Tax:</td>
-                <td>@Model.CurrencySymbol@Model.Tax.ToString("N2")</td>
-            </tr>
-            <tr>
-                <td><strong>Grand Total:</strong></td>
-                <td><strong>@Model.CurrencySymbol@Model.GrandTotal.ToString("N2") @Model.CurrencyCode</strong></td>
-            </tr>
-        </table>
-    </div>
-    <div id="hiddenFields">
-        <input class="hiddenField" type="hidden" asp-for="@Model.TransactionId" value="@Model.TransactionId">
-        <input class="hiddenField" type="hidden" asp-for="@Model.PayerId" value="@Model.PayerId">
-        <input class="hiddenField" type="hidden" asp-for="@Model.PayerEmail" value="@Model.PayerEmail">
-        <input class="hiddenField" type="hidden" asp-for="@Model.CaptureId" value="@Model.CaptureId">
-        <input class="hiddenField" type="hidden" asp-for="@Model.PayerFullName" value="@Model.PayerFullName">
-        <input class="hiddenField" type="hidden" asp-for="@Model.GrandTotal" value="@Model.GrandTotal" />
-        <input class="hiddenField" type="hidden" asp-for="@Model.CurrencyCode" value="@Model.CurrencyCode" />
-        <input class="hiddenField" type="hidden" asp-for="@Model.CurrencySymbol" value="@Model.CurrencySymbol" />
-    </div><br />
-    <div class="alert alert-warning" role="alert" id="formWarning" style="display: none;">
-        Please fill in Phone and all address fields before proceeding.
-    </div>
-</form>
 
 <!-- Place to render the PayPal button -->
 <div id="paypal-button-container"></div>
