@@ -1,26 +1,32 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
+using SendGridDemo.Data.Services;
 using System.Diagnostics;
+using System.Net.Mail;
 using WildPath.Data;
 using WildPath.EfModels;
 using WildPath.Migrations;
 using WildPath.Models;
 using WildPath.Repositories;
 using WildPath.ViewModels;
+using WildPath.Data.Services;
 
 namespace WildPath.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IEmailService _emailService;
         private readonly WildPathDbContext _wpdb;
         private readonly ApplicationDbContext _applicationDbContext;
 
-        public HomeController(ILogger<HomeController> logger, WildPathDbContext wpdp, ApplicationDbContext applicationDbContext)
+        public HomeController(ILogger<HomeController> logger, WildPathDbContext wpdp, ApplicationDbContext applicationDbContext, IEmailService emailService
+)
         {
             _logger = logger;
             _wpdb = wpdp;
             _applicationDbContext = applicationDbContext;
+            _emailService = emailService;
 
         }
 
@@ -60,10 +66,20 @@ namespace WildPath.Controllers
                                     .Select(u => u.Id)
                                     .FirstOrDefault();
                 CheckoutVM.PayerFullName = registeredUserRepo.GetFirstAndLastNameByEmail(User.Identity.Name);
-               
-                    registeredUserRepo.AddFkAddress(CheckoutVM, userName);
+
+                
+                registeredUserRepo.AddFkAddress(CheckoutVM, userName);
                 
             }
+            var rounded = CheckoutVM.GrandTotal.ToString("N2");
+            var emailBody = $"Hi {CheckoutVM.PayerFullName} Thank you for your payment of ${rounded} has been processed successfully. Your shipment with Tracking number: #{CheckoutVM.TrackingNumber} is ready. \n\n Delivered to: \n\n{CheckoutVM.Address.Address1} \n{CheckoutVM.Address.City}, {CheckoutVM.Address.PostalCode} \n\n Estimated Delivery Date: {CheckoutVM.EstimatedDeliveryDate}";
+
+            _emailService.SendSingleEmail(new ComposeEmailModel
+            {
+                Subject = "Transaction Confirmation",
+                Body = emailBody,
+                Email = User.Identity.Name ?? CheckoutVM.PayerEmail // assuming CheckoutVM.Email is the customer's email
+            });
             transRepo.Add(CheckoutVM, userId);
 
             return RedirectToAction("PayPalConfirmation", CheckoutVM);
