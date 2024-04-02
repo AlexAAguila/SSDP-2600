@@ -16,25 +16,25 @@
         <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
                 <div class="fix">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
-                    <img src="~/images/logo.png" alt="WildPath Logo" height="90px">
-                </a>
+                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                        <img src="~/images/logo.png" alt="WildPath Logo" height="90px">
+                    </a>
                 </div>
 
                 <div class="fix">
-                <div class="d-lg-none">
-                    <partial name="_LoginPartial" />
-                </div>
-                
+                    <div class="d-lg-none">
+                        <partial name="_LoginPartial" />
+                    </div>
 
-                <a class="nav-item d-lg-none" asp-area="" asp-controller="Product" asp-action="ShoppingCart">
+
+                    <a class="nav-item d-lg-none" asp-area="" asp-controller="Product" asp-action="ShoppingCart">
                         <i class="bi bi-cart d-lg-none text-dark"></i>
-                </a>
+                    </a>
 
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
 
                 </div>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -121,11 +121,11 @@
                     </ul>
                     <span class="d-none d-sm-block">   <partial name="_LoginPartial" /></span>
 
-                  
+
                     <a class="nav-link text-dark d-none d-sm-block d-lg-flex align-items-center" asp-area="" asp-controller="Product" asp-action="ShoppingCart">
                         <i class="bi bi-cart d-none d-sm-block me-2 text-dark"></i> Shopping Cart
                     </a>
-                   
+
 
                 </div>
             </div>
