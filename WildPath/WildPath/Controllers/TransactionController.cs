@@ -169,11 +169,13 @@ namespace WildPath.Controllers
         }
         public IActionResult Checkout()
         {
-            const string CURRENCY_CODE = "CAD";           //Should be pulled from the database!
-            const string CURRENCY_SYMBOL = "$";           //Should be pulled from the database!
-            const double CA_TAX = .12;                    //Should be pulled from the database!
-            const double SHIPPING_RATE = 7.99;            //Should be pulled from the database!
-            const double FREE_SHIPPING_THRESHOLD = 74.99; //Should be pulled from the database!
+             TransactionRepo transactionRepo = new TransactionRepo(_wpdb);
+            var shippingInfo = transactionRepo.GetShippingInfo();
+            string CURRENCY_CODE = shippingInfo.CurrencyCode ?? "CAD";           
+             string CURRENCY_SYMBOL = shippingInfo.CurrencySymbol ?? "$";         
+             double CA_TAX = shippingInfo.CaTax ?? .12;                   
+            double SHIPPING_RATE = shippingInfo.ShippingRate ?? 7.99;            
+             double FREE_SHIPPING_THRESHOLD = shippingInfo.ShippingRate ?? 74.99; 
 
             List<CartItemVM> cartItems = new List<CartItemVM>();
 
@@ -185,7 +187,7 @@ namespace WildPath.Controllers
             {
                 List<CartItem> sessionCartItems = Newtonsoft.Json.JsonConvert.DeserializeObject<List<CartItem>>(cartSession);
                 ProductRepo productRepo = new ProductRepo(_wpdb);
-                TransactionRepo transactionRepo = new TransactionRepo(_wpdb);
+                //TransactionRepo transactionRepo = new TransactionRepo(_wpdb);
                 cartItems = productRepo.GetCartVM(sessionCartItems);
 
                 double totalPrice = 0;
