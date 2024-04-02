@@ -11,8 +11,8 @@
         justify-content:center;
         border: 1px solid #0000001f;
         border-radius:20px;
-        padding:1rem;
-        margin:1rem;
+        padding:2rem;
+        margin:2rem 1rem;
     }
 
     .cart-summary h3{
@@ -108,7 +108,7 @@
 
        @@media (min-width: 768px) { /* Adjust the max-width as needed for your target tablet size */
        .cart-summary{
-           margin:8rem;
+           margin:3rem 8rem;
        }
     }
 </style>
@@ -118,6 +118,8 @@
 <hr/>
 
 <div>
+    <h1>Your Shopping Cart</h1>
+    <hr/>
     @if (Model.Any())
     {
         <table class="table">
