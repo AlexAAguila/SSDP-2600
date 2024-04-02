@@ -27,6 +27,13 @@ namespace WildPath.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult Index()
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                MyRegisteredUserRepo registeredUserRepo = new MyRegisteredUserRepo(_wpdb);
+                string userName = User.Identity.Name;
+                string name = registeredUserRepo.GetUserByName(userName).FirstName;
+                ViewBag.UserName = name;
+            }
             TransactionRepo transactionRepo = new TransactionRepo(_wpdb);
 
             return View(transactionRepo.GetAll());
@@ -35,6 +42,13 @@ namespace WildPath.Controllers
         [Authorize]
         public IActionResult UserTransactions()
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                MyRegisteredUserRepo registeredUserRepo = new MyRegisteredUserRepo(_wpdb);
+                string userName = User.Identity.Name;
+                string name = registeredUserRepo.GetUserByName(userName).FirstName;
+                ViewBag.UserName = name;
+            }
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             var userTransactions = _wpdb.Transactions
@@ -155,6 +169,7 @@ namespace WildPath.Controllers
 
         public IActionResult GetCartState()
         {
+
             // Retrieve cart items from session
             string cartSession = HttpContext.Session.GetString("Cart");
             List<CartItem> cartItems = new List<CartItem>();
@@ -169,7 +184,14 @@ namespace WildPath.Controllers
         }
         public IActionResult Checkout()
         {
-             TransactionRepo transactionRepo = new TransactionRepo(_wpdb);
+            if (User.Identity.IsAuthenticated)
+            {
+                MyRegisteredUserRepo registeredUserRepo = new MyRegisteredUserRepo(_wpdb);
+                string userName = User.Identity.Name;
+                string name = registeredUserRepo.GetUserByName(userName).FirstName;
+                ViewBag.UserName = name;
+            }
+            TransactionRepo transactionRepo = new TransactionRepo(_wpdb);
             var shippingInfo = transactionRepo.GetShippingInfo();
             string CURRENCY_CODE = shippingInfo.CurrencyCode ?? "CAD";           
              string CURRENCY_SYMBOL = shippingInfo.CurrencySymbol ?? "$";         
