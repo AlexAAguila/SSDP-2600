@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using WildPath.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace WildPath.Repositories
 {
@@ -29,9 +31,12 @@ namespace WildPath.Repositories
         {
             return _context.Transactions.Where(t => t.FkUserId == userId).ToList();
         }
+        public IEnumerable<Transaction> GetTransactionsByTransactionId(string PayerId)
+        {
+            return _context.Transactions.Where(t => t.PaymentId == PayerId);
+        }
 
-
-        public string Add(CheckoutVM CheckoutVM)
+        public string Add(CheckoutVM CheckoutVM, string userName)
         {
             var address = new Address()
             {
@@ -39,11 +44,11 @@ namespace WildPath.Repositories
                 City = CheckoutVM.Address.City,
                 Province = CheckoutVM.Address.Province,
                 PostalCode = CheckoutVM.Address.PostalCode,
-                Unit = CheckoutVM.Address.Unit
+                Unit = CheckoutVM.Address.Unit,
+                
             };
             _context.Addresses.Add(address);
             _context.SaveChanges();
-
             var transaction = new Transaction()
             {
                 PaymentId = CheckoutVM.TransactionId,
@@ -51,10 +56,12 @@ namespace WildPath.Repositories
                 PayerName = CheckoutVM.PayerFullName,
                 PayerEmail = CheckoutVM.PayerEmail,
                 Amount = CheckoutVM.GrandTotal.ToString(),
+                FkAddress = address,
                 Currency = CheckoutVM.CurrencyCode,
                 PaymentMethod = "PayPal",
                 ShippingMethod = CheckoutVM.ShippingMethod,
                 FkAddressId = address.PkAddressId,
+                FkUserId = userName
 
             };
             _context.Transactions.Add(transaction);

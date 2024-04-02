@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using WildPath.Data;
 using WildPath.EfModels;
 using WildPath.Models;
 using WildPath.Repositories;
@@ -11,18 +12,27 @@ namespace WildPath.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly WildPathDbContext _wpdb;
+        private readonly ApplicationDbContext _applicationDbContext;
 
-        public HomeController(ILogger<HomeController> logger, WildPathDbContext wpdp)
+        public HomeController(ILogger<HomeController> logger, WildPathDbContext wpdp, ApplicationDbContext applicationDbContext)
         {
             _logger = logger;
             _wpdb = wpdp;
+            _applicationDbContext = applicationDbContext;
 
         }
 
         public IActionResult Index()
         {
-
+            //if (User.Identity.IsAuthenticated)
+            //{
+            //    MyRegisteredUserRepo registeredUserRepo = new MyRegisteredUserRepo(_wpdb);
+            //    string userName = User.Identity.Name;
+            //    string name = registeredUserRepo.GetUserByName(userName).FirstName;
+            //    ViewBag.UserName = name;
+            //}
             return View();
+                
         }
 
         [HttpPost]
@@ -33,8 +43,16 @@ namespace WildPath.Controllers
             CheckoutVM.EstimatedDeliveryDate = DateTime.Now.AddDays(14);
 
             var transRepo = new TransactionRepo(_wpdb);
-
-            transRepo.Add(CheckoutVM);
+            string? userId = null;
+            if (User.Identity.IsAuthenticated)
+            {
+                // Assuming ApplicationDbContext is your Entity Framework DbContext
+                 userId = _applicationDbContext.Users
+                                    .Where(u => u.UserName == User.Identity.Name)
+                                    .Select(u => u.Id)
+                                    .FirstOrDefault();
+            }
+            transRepo.Add(CheckoutVM, userId);
 
             return RedirectToAction("PayPalConfirmation", CheckoutVM);
         }
@@ -42,6 +60,10 @@ namespace WildPath.Controllers
         public IActionResult PayPalConfirmation(CheckoutVM CheckoutVM)
         {
             string cartSession = HttpContext.Session.GetString("Cart");
+            TransactionRepo transactionRepo = new TransactionRepo(_wpdb);
+            var transId = transactionRepo.GetTransactionsByTransactionId(CheckoutVM.TransactionId);
+            CheckoutVM.Address = _wpdb.Addresses.Where(u => transId.FirstOrDefault().PaymentId == CheckoutVM.TransactionId)
+                                    .FirstOrDefault();
 
             if (cartSession != null)
             {
