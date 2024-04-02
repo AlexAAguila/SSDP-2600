@@ -54,10 +54,11 @@ namespace WildPath.Controllers
 
             var transRepo = new TransactionRepo(_wpdb);
             string? userId = null;
+            string userName = CheckoutVM.PayerEmail;
             if (User.Identity.IsAuthenticated)
             {
                 MyRegisteredUserRepo registeredUserRepo = new MyRegisteredUserRepo(_wpdb);
-                string userName = User.Identity.Name;
+                 userName = User.Identity.Name;
                 string name = registeredUserRepo.GetUserByName(userName).FirstName;
                 ViewBag.UserName = name;
                 // Assuming ApplicationDbContext is your Entity Framework DbContext
@@ -80,7 +81,7 @@ namespace WildPath.Controllers
                 Body = emailBody,
                 Email = User.Identity.Name ?? CheckoutVM.PayerEmail // assuming CheckoutVM.Email is the customer's email
             });
-            transRepo.Add(CheckoutVM, userId);
+            transRepo.Add(CheckoutVM, userId, userName);
 
             return RedirectToAction("PayPalConfirmation", CheckoutVM);
         }

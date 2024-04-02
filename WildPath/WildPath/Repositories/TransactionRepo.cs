@@ -36,7 +36,7 @@ namespace WildPath.Repositories
             return _context.Transactions.Where(t => t.PaymentId == PayerId);
         }
 
-        public string Add(CheckoutVM CheckoutVM, string userName)
+        public string Add(CheckoutVM CheckoutVM, string userName, string userEmail)
         {
             var address = new Address()
             {
@@ -54,7 +54,7 @@ namespace WildPath.Repositories
                 PaymentId = CheckoutVM.TransactionId,
                 CreateTime = DateTime.Now.ToString("dd-MM-yyyy, HH:mm"),
                 PayerName = CheckoutVM.PayerFullName,
-                PayerEmail = CheckoutVM.PayerEmail,
+                PayerEmail = userEmail,
                 Amount = CheckoutVM.GrandTotal.ToString(),
                 FkAddress = address,
                 Currency = CheckoutVM.CurrencyCode,
